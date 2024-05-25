@@ -3,20 +3,21 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputMapper : MonoBehaviour
 {
+    public float speed = 2;
+
     private PlayerInput input;
+    private Rigidbody body;
 
     void Awake()
     {
         input = GetComponent<PlayerInput>();
+        body = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        Debug.Log(input.actions["move"].ReadValue<Vector2>());
+        var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
 
-        //if ()
-        {
-
-        }
+        body.MovePosition(body.position + move * Time.deltaTime * speed);
     }
 }
