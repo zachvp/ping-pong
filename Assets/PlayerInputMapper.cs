@@ -6,6 +6,9 @@ public class PlayerInputMapper : MonoBehaviour
     public float speed = 2;
 
     private PlayerInput input;
+
+    public Vector3 FrameVelocity { get; private set; }
+    public Rigidbody Body { get { return body; } }
     private Rigidbody body;
 
     void Awake()
@@ -18,6 +21,18 @@ public class PlayerInputMapper : MonoBehaviour
     {
         var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
 
-        body.MovePosition(body.position + move * Time.deltaTime * speed);
+        var lastPosition = body.position;
+        var newPosition = body.position + move * Time.deltaTime * speed;
+        body.MovePosition(newPosition);
+        FrameVelocity = newPosition - lastPosition;
+
+        //Debug.Log($"player velocity: {body.velocity}");
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<Ball>()) {
+            body.velocity = Vector3.zero;
+        }
     }
 }
