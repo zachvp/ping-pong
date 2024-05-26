@@ -11,27 +11,62 @@ public class PlayerInputMapper : MonoBehaviour
     public Rigidbody Body { get { return body; } }
     private Rigidbody body;
 
-    void Awake()
+    private Material material;
+
+    public State state { get; private set; }
+    public enum State
+    {
+        NONE,
+        HIT
+    }
+
+    private void Awake()
     {
         input = GetComponent<PlayerInput>();
         body = GetComponent<Rigidbody>();
+        material = GetComponent<MeshRenderer>().material;
     }
 
-    void FixedUpdate()
+    private void Update()
+    {
+        if (input.actions["hit"].WasPressedThisFrame())
+        {
+            var initialColor = material.color;
+            var newColor = Color.yellow;
+            newColor.a = initialColor.a;
+
+            material.color = newColor;
+            state = State.HIT;
+            StartCoroutine(Task.Delayed(0.8f, () =>
+            {
+                material.color = initialColor;
+                state = State.NONE;
+            }));
+        }
+    }
+
+    private void FixedUpdate()
     {
         var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
 
-        var lastPosition = body.position;
-        var newPosition = body.position + move * Time.deltaTime * speed;
-        body.MovePosition(newPosition);
-        FrameVelocity = newPosition - lastPosition;
-
-        //Debug.Log($"player velocity: {body.velocity}");
+        if (move.sqrMagnitude > Mathf.Epsilon) 
+        {
+            var lastPosition = body.position;
+            var newPosition = body.position + move * Time.deltaTime * speed;
+            body.MovePosition(newPosition);
+            FrameVelocity = newPosition - lastPosition;
+        }
+        else
+        {
+            body.velocity = Vector3.zero;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.GetComponent<Ball>()) {
+        var ball = collision.gameObject.GetComponent<Ball>();
+        if (ball)
+        {
             body.velocity = Vector3.zero;
         }
     }
