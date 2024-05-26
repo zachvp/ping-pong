@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class CameraDefault : MonoBehaviour
 {
-    public GameObject target;
     public Vector3 offsetFromTarget;
 
-    void LateUpdate()
+    private GameObject target;
+
+    private void Start()
+    {
+        target = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    private void LateUpdate()
     {
         var newPosition = transform.position;
         newPosition.x = target.transform.position.x;
@@ -13,6 +19,5 @@ public class CameraDefault : MonoBehaviour
         newPosition += offsetFromTarget;
 
         transform.position = newPosition;
-        //transform.LookAt(target.transform);
     }
 }

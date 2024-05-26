@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class PlayerInputMapper : MonoBehaviour
 {
-    public float speed = 2;
+    public float moveSpeed = 2;
+    public float dashSpeed = 4;
 
     private PlayerInput input;
 
@@ -12,12 +14,16 @@ public class PlayerInputMapper : MonoBehaviour
     private Rigidbody body;
 
     private Material material;
+    private Color initialColor;
 
     public State state { get; private set; }
+
+    [Flags]
     public enum State
     {
-        NONE,
-        HIT
+        NONE = 0,
+        HIT = 1 << 0,
+        DASH = 1 << 1,
     }
 
     private void Awake()
@@ -25,23 +31,41 @@ public class PlayerInputMapper : MonoBehaviour
         input = GetComponent<PlayerInput>();
         body = GetComponent<Rigidbody>();
         material = GetComponent<MeshRenderer>().material;
+
+        initialColor = material.color;
     }
 
     private void Update()
     {
-        if (input.actions["hit"].WasPressedThisFrame())
+        if (!state.HasFlag(State.HIT) && input.actions["hit"].WasPressedThisFrame())
         {
-            var initialColor = material.color;
+            state |= State.HIT;
+
             var newColor = Color.yellow;
             newColor.a = initialColor.a;
-
             material.color = newColor;
-            state = State.HIT;
             StartCoroutine(Task.Delayed(0.8f, () =>
             {
                 material.color = initialColor;
-                state = State.NONE;
+                state &= ~State.HIT;
             }));
+        }
+
+        if (input.actions["dash"].IsPressed() && !input.actions["hit"].IsPressed())
+        {
+            state |= State.DASH;
+
+            var newColor = Color.blue;
+            newColor.a = initialColor.a;
+            material.color = newColor;
+        }
+        else
+        {
+            if (!state.HasFlag(State.HIT))
+            {
+                material.color = initialColor;
+            }
+            state &= ~State.DASH;
         }
     }
 
@@ -52,7 +76,17 @@ public class PlayerInputMapper : MonoBehaviour
         if (move.sqrMagnitude > Mathf.Epsilon) 
         {
             var lastPosition = body.position;
-            var newPosition = body.position + move * Time.deltaTime * speed;
+            Vector3 newPosition;
+
+            if (state == State.DASH)
+            {
+                newPosition = body.position + move * Time.deltaTime * dashSpeed;
+            }
+            else
+            {
+                newPosition = body.position + move * Time.deltaTime * moveSpeed;
+            }
+
             body.MovePosition(newPosition);
             FrameVelocity = newPosition - lastPosition;
         }

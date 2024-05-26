@@ -6,6 +6,7 @@ public class Ball : MonoBehaviour
     public Vector3 initialVelocity;
 
     public float spinMultiplier = 1;
+    public Vector2 spinDampening = Vector2.one;
     public float hitMultiplier = 2;
 
     private Vector3 initialPosition;
@@ -37,7 +38,6 @@ public class Ball : MonoBehaviour
         foreach (var c in collision.contacts)
         {
             var dot = Vector3.Dot(c.normal, body.velocity.normalized);
-            Debug.Log($"dot: {dot}");
             if (dot > 0.9f)
             {
                 if (newVelocity.z > 0)
@@ -48,36 +48,34 @@ public class Ball : MonoBehaviour
                 {
                     newVelocity.z = Mathf.Min(-initialVelocity.z, newVelocity.z);
                 }
+
                 if (playerCharacter)
                 {
                     var playerVelocity = playerCharacter.FrameVelocity;
-                    Debug.Log($"player velocity: {playerVelocity}");
-                    newVelocity.x -= playerVelocity.x * spinMultiplier;
-                    newVelocity.y -= playerVelocity.y * spinMultiplier;
+                    //Debug.Log($"player velocity: {playerVelocity}");
 
                     if (playerCharacter.state == PlayerInputMapper.State.HIT)
                     {
-                        Debug.Log($"apply hit boost");
+                        //Debug.Log($"apply hit boost");
                         newVelocity.z *= hitMultiplier;
                         newVelocity.z = Mathf.Clamp(newVelocity.z, -hitMultiplier * initialVelocity.z, hitMultiplier * initialVelocity.z);
+
+                        var spinX = playerVelocity.x * spinMultiplier * hitMultiplier * spinDampening.x;
+                        var spinY = playerVelocity.y * spinMultiplier * hitMultiplier * spinDampening.y;
+                        //Debug.Log($"spinX: {spinX}, spinY: {spinY}");
+
+                        newVelocity.x -= spinX;
+                        newVelocity.y -= spinY;
+                    }
+                    else
+                    {
+                        newVelocity.x -= playerVelocity.x * spinMultiplier;
+                        newVelocity.y -= playerVelocity.y * spinMultiplier;
                     }
                 }
                 
                 break;
             }
-        }
-
-        if (playerCharacter)
-        {
-            //var playerVelocity = playerCharacter.FrameVelocity;
-            //Debug.Log($"player velocity: {playerVelocity}");
-            //newVelocity.x -= playerVelocity.x * spinMultiplier;
-            //newVelocity.y -= playerVelocity.y * spinMultiplier;
-
-            //if (playerCharacter.state == PlayerInputMapper.State.HIT)
-            //{
-            //    newVelocity.z = newVelocity.z > 0 ? initialVelocity.z * 1.5f : -initialVelocity.z * 1.5f;
-            //}
         }
 
         body.velocity = newVelocity;
