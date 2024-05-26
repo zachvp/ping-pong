@@ -14,7 +14,7 @@ public class PlayerInputMapper : MonoBehaviour
         body = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
 
