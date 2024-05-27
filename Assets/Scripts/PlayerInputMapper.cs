@@ -4,8 +4,12 @@ using System;
 
 public class PlayerInputMapper : MonoBehaviour
 {
-    public float moveSpeed = 2;
-    public float dashSpeed = 4;
+    public float moveSpeed = 5;
+
+    public float dashSpeed = 8;
+    public float dashTimeLength = 0.5f;
+
+    public float hitTimeLength = 0.4f;
 
     private PlayerInput input;
 
@@ -44,28 +48,25 @@ public class PlayerInputMapper : MonoBehaviour
             var newColor = Color.yellow;
             newColor.a = initialColor.a;
             material.color = newColor;
-            StartCoroutine(Task.Delayed(0.8f, () =>
+            StartCoroutine(Task.Delayed(hitTimeLength, () =>
             {
                 material.color = initialColor;
                 state &= ~State.HIT;
             }));
         }
 
-        if (input.actions["dash"].IsPressed() && !input.actions["hit"].IsPressed())
+        if (!state.HasFlag(State.DASH) && input.actions["dash"].WasPressedThisFrame())
         {
             state |= State.DASH;
 
             var newColor = Color.blue;
             newColor.a = initialColor.a;
             material.color = newColor;
-        }
-        else
-        {
-            if (!state.HasFlag(State.HIT))
+            StartCoroutine(Task.Delayed(dashTimeLength, () =>
             {
                 material.color = initialColor;
-            }
-            state &= ~State.DASH;
+                state &= ~State.DASH;
+            }));
         }
     }
 
