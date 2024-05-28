@@ -5308,6 +5308,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 2840934839081790478, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2840934839081790478, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2840934839081790478, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2840934839081790478, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5828455256320872031, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5404,6 +5420,10 @@ PrefabInstance:
     - target: {fileID: 2060055902556777814, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
+      propertyPath: hitMultiplier
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
       propertyPath: dashSpinMultiplier
