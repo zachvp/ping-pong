@@ -73,8 +73,8 @@ public class Ball : MonoBehaviour
                 }
                 else
                 {
-                    newVelocity.x -= playerVelocity.x * spinMultiplier * spinDampening.x;
-                    newVelocity.y -= playerVelocity.y * spinMultiplier * spinDampening.y;
+                    newVelocity.x -= playerVelocity.x * spinMultiplier;
+                    newVelocity.y -= playerVelocity.y * spinMultiplier;
                 }
 
                 if (body.velocity.z > initialVelocity.z)
