@@ -5405,6 +5405,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
+      propertyPath: dashSpinMultiplier
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
