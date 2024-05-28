@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4547044939558899942}
   - component: {fileID: 4675167870503471564}
   m_Layer: 0
-  m_Name: ball
+  m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,6 +62,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -148,9 +150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialVelocity: {x: 0, y: 0, z: 8}
-  spinMultiplier: 5
-  spinDampening: {x: 1, y: 0.9}
-  hitMultiplier: 1.8
+  spinMultiplier: 4
+  spinDampening: {x: 1, y: 0.7}
+  hitMultiplier: 1.5
 --- !u!135 &4675167870503471564
 SphereCollider:
   m_ObjectHideFlags: 0

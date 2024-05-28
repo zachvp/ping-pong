@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class Task
@@ -61,5 +61,13 @@ public static class Task
     {
         yield return new WaitForSeconds(delay);
         task(arg0, arg1);
+    }
+}
+
+public static class Utils
+{
+    public static int SignMultiplier(float value)
+    {
+        return value < 0 ? -1 : 1;
     }
 }

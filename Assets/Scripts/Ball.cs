@@ -23,22 +23,20 @@ public class Ball : MonoBehaviour
         body.velocity = initialVelocity;
     }
 
-    private void Update() {
-        if (Keyboard.current.backspaceKey.wasPressedThisFrame) {
-            body.position = initialPosition;
-            body.velocity = initialVelocity;
-        }
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         var newVelocity = body.velocity;
         var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
 
+        Debug.Log($"collision contacts: {collision.contacts.Length}");
+
         foreach (var c in collision.contacts)
         {
-            var dot = Vector3.Dot(c.normal, body.velocity.normalized);
-            if (dot > 0.9f)
+            var contactNormalDotBack = Vector3.Dot(c.normal, Vector3.back); // body.velocity.normalized
+            var contactNormalDotUp = Vector3.Dot(c.normal, Vector3.up);
+            var contactNormalDotRight = Vector3.Dot(c.normal, Vector3.right);
+
+            if (Mathf.Abs(contactNormalDotBack) > 0.9f)
             {
                 if (newVelocity.z > 0)
                 {
@@ -69,12 +67,24 @@ public class Ball : MonoBehaviour
                     }
                     else
                     {
-                        newVelocity.x -= playerVelocity.x * spinMultiplier;
-                        newVelocity.y -= playerVelocity.y * spinMultiplier;
+                        newVelocity.x -= playerVelocity.x * spinMultiplier * spinDampening.x;
+                        newVelocity.y -= playerVelocity.y * spinMultiplier * spinDampening.y;
                     }
-                }
-                
-                break;
+                }    
+            }
+
+            if (Mathf.Abs(contactNormalDotUp) > 0.6f)
+            {
+                Debug.LogFormat($"contactNormalDotUp: {contactNormalDotUp}");
+                newVelocity.y *= 0.6f;
+                newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
+            }
+
+            if (Mathf.Abs(contactNormalDotRight) > 0.6f)
+            {
+                Debug.LogFormat($"contactNormalDotUp: {contactNormalDotUp}");
+                newVelocity.x *= 0.6f;
+                newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
             }
         }
 
