@@ -63,11 +63,6 @@ public class PlayerInputMapper : MonoBehaviour
         InputFlickVelocity = inputFlick - InputFlickVelocity;
         if (!state.HasFlag(State.DASH))
         {
-            if (input.actions["dash"].WasPressedThisFrame())
-            {
-                Dash();
-            }
-
             if (InputFlickVelocity.sqrMagnitude > 0.25f)
             {
                 Dash();
@@ -101,29 +96,14 @@ public class PlayerInputMapper : MonoBehaviour
 
         if (state.HasFlag(State.DASH))
         {
-            //newPosition = body.position + move * Time.deltaTime * dashSpeed;
-            if (move.sqrMagnitude > Mathf.Epsilon)
-            {
-                newPosition += (move + InputFlickVelocityDash) * Time.deltaTime * dashSpeed;
-            }
-            else
-            {
-                newPosition += InputFlickVelocityDash * stationaryFlickMultiplier * Time.deltaTime * dashSpeed;
-            }
+            newPosition += InputFlickVelocityDash * stationaryFlickMultiplier * Time.deltaTime * dashSpeed;
+
             Debug.Log($"stationary: {InputFlickVelocityDash} * {stationaryFlickMultiplier} * {Time.deltaTime} * {dashSpeed}");
         }
         else
         {
             newPosition += move * Time.deltaTime * moveSpeed;
         }
-
-        //if (move.sqrMagnitude < Mathf.Epsilon)
-        //{
-        //    if (!state.HasFlag(State.DASH))
-        //    {
-        //        body.velocity = Vector3.zero;
-        //    }
-        //}
 
         body.MovePosition(newPosition);
         Velocity = newPosition - lastPosition;
