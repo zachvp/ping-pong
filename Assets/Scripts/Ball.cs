@@ -1,6 +1,4 @@
-using UnityEngine.InputSystem;
 using UnityEngine;
-using System.Threading.Tasks;
 
 public class Ball : MonoBehaviour
 {
@@ -11,7 +9,7 @@ public class Ball : MonoBehaviour
     public float highVelocitySpinMultiplier = 1.5f;
     public Vector2 hitDampening = Vector2.one;
     public float hitMultiplier = 2;
-    public float angularVelocityMultiplier = 100;
+    public float angularMultiplier = 5;
 
     public Rigidbody Body { get { return body; } }
     private Rigidbody body;
@@ -47,11 +45,11 @@ public class Ball : MonoBehaviour
             }
 
             // ball collides with player
+            // apply ball physics effects depending on player state
             var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
             if (playerCharacter)
             {
                 var playerVelocity = playerCharacter.FrameVelocity;
-
 
                 if (playerCharacter.state == PlayerInputMapper.State.HIT)
                 {
@@ -76,14 +74,11 @@ public class Ball : MonoBehaviour
                     newVelocity.y -= playerVelocity.y * spinMultiplier;
                 }
 
-                // apply angular velocity
-                if (newVelocity.sqrMagnitude > Mathf.Epsilon)
+                // apply spin effect via torque
+                if (playerVelocity.sqrMagnitude > Mathf.Epsilon)
                 {
-                    var resolvedVelocity = newVelocity;
-                    var angularVelocity = new Vector3(resolvedVelocity.y, resolvedVelocity.x, 0) * angularVelocityMultiplier;
-
-                    Debug.Log($"flickVelocity: {playerCharacter.InputFlickVelocity}");
-                    body.angularVelocity = angularVelocity;
+                    var torque = new Vector3(playerVelocity.y, -playerVelocity.x, 0) * angularMultiplier;
+                    StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
                 }
             }
         }

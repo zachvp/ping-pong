@@ -55,7 +55,7 @@ MonoBehaviour:
   highVelocitySpinMultiplier: 1.5
   hitDampening: {x: 1, y: 1}
   hitMultiplier: 1.5
-  angularVelocityMultiplier: 100
+  angularMultiplier: 100
 --- !u!33 &2479387154023948608
 MeshFilter:
   m_ObjectHideFlags: 0

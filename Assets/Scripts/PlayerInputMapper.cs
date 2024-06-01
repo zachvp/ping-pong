@@ -22,6 +22,7 @@ public class PlayerInputMapper : MonoBehaviour
 
     public Vector2 InputFlickVelocity { get; private set; }
     public Vector3 InputFlickVelocityDash { get; private set; }
+    public float stationaryFlickMultiplier = 2;
 
     public State state;// { get; private set; }
 
@@ -95,29 +96,37 @@ public class PlayerInputMapper : MonoBehaviour
     private void FixedUpdate()
     {
         var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
+        var lastPosition = body.position;
+        Vector3 newPosition = body.position;
 
-        if (move.sqrMagnitude > Mathf.Epsilon) 
+        if (state.HasFlag(State.DASH))
         {
-            var lastPosition = body.position;
-            Vector3 newPosition = body.position;
-
-            if (state.HasFlag(State.DASH))
+            //newPosition = body.position + move * Time.deltaTime * dashSpeed;
+            if (move.sqrMagnitude > Mathf.Epsilon)
             {
-                //newPosition = body.position + move * Time.deltaTime * dashSpeed;
                 newPosition += (move + InputFlickVelocityDash) * Time.deltaTime * dashSpeed;
             }
             else
             {
-                newPosition += move * Time.deltaTime * moveSpeed;
+                newPosition += InputFlickVelocityDash * stationaryFlickMultiplier * Time.deltaTime * dashSpeed;
             }
-
-            body.MovePosition(newPosition);
-            FrameVelocity = newPosition - lastPosition;
+            Debug.Log($"stationary: {InputFlickVelocityDash} * {stationaryFlickMultiplier} * {Time.deltaTime} * {dashSpeed}");
         }
         else
         {
-            body.velocity = Vector3.zero;
+            newPosition += move * Time.deltaTime * moveSpeed;
         }
+
+        //if (move.sqrMagnitude < Mathf.Epsilon)
+        //{
+        //    if (!state.HasFlag(State.DASH))
+        //    {
+        //        body.velocity = Vector3.zero;
+        //    }
+        //}
+
+        body.MovePosition(newPosition);
+        FrameVelocity = newPosition - lastPosition;
     }
 
     private void OnCollisionEnter(Collision collision)

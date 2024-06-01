@@ -5064,6 +5064,14 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2220692565
       objectReference: {fileID: 0}
+    - target: {fileID: 7568673611291566319, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
+      propertyPath: dashSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7568673611291566319, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
+      propertyPath: dashTimeLength
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8175901116463179508, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
@@ -5396,6 +5404,14 @@ PrefabInstance:
     - target: {fileID: 2060055902556777814, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
+      propertyPath: hitMultiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
+      propertyPath: angularMultiplier
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
