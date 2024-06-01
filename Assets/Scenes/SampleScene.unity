@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 5498716}
   - component: {fileID: 5498715}
   m_Layer: 0
-  m_Name: Light
+  m_Name: Celing Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,8 +147,8 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 48
+  m_Intensity: 0.7
+  m_Range: 50
   m_SpotAngle: 179
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -186,7 +186,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -1180,7 +1180,7 @@ GameObject:
   - component: {fileID: 697302355}
   - component: {fileID: 697302354}
   m_Layer: 0
-  m_Name: Light (1)
+  m_Name: Rear Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5064,14 +5064,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2220692565
       objectReference: {fileID: 0}
-    - target: {fileID: 7568673611291566319, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
-      propertyPath: dashSpeed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7568673611291566319, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
-      propertyPath: dashTimeLength
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 8175901116463179508, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
@@ -5404,14 +5396,6 @@ PrefabInstance:
     - target: {fileID: 2060055902556777814, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
-      propertyPath: hitMultiplier
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
-      propertyPath: angularMultiplier
-      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
