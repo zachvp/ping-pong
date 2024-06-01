@@ -35,25 +35,16 @@ public class Ball : MonoBehaviour
         // check for a hit at either end
         if (Mathf.Abs(contactNormalDotForward) > 0.9f)
         {
-            if (newVelocity.z > 0)
-            {
-                newVelocity.z = Mathf.Max(initialVelocity.z, newVelocity.z);
-            }
-            else
-            {
-                newVelocity.z = Mathf.Min(-initialVelocity.z, newVelocity.z);
-            }
+            var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
 
             // ball collides with player
             // apply ball physics effects depending on player state
-            var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
             if (playerCharacter)
             {
-                var playerVelocity = playerCharacter.FrameVelocity;
+                var playerVelocity = playerCharacter.Velocity;
 
-                if (playerCharacter.state == PlayerInputMapper.State.HIT)
+                if (playerCharacter.state.HasFlag(PlayerInputMapper.State.HIT))
                 {
-                    //Debug.Log($"apply hit boost");
                     newVelocity.z *= hitMultiplier;
                     newVelocity.z = Mathf.Clamp(newVelocity.z, -hitMultiplier * initialVelocity.z, hitMultiplier * initialVelocity.z);
 
@@ -63,7 +54,7 @@ public class Ball : MonoBehaviour
                         0);
                     newVelocity -= spin;
                 }
-                else if (playerCharacter.state == PlayerInputMapper.State.DASH)
+                else if (playerCharacter.state.HasFlag(PlayerInputMapper.State.DASH))
                 {
                     newVelocity.x -= playerVelocity.x * spinMultiplier;
                     newVelocity.y -= playerVelocity.y * spinMultiplier;
@@ -72,6 +63,16 @@ public class Ball : MonoBehaviour
                 {
                     newVelocity.x -= playerVelocity.x * spinMultiplier;
                     newVelocity.y -= playerVelocity.y * spinMultiplier;
+
+                    // cap/cushion velocity for collision with neutral player
+                    if (newVelocity.z > 0)
+                    {
+                        newVelocity.z = Mathf.Max(initialVelocity.z, newVelocity.z);
+                    }
+                    else
+                    {
+                        newVelocity.z = Mathf.Min(-initialVelocity.z, newVelocity.z);
+                    }
                 }
 
                 // apply spin effect via torque
@@ -88,7 +89,6 @@ public class Ball : MonoBehaviour
         var velocityNerf = 0.6f;
         if (Mathf.Abs(contactNormalDotUp) > steepDeflectValue)
         {
-            Debug.LogFormat($"contactNormalDotUp: {Mathf.Abs(contactNormalDotUp)}");
             newVelocity.y *= velocityNerf;
             newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
         }
@@ -96,7 +96,6 @@ public class Ball : MonoBehaviour
         // check for steep leftward/rightward deflection
         if (Mathf.Abs(contactNormalDotRight) > steepDeflectValue)
         {
-            Debug.LogFormat($"contactNormalDotRight: {Mathf.Abs(contactNormalDotRight)}");
             newVelocity.x *= velocityNerf;
             newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
         }

@@ -13,12 +13,13 @@ public class PlayerInputMapper : MonoBehaviour
 
     private PlayerInput input;
 
-    public Vector3 FrameVelocity { get; private set; }
+    public Vector3 Velocity { get; private set; }
     public Rigidbody Body { get { return body; } }
     private Rigidbody body;
 
     private Material material;
     private Color initialColor;
+    public Color hitColor = Color.red;
 
     public Vector2 InputFlickVelocity { get; private set; }
     public Vector3 InputFlickVelocityDash { get; private set; }
@@ -49,9 +50,8 @@ public class PlayerInputMapper : MonoBehaviour
         {
             state |= State.HIT;
 
-            var newColor = Color.yellow;
-            newColor.a = initialColor.a;
-            material.color = newColor;
+            hitColor.a = initialColor.a;
+            material.color = hitColor;
             StartCoroutine(Task.Delayed(hitTimeLength, () =>
             {
                 material.color = initialColor;
@@ -126,7 +126,7 @@ public class PlayerInputMapper : MonoBehaviour
         //}
 
         body.MovePosition(newPosition);
-        FrameVelocity = newPosition - lastPosition;
+        Velocity = newPosition - lastPosition;
     }
 
     private void OnCollisionEnter(Collision collision)

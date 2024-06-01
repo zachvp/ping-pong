@@ -67,6 +67,17 @@
                 },
                 {
                     "name": "",
+                    "id": "e57729fb-e7a2-49f6-9026-27f30b9cb465",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "hit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f31e4fae-223a-4f3a-874f-3acc4b1cd710",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
