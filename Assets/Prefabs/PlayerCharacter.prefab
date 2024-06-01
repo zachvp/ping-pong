@@ -134,8 +134,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 4.5
   dashSpeed: 8
-  dashTimeLength: 0.5
+  dashTimeLength: 0.25
   hitTimeLength: 0.4
+  state: 0
 --- !u!54 &5972274319968965094
 Rigidbody:
   m_ObjectHideFlags: 0

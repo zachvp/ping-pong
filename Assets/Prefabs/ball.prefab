@@ -50,11 +50,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialVelocity: {x: 0, y: 0, z: 8}
-  spinMultiplier: 4
-  dashSpinMultiplier: 1.1
-  spinDampening: {x: 1.1, y: 0.8}
+  spinMultiplier: 3
+  dashSpinMultiplier: 8
+  highVelocitySpinMultiplier: 1.5
+  hitDampening: {x: 1, y: 1}
   hitMultiplier: 1.5
-  torqueMultiplier: 20
+  angularVelocityMultiplier: 100
 --- !u!33 &2479387154023948608
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -20,7 +20,10 @@ public class PlayerInputMapper : MonoBehaviour
     private Material material;
     private Color initialColor;
 
-    public State state { get; private set; }
+    public Vector2 InputFlickVelocity { get; private set; }
+    public Vector3 InputFlickVelocityDash { get; private set; }
+
+    public State state;// { get; private set; }
 
     [Flags]
     public enum State
@@ -55,19 +58,38 @@ public class PlayerInputMapper : MonoBehaviour
             }));
         }
 
-        if (!state.HasFlag(State.DASH) && input.actions["dash"].WasPressedThisFrame())
+        var inputFlick = input.actions["flick"].ReadValue<Vector2>();
+        InputFlickVelocity = inputFlick - InputFlickVelocity;
+        if (!state.HasFlag(State.DASH))
         {
-            state |= State.DASH;
-
-            var newColor = Color.blue;
-            newColor.a = initialColor.a;
-            material.color = newColor;
-            StartCoroutine(Task.Delayed(dashTimeLength, () =>
+            if (input.actions["dash"].WasPressedThisFrame())
             {
-                material.color = initialColor;
-                state &= ~State.DASH;
-            }));
+                Dash();
+            }
+
+            if (InputFlickVelocity.sqrMagnitude > 0.25f)
+            {
+                Dash();
+                InputFlickVelocityDash = InputFlickVelocity;
+            }
         }
+    }
+
+    private void Dash()
+    {
+        Debug.Log("DASH");
+        state |= State.DASH;
+
+        var newColor = Color.blue;
+        newColor.a = initialColor.a;
+        material.color = newColor;
+
+        StartCoroutine(Task.Delayed(dashTimeLength, () =>
+        {
+            material.color = initialColor;
+            state &= ~State.DASH;
+            InputFlickVelocity = Vector3.zero;
+        }));
     }
 
     private void FixedUpdate()
@@ -77,15 +99,16 @@ public class PlayerInputMapper : MonoBehaviour
         if (move.sqrMagnitude > Mathf.Epsilon) 
         {
             var lastPosition = body.position;
-            Vector3 newPosition;
+            Vector3 newPosition = body.position;
 
-            if (state == State.DASH)
+            if (state.HasFlag(State.DASH))
             {
-                newPosition = body.position + move * Time.deltaTime * dashSpeed;
+                //newPosition = body.position + move * Time.deltaTime * dashSpeed;
+                newPosition += (move + InputFlickVelocityDash) * Time.deltaTime * dashSpeed;
             }
             else
             {
-                newPosition = body.position + move * Time.deltaTime * moveSpeed;
+                newPosition += move * Time.deltaTime * moveSpeed;
             }
 
             body.MovePosition(newPosition);

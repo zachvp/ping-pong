@@ -6,13 +6,12 @@ public class Ball : MonoBehaviour
 {
     public Vector3 initialVelocity;
 
-    public float spinMultiplier = 1;
-    public float dashSpinMultiplier = 1.1f;
+    public float spinMultiplier = 6;
+    public float dashSpinMultiplier = 8;
     public float highVelocitySpinMultiplier = 1.5f;
-    public Vector2 spinDampening = Vector2.one;
+    public Vector2 hitDampening = Vector2.one;
     public float hitMultiplier = 2;
-    public float torqueMultiplier = 5;
-
+    public float angularVelocityMultiplier = 100;
 
     public Rigidbody Body { get { return body; } }
     private Rigidbody body;
@@ -52,7 +51,7 @@ public class Ball : MonoBehaviour
             if (playerCharacter)
             {
                 var playerVelocity = playerCharacter.FrameVelocity;
-                //Debug.Log($"player velocity: {playerVelocity}");
+
 
                 if (playerCharacter.state == PlayerInputMapper.State.HIT)
                 {
@@ -61,8 +60,8 @@ public class Ball : MonoBehaviour
                     newVelocity.z = Mathf.Clamp(newVelocity.z, -hitMultiplier * initialVelocity.z, hitMultiplier * initialVelocity.z);
 
                     var spin = new Vector3(
-                        playerVelocity.x * spinMultiplier * hitMultiplier * spinDampening.x,
-                        playerVelocity.y * spinMultiplier * hitMultiplier * spinDampening.y,
+                        playerVelocity.x * spinMultiplier * hitMultiplier * hitDampening.x,
+                        playerVelocity.y * spinMultiplier * hitMultiplier * hitDampening.y,
                         0);
                     newVelocity -= spin;
                 }
@@ -77,16 +76,14 @@ public class Ball : MonoBehaviour
                     newVelocity.y -= playerVelocity.y * spinMultiplier;
                 }
 
-                if (body.velocity.z > initialVelocity.z)
+                // apply angular velocity
+                if (newVelocity.sqrMagnitude > Mathf.Epsilon)
                 {
-                    newVelocity.x -= playerVelocity.x * highVelocitySpinMultiplier;
-                    newVelocity.y -= playerVelocity.y * highVelocitySpinMultiplier;
-                }
-                
-                if (playerVelocity.sqrMagnitude > Mathf.Epsilon)
-                {
-                    var torque = new Vector3(playerVelocity.y, -playerVelocity.x, 0) * torqueMultiplier;
-                    StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
+                    var resolvedVelocity = newVelocity;
+                    var angularVelocity = new Vector3(resolvedVelocity.y, resolvedVelocity.x, 0) * angularVelocityMultiplier;
+
+                    Debug.Log($"flickVelocity: {playerCharacter.InputFlickVelocity}");
+                    body.angularVelocity = angularVelocity;
                 }
             }
         }

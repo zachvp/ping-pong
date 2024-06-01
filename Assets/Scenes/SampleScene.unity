@@ -5239,10 +5239,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3431919899813415781, guid: 63b0b524aa619f24291e26106d79c033, type: 3}
-      propertyPath: m_Type
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5364453878128352817, guid: 63b0b524aa619f24291e26106d79c033, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5286,10 +5282,6 @@ PrefabInstance:
     - target: {fileID: 6153655977983344003, guid: 63b0b524aa619f24291e26106d79c033, type: 3}
       propertyPath: m_Name
       value: Directional Light
-      objectReference: {fileID: 0}
-    - target: {fileID: 6153655977983344003, guid: 63b0b524aa619f24291e26106d79c033, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5404,10 +5396,6 @@ PrefabInstance:
     - target: {fileID: 2060055902556777814, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4547044939558899942, guid: 48e9c82203739e545a43fad857e4423a, type: 3}
-      propertyPath: dashSpinMultiplier
-      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
