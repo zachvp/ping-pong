@@ -43,7 +43,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.2
+  m_Intensity: 0.6
   m_Range: 5
   m_SpotAngle: 179
   m_InnerSpotAngle: 1
@@ -226,10 +226,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90bf824f16fdbdc45b614b85ff17168f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4.5
-  dashSpeed: 10
+  moveSpeed: 6
+  dashSpeed: 12
   dashTimeLength: 0.1
   hitTimeLength: 0.4
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
   stationaryFlickMultiplier: 2
   state: 0
 --- !u!54 &5972274319968965094

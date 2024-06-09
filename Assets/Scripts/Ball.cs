@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
     public Vector3 initialVelocity;
+    private Vector3 initialPosition;
 
     public float spinMultiplier = 6;
     public float dashSpinMultiplier = 8;
@@ -10,18 +12,29 @@ public class Ball : MonoBehaviour
     public Vector2 hitDampening = Vector2.one;
     public float hitMultiplier = 2;
     public float angularMultiplier = 5;
+    public float centripetalForceMultiplier = 4;
+    public float debugDuration = 2;
 
     public Rigidbody Body { get { return body; } }
     private Rigidbody body;
 
+    private IEnumerator currentCurveCoroutine;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
+        initialPosition = transform.position;
     }
 
     private void Start()
     {
         body.velocity = initialVelocity;
+    }
+
+    private void FixedUpdate()
+    {
+        //Gizmos.DrawWireSphere(body.position, GetComponent<SphereCollider>().radius, );
+        Debug.DrawLine(body.position, body.position + Vector3.forward * 0.15f, Color.blue, debugDuration);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -35,6 +48,11 @@ public class Ball : MonoBehaviour
         // check for a hit at either end
         if (Mathf.Abs(contactNormalDotForward) > 0.9f)
         {
+            if (currentCurveCoroutine != null)
+            {
+                StopCoroutine(currentCurveCoroutine);
+            }
+
             var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
 
             // ball collides with player
@@ -56,12 +74,12 @@ public class Ball : MonoBehaviour
                 }
                 else if (playerCharacter.state.HasFlag(PlayerInputMapper.State.DASH))
                 {
-                    newVelocity.x -= playerVelocity.x * spinMultiplier;
+                    newVelocity.x += playerVelocity.x * spinMultiplier;
                     newVelocity.y -= playerVelocity.y * spinMultiplier;
                 }
                 else
                 {
-                    newVelocity.x -= playerVelocity.x * spinMultiplier;
+                    newVelocity.x += playerVelocity.x * spinMultiplier;
                     newVelocity.y -= playerVelocity.y * spinMultiplier;
 
                     // cap/cushion velocity for collision with neutral player
@@ -75,22 +93,27 @@ public class Ball : MonoBehaviour
                     }
                 }
 
-                // apply spin effect via torque
                 if (playerVelocity.sqrMagnitude > Mathf.Epsilon)
                 {
+                    // apply spin effect via torque
                     var torque = new Vector3(playerVelocity.y, -playerVelocity.x, 0) * angularMultiplier;
                     StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
+
+                    // apply centripetal force for a curved motion
+                    currentCurveCoroutine = CurveCoroutine(newVelocity);
+                    StartCoroutine(currentCurveCoroutine);
                 }
             }
         }
 
         // check for steep upward/downward deflection
-        var steepDeflectValue = 0.65f;
-        var velocityNerf = 0.6f;
+        var steepDeflectValue = 0.75f;
+        var velocityNerf = 0.7f;
         if (Mathf.Abs(contactNormalDotUp) > steepDeflectValue)
         {
             newVelocity.y *= velocityNerf;
             newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
+            Debug.Log("steep deflection");
         }
 
         // check for steep leftward/rightward deflection
@@ -98,8 +121,26 @@ public class Ball : MonoBehaviour
         {
             newVelocity.x *= velocityNerf;
             newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
+            Debug.Log("steep deflection");
         }
 
         body.velocity = newVelocity;
+    }
+
+    private IEnumerator CurveCoroutine(Vector3 spinVelocity)
+    {
+        // at any given frame, the force is directed to the "center" relative to the ball's velocity
+        var centripetalForce = -spinVelocity;
+        centripetalForce.z = 0;
+        var tick = 0;
+        var tickStep = 2;
+        return Task.FixedUpdateContinuous(() =>
+        {
+            tick++;
+            if (tick % tickStep == 0)
+            {
+                body.AddForce(centripetalForce * centripetalForceMultiplier, ForceMode.Acceleration);
+            }
+        });
     }
 }

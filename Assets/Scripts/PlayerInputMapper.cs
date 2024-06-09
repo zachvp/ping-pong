@@ -98,7 +98,7 @@ public class PlayerInputMapper : MonoBehaviour
         {
             newPosition += InputFlickVelocityDash * stationaryFlickMultiplier * Time.deltaTime * dashSpeed;
 
-            Debug.Log($"stationary: {InputFlickVelocityDash} * {stationaryFlickMultiplier} * {Time.deltaTime} * {dashSpeed}");
+            //Debug.Log($"stationary: {InputFlickVelocityDash} * {stationaryFlickMultiplier} * {Time.deltaTime} * {dashSpeed}");
         }
         else
         {

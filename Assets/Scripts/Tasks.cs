@@ -45,6 +45,15 @@ public static class Task
         task(arg0);
     }
 
+    public static IEnumerator FixedUpdateContinuous(Action task)
+    {
+        while (true)
+        {
+            yield return new WaitForFixedUpdate();
+            task();
+        }
+    }
+
     public static IEnumerator Delayed(float delay, Action task)
     {
         yield return new WaitForSeconds(delay);
