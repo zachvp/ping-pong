@@ -91,24 +91,16 @@ public class PlayerInputMapper : MonoBehaviour
     private void FixedUpdate()
     {
         var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
-        //var lastPosition = body.position;
-        //Vector3 newPosition = body.position;
 
         if (state.HasFlag(State.DASH))
         {
-            //newPosition += InputFlickVelocityDash * stationaryFlickMultiplier * Time.deltaTime * dashSpeed;
             body.velocity = InputFlickVelocityDash * moveSpeed * dashMoveSpeedMultiplier;
-
-            //Debug.Log($"stationary: {InputFlickVelocityDash} * {stationaryFlickMultiplier} * {Time.deltaTime} * {dashSpeed}");
         }
         else
         {
-            //newPosition += move * Time.deltaTime * moveSpeed;
             body.velocity = move * moveSpeed;
         }
 
-        //body.MovePosition(newPosition);
-        //Velocity = newPosition - lastPosition;
         Velocity = body.velocity;
     }
 

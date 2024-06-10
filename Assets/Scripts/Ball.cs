@@ -32,7 +32,6 @@ public class Ball : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Gizmos.DrawWireSphere(body.position, GetComponent<SphereCollider>().radius, );
         Debug.DrawLine(body.position, body.position + Vector3.forward * 0.15f, Color.blue, debugDuration);
     }
 
@@ -41,16 +40,11 @@ public class Ball : MonoBehaviour
         var newVelocity = body.velocity;
         var contact = collision.contacts[collision.contacts.Length - 1];
         var contactNormalDotForward = Vector3.Dot(contact.normal, Vector3.forward);
-        var contactNormalDotUp = Vector3.Dot(contact.normal, Vector3.up);
-        var contactNormalDotRight = Vector3.Dot(contact.normal, Vector3.right);
 
         // check for a hit at either end
         if (Mathf.Abs(contactNormalDotForward) > 0.9f)
         {
-            if (currentCurveCoroutine != null)
-            {
-                StopCoroutine(currentCurveCoroutine);
-            }
+            StopNullableCoroutine(currentCurveCoroutine);
 
             var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
 
@@ -104,15 +98,22 @@ public class Ball : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            StopNullableCoroutine(currentCurveCoroutine);
+        }
 
         // check for steep upward/downward deflection
-        var steepDeflectValue = 0.75f;
-        var velocityNerf = 0.7f;
+        var contactNormalDotUp = Vector3.Dot(contact.normal, Vector3.up);
+        var contactNormalDotRight = Vector3.Dot(contact.normal, Vector3.right);
+        var steepDeflectValue = 0.95f;
+        var velocityNerf = 0.6f;
         if (Mathf.Abs(contactNormalDotUp) > steepDeflectValue)
         {
             newVelocity.y *= velocityNerf;
             newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
-            Debug.Log("steep deflection");
+
+            Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
         }
 
         // check for steep leftward/rightward deflection
@@ -120,10 +121,19 @@ public class Ball : MonoBehaviour
         {
             newVelocity.x *= velocityNerf;
             newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
-            Debug.Log("steep deflection");
+
+            Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
         }
 
         body.velocity = newVelocity;
+    }
+
+    private void StopNullableCoroutine(IEnumerator enumerator)
+    {
+        if (enumerator != null)
+        {
+            StopCoroutine(enumerator);
+        }
     }
 
     private IEnumerator CurveCoroutine(Vector3 spinVelocity)
