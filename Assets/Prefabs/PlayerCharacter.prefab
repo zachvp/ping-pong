@@ -226,9 +226,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90bf824f16fdbdc45b614b85ff17168f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 6
-  dashSpeed: 12
-  dashTimeLength: 0.1
+  moveSpeed: 16
+  dashMoveSpeedMultiplier: 2
+  dashTimeLength: 0.2
   hitTimeLength: 0.4
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   stationaryFlickMultiplier: 2
@@ -241,7 +241,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8175901116463179508}
   serializedVersion: 4
-  m_Mass: 8
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}

@@ -8,7 +8,6 @@ public class Ball : MonoBehaviour
 
     public float spinMultiplier = 6;
     public float dashSpinMultiplier = 8;
-    public float highVelocitySpinMultiplier = 1.5f;
     public Vector2 hitDampening = Vector2.one;
     public float hitMultiplier = 2;
     public float angularMultiplier = 5;

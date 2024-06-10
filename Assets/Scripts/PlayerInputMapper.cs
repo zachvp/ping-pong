@@ -6,7 +6,7 @@ public class PlayerInputMapper : MonoBehaviour
 {
     public float moveSpeed = 5;
 
-    public float dashSpeed = 8;
+    public float dashMoveSpeedMultiplier = 1.5f;
     public float dashTimeLength = 0.5f;
 
     public float hitTimeLength = 0.4f;
@@ -91,22 +91,25 @@ public class PlayerInputMapper : MonoBehaviour
     private void FixedUpdate()
     {
         var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
-        var lastPosition = body.position;
-        Vector3 newPosition = body.position;
+        //var lastPosition = body.position;
+        //Vector3 newPosition = body.position;
 
         if (state.HasFlag(State.DASH))
         {
-            newPosition += InputFlickVelocityDash * stationaryFlickMultiplier * Time.deltaTime * dashSpeed;
+            //newPosition += InputFlickVelocityDash * stationaryFlickMultiplier * Time.deltaTime * dashSpeed;
+            body.velocity = InputFlickVelocityDash * moveSpeed * dashMoveSpeedMultiplier;
 
             //Debug.Log($"stationary: {InputFlickVelocityDash} * {stationaryFlickMultiplier} * {Time.deltaTime} * {dashSpeed}");
         }
         else
         {
-            newPosition += move * Time.deltaTime * moveSpeed;
+            //newPosition += move * Time.deltaTime * moveSpeed;
+            body.velocity = move * moveSpeed;
         }
 
-        body.MovePosition(newPosition);
-        Velocity = newPosition - lastPosition;
+        //body.MovePosition(newPosition);
+        //Velocity = newPosition - lastPosition;
+        Velocity = body.velocity;
     }
 
     private void OnCollisionEnter(Collision collision)
