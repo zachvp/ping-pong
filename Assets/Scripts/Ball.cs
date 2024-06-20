@@ -101,28 +101,28 @@ public class Ball : MonoBehaviour
         else
         {
             StopNullableCoroutine(currentCurveCoroutine);
-        }
 
-        // check for steep upward/downward deflection
-        var contactNormalDotUp = Vector3.Dot(contact.normal, Vector3.up);
-        var contactNormalDotRight = Vector3.Dot(contact.normal, Vector3.right);
-        var steepDeflectValue = 0.95f;
-        var velocityNerf = 0.6f;
-        if (Mathf.Abs(contactNormalDotUp) > steepDeflectValue)
-        {
-            newVelocity.y *= velocityNerf;
-            newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
+            // check for steep upward/downward deflection
+            var contactNormalDotUp = Vector3.Dot(contact.normal, Vector3.up);
+            var contactNormalDotRight = Vector3.Dot(contact.normal, Vector3.right);
+            var steepDeflectValue = 0.95f;
+            var velocityNerf = 0.6f;
+            if (Mathf.Abs(contactNormalDotUp) > steepDeflectValue)
+            {
+                newVelocity.y *= velocityNerf;
+                newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
 
-            Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
-        }
+                Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
+            }
 
-        // check for steep leftward/rightward deflection
-        if (Mathf.Abs(contactNormalDotRight) > steepDeflectValue)
-        {
-            newVelocity.x *= velocityNerf;
-            newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
+            // check for steep leftward/rightward deflection
+            if (Mathf.Abs(contactNormalDotRight) > steepDeflectValue)
+            {
+                newVelocity.x *= velocityNerf;
+                newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
 
-            Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
+                Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
+            }
         }
 
         body.velocity = newVelocity;
