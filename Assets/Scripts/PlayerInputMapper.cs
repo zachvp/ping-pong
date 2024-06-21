@@ -41,7 +41,8 @@ public class PlayerInputMapper : MonoBehaviour
         body = GetComponent<Rigidbody>();
         material = GetComponent<MeshRenderer>().material;
 
-        initialColor = material.color;
+        //initialColor = material.color;
+        initialColor = material.GetColor("_FillColor"); // todo: fix hardcoding
     }
 
     private void Update()
