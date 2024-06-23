@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.InputSystem.LowLevel;
 
 public class PlayerInputMapper : MonoBehaviour
 {
@@ -33,8 +35,10 @@ public class PlayerInputMapper : MonoBehaviour
     private Vector3 cursorWorldVelocity;
     private Vector3 cursorWorldPositionPrevious;
     private Vector2 cursorPositionPrevious;
-    private Vector2Int cursorPositionSampled;
+    private Vector2 cursorPositionSampled;
     public float cursorMoveThreshold = 0.1f;
+    public float cursorSmoothing = 2;
+    public float cursorSensitivity = 1;
 
     // todo: dbg
     public DebugValues debugValues;
@@ -84,29 +88,56 @@ public class PlayerInputMapper : MonoBehaviour
         }
 
         var cursor = input.actions["cursor-mouse"].ReadValue<Vector2>();
+        var touch = input.actions["touch-cursor"].ReadValue<TouchState>();
+        if (input.currentControlScheme.Equals("touchscreen"))
+        {
+            cursor = touch.position;
+            Debug.Log($"touchscreen pos: {cursor}");
+        }
 
         debugValues.vector2_0 = cursor;
         if (cursorPositionSampled.sqrMagnitude > cursorMoveThreshold)
         {
+            //cursor += Vector2.SmoothDamp(cursor, cursorPositionPrevious, ref cursorPositionSampled, 1 / cursorSmoothing);
+
             var originalPosition = body.position;
             var newPosition = originalPosition;
             var zeroedPos = new Vector3(cursor.x, cursor.y, -input.camera.transform.position.z);
             newPosition = input.camera.ScreenToWorldPoint(zeroedPos);
             newPosition.z = positionInitial.z;
             cursorWorldPosition = newPosition;
-            cursorWorldVelocity = Vector3.ClampMagnitude((newPosition - originalPosition) / Time.fixedDeltaTime, moveSpeed);
+
+            var deltaPosition = newPosition - originalPosition;
+            if (deltaPosition.sqrMagnitude > 0.5f)
+            {
+                cursorWorldVelocity = (deltaPosition).normalized * moveSpeed;
+            }
+            else
+            {
+                cursorWorldVelocity = Vector3.zero;
+            }
+
+            //cursorWorldVelocity = Vector3.ClampMagnitude((newPosition - originalPosition) / Time.fixedDeltaTime, moveSpeed);
             //cursorWorldVelocity = (newPosition - originalPosition) / Time.fixedDeltaTime;
 
             // todo: no boundaries to where the cursor
 
-
             debugValues.vector3 = newPosition;
         }
+
+        //if (input.currentControlScheme.Equals("touchscreen"))
+        {
+            if (!touch.isInProgress)
+            {
+                cursorWorldVelocity = Vector3.zero;
+            }
+        }
+
         cursorPositionSampled = FromFloat(cursor) - FromFloat(cursorPositionPrevious);
         cursorPositionPrevious = cursor;
 
         //Debug.Log($"FromFloat(cursor) - sampledCursorPosition: {FromFloat(cursor)} - {cursorPositionSampled}");
-        debugValues.vector2Int_0 = cursorPositionSampled;
+        debugValues.vector2_1 = cursorPositionSampled;
         debugValues.flt = cursorPositionSampled.sqrMagnitude;
     }
 

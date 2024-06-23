@@ -8,7 +8,7 @@ public class RandomBS : MonoBehaviour
     {
         if (Keyboard.current.backspaceKey.wasPressedThisFrame)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            Restart();
         }
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -22,5 +22,22 @@ public class RandomBS : MonoBehaviour
                 Time.timeScale = 1;
             }
         }
+    }
+
+    private void OnGUI()
+    {
+        GUILayout.BeginArea(new Rect(10, 700, 150, 200));
+        GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+        buttonStyle.fontSize = 32;
+        if (GUILayout.Button("Restart", buttonStyle, GUILayout.Width(150), GUILayout.Height(200)))
+        {
+            Restart();
+        }
+        GUILayout.EndArea();
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
