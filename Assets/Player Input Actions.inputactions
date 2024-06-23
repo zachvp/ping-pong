@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "cursor-touch",
+                    "name": "touch-cursor",
                     "type": "Value",
                     "id": "db56597b-262d-4269-bc51-bc46a328f7df",
                     "expectedControlType": "Touch",
@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "touch-tilt",
+                    "type": "Value",
+                    "id": "557163b0-4984-4a4c-9f3c-d5c8d7f10f67",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -59,6 +68,17 @@
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "gamepad",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f0d56f8-5aca-4166-997b-06a8b09d9206",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -103,7 +123,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "mobile;touchscreen",
-                    "action": "cursor-touch",
+                    "action": "touch-cursor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -115,6 +135,17 @@
                     "processors": "",
                     "groups": "keyboard+mouse",
                     "action": "cursor-mouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "98b2d33d-46ee-4031-b698-bf74b0f90175",
+                    "path": "<Touchscreen>/{Tilt}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "touchscreen",
+                    "action": "touch-tilt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

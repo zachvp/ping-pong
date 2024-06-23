@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
-using static Unity.VisualScripting.Member;
 
 public class PlayerInputMapper : MonoBehaviour
 {
@@ -31,9 +30,11 @@ public class PlayerInputMapper : MonoBehaviour
     public State state;// { get; private set; }
 
     private Vector3 cursorWorldPosition;
+    private Vector3 cursorWorldVelocity;
+    private Vector3 cursorWorldPositionPrevious;
     private Vector2 cursorPositionPrevious;
     private Vector2Int cursorPositionSampled;
-    public float cursorNeutralThreshold = 0.1f;
+    public float cursorMoveThreshold = 0.1f;
 
     // todo: dbg
     public DebugValues debugValues;
@@ -85,13 +86,20 @@ public class PlayerInputMapper : MonoBehaviour
         var cursor = input.actions["cursor-mouse"].ReadValue<Vector2>();
 
         debugValues.vector2_0 = cursor;
-        if (cursorPositionSampled.sqrMagnitude > Mathf.Epsilon)
+        if (cursorPositionSampled.sqrMagnitude > cursorMoveThreshold)
         {
-            var newPosition = body.position;
+            var originalPosition = body.position;
+            var newPosition = originalPosition;
             var zeroedPos = new Vector3(cursor.x, cursor.y, -input.camera.transform.position.z);
             newPosition = input.camera.ScreenToWorldPoint(zeroedPos);
             newPosition.z = positionInitial.z;
             cursorWorldPosition = newPosition;
+            cursorWorldVelocity = Vector3.ClampMagnitude((newPosition - originalPosition) / Time.fixedDeltaTime, moveSpeed);
+            //cursorWorldVelocity = (newPosition - originalPosition) / Time.fixedDeltaTime;
+
+            // todo: no boundaries to where the cursor
+
+
             debugValues.vector3 = newPosition;
         }
         cursorPositionSampled = FromFloat(cursor) - FromFloat(cursorPositionPrevious);
@@ -122,16 +130,18 @@ public class PlayerInputMapper : MonoBehaviour
             {
                 body.velocity = move * moveSpeed;
             }
-            Velocity = body.velocity;
         }
         else
         {
             Debug.Log("use non-gamepad control scheme");
-            body.position = cursorWorldPosition;
+            //body.MovePosition(cursorWorldPosition);
             //Velocity = ;
-            body.velocity = (body.position - positionPrevious) / Time.fixedDeltaTime;
+
+            if (cursorPositionSampled.sqrMagnitude > cursorMoveThreshold)
+                body.velocity = cursorWorldVelocity;
         }
 
+        Velocity = body.velocity;
         positionPrevious = body.position;
     }
 
