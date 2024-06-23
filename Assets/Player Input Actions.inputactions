@@ -102,29 +102,7 @@
                     "path": "<Touchscreen>/primaryTouch",
                     "interactions": "",
                     "processors": "",
-                    "groups": "mobile",
-                    "action": "cursor-touch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5b9ffdf3-f4b8-48b5-be96-58a6baccedec",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "mobile",
-                    "action": "cursor-touch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6e7ed372-de45-4d20-b77e-921d08842866",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard+mouse",
+                    "groups": "mobile;touchscreen",
                     "action": "cursor-touch",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -156,8 +134,8 @@
             ]
         },
         {
-            "name": "mobile",
-            "bindingGroup": "mobile",
+            "name": "touchscreen",
+            "bindingGroup": "touchscreen",
             "devices": [
                 {
                     "devicePath": "<Touchscreen>",
