@@ -77,3 +77,9 @@ crashlytics-build.properties
 
 # Visual studio
 .vsconfig
+
+# Other Unity
+.utmp/*
+
+# Other
+*.swp

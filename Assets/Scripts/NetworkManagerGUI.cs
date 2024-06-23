@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using System.Transactions;
 
 public class NetworkManagerGUI : MonoBehaviour
 {

@@ -10,5 +10,17 @@ public class RandomBS : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (Time.timeScale > 0)
+            {
+                Time.timeScale = 0;
+
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+        }
     }
 }
