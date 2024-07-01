@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using System;
 using UnityEngine.InputSystem.LowLevel;
 
+// todo: refactor
 public class PlayerInputMapper : MonoBehaviour
 {
     public float moveSpeed = 5;
@@ -37,6 +38,8 @@ public class PlayerInputMapper : MonoBehaviour
     private Vector2 cursorPositionPrevious;
     private Vector2 cursorPositionSampled;
     public float cursorMoveThreshold = 0.1f;
+
+    public TrailRenderer trailRenderer;
 
     // todo: dbg
     public DebugValues debugValues;
@@ -177,13 +180,11 @@ public class PlayerInputMapper : MonoBehaviour
         Debug.Log("DASH");
         state |= State.DASH;
 
-        var newColor = Color.blue;
-        newColor.a = initialColor.a;
-        material.color = newColor;
+        trailRenderer.emitting = true;
 
         StartCoroutine(Task.Delayed(dashTimeLength, () =>
         {
-            material.color = initialColor;
+            trailRenderer.emitting = false;
             state &= ~State.DASH;
             InputFlickVelocity = Vector3.zero;
         }));
