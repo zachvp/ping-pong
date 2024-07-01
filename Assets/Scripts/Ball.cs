@@ -6,12 +6,18 @@ public class Ball : MonoBehaviour
     public Vector3 initialVelocity;
     private Vector3 initialPosition;
 
-    public float spinMultiplier = 6;
+    [Tooltip("Determines player velocity effect on ball curve.")]
+    public float curveMultiplier = 0.5f;
     public float dashSpinMultiplier = 8;
-    public Vector2 hitDampening = Vector2.one;
+
+    [Tooltip("Determines how much spin torque to apply on player hit.")]
+    public float curveSpinAngularMultiplier = 10;
+    [Tooltip("Determines the force the ball will drive to the center of its curve arc.")]
+    public float centripetalForceMultiplier = 2;
+    
     public float hitMultiplier = 2;
-    public float angularMultiplier = 5;
-    public float centripetalForceMultiplier = 4;
+    public Vector2 hitDampening = Vector2.one;
+
     public float debugDuration = 2;
 
     public Rigidbody Body { get { return body; } }
@@ -33,6 +39,21 @@ public class Ball : MonoBehaviour
     private void FixedUpdate()
     {
         Debug.DrawLine(body.position, body.position + Vector3.forward * 0.15f, Color.blue, debugDuration);
+
+        // cap/cushion velocity for collision with neutral player
+        var newVelocity = body.velocity;
+        if (newVelocity.z < initialVelocity.z * hitMultiplier)
+        {
+            if (newVelocity.z > 0)
+            {
+                newVelocity.z = Mathf.Max(initialVelocity.z, newVelocity.z);
+            }
+            else
+            {
+                newVelocity.z = Mathf.Min(-initialVelocity.z, newVelocity.z);
+            }
+            body.velocity = newVelocity;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -49,7 +70,7 @@ public class Ball : MonoBehaviour
             var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
 
             // ball collides with player
-            // apply ball physics effects depending on player state
+            // apply ball curve physics effects depending on player state
             if (playerCharacter)
             {
                 var playerVelocity = playerCharacter.Velocity;
@@ -60,36 +81,26 @@ public class Ball : MonoBehaviour
                     newVelocity.z = Mathf.Clamp(newVelocity.z, -hitMultiplier * initialVelocity.z, hitMultiplier * initialVelocity.z);
 
                     var spin = new Vector3(
-                        playerVelocity.x * spinMultiplier * hitMultiplier * hitDampening.x,
-                        playerVelocity.y * spinMultiplier * hitMultiplier * hitDampening.y,
+                        playerVelocity.x * curveMultiplier * hitDampening.x,
+                        playerVelocity.y * curveMultiplier * hitDampening.y,
                         0);
                     newVelocity -= spin;
                 }
                 else if (playerCharacter.state.HasFlag(PlayerInputMapper.State.DASH))
                 {
-                    newVelocity.x += playerVelocity.x * spinMultiplier;
-                    newVelocity.y -= playerVelocity.y * spinMultiplier;
+                    newVelocity.x += playerVelocity.x * dashSpinMultiplier;
+                    newVelocity.y -= playerVelocity.y * dashSpinMultiplier;
                 }
                 else
                 {
-                    newVelocity.x += playerVelocity.x * spinMultiplier;
-                    newVelocity.y -= playerVelocity.y * spinMultiplier;
-
-                    // cap/cushion velocity for collision with neutral player
-                    if (newVelocity.z > 0)
-                    {
-                        newVelocity.z = Mathf.Max(initialVelocity.z, newVelocity.z);
-                    }
-                    else
-                    {
-                        newVelocity.z = Mathf.Min(-initialVelocity.z, newVelocity.z);
-                    }
+                    newVelocity.x += playerVelocity.x * curveMultiplier;
+                    newVelocity.y -= playerVelocity.y * curveMultiplier;
                 }
 
                 if (playerVelocity.sqrMagnitude > Mathf.Epsilon)
                 {
                     // apply spin effect via torque
-                    var torque = new Vector3(playerVelocity.y, -playerVelocity.x, 0) * angularMultiplier;
+                    var torque = new Vector3(playerVelocity.y, -playerVelocity.x, 0) * curveSpinAngularMultiplier;
                     StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
 
                     // apply centripetal force for a curved motion
@@ -112,7 +123,7 @@ public class Ball : MonoBehaviour
                 newVelocity.y *= velocityNerf;
                 newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
 
-                Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
+                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
             }
 
             // check for steep leftward/rightward deflection
@@ -121,13 +132,14 @@ public class Ball : MonoBehaviour
                 newVelocity.x *= velocityNerf;
                 newVelocity.z = initialVelocity.z * Utils.SignMultiplier(newVelocity.z);
 
-                Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
+                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
             }
         }
 
         body.velocity = newVelocity;
     }
 
+    // todo: move to shared class
     private void StopNullableCoroutine(IEnumerator enumerator)
     {
         if (enumerator != null)
@@ -141,6 +153,7 @@ public class Ball : MonoBehaviour
         // at any given frame, the force is directed to the "center" relative to the ball's velocity
         var centripetalForce = -spinVelocity;
         centripetalForce.z = 0;
+
         var tick = 0;
         var tickStep = 2;
         return Task.FixedUpdateContinuous(() =>

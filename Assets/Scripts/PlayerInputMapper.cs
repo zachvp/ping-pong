@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.InputSystem.LowLevel;
 
 public class PlayerInputMapper : MonoBehaviour
@@ -23,6 +22,7 @@ public class PlayerInputMapper : MonoBehaviour
 
     private Material material;
     private Color initialColor;
+    public string initialColorMaterialPropertyName = "_Color";
     public Color hitColor = Color.red;
 
     public Vector2 InputFlickVelocity { get; private set; }
@@ -37,8 +37,6 @@ public class PlayerInputMapper : MonoBehaviour
     private Vector2 cursorPositionPrevious;
     private Vector2 cursorPositionSampled;
     public float cursorMoveThreshold = 0.1f;
-    public float cursorSmoothing = 2;
-    public float cursorSensitivity = 1;
 
     // todo: dbg
     public DebugValues debugValues;
@@ -57,7 +55,7 @@ public class PlayerInputMapper : MonoBehaviour
         body = GetComponent<Rigidbody>();
         material = GetComponent<MeshRenderer>().material;
 
-        initialColor = material.GetColor("_FillColor"); // todo: fix hardcoding
+        initialColor = material.GetColor(initialColorMaterialPropertyName);
         positionInitial = body.position;
     }
 
@@ -82,7 +80,7 @@ public class PlayerInputMapper : MonoBehaviour
         {
             if (InputFlickVelocity.sqrMagnitude > 0.25f)
             {
-                Dash();
+                Dash(dashTimeLength);
                 InputFlickVelocityDash = InputFlickVelocity;
             }
         }
@@ -125,12 +123,9 @@ public class PlayerInputMapper : MonoBehaviour
             debugValues.vector3 = newPosition;
         }
 
-        //if (input.currentControlScheme.Equals("touchscreen"))
+        if (!touch.isInProgress)
         {
-            if (!touch.isInProgress)
-            {
-                cursorWorldVelocity = Vector3.zero;
-            }
+            cursorWorldVelocity = Vector3.zero;
         }
 
         cursorPositionSampled = FromFloat(cursor) - FromFloat(cursorPositionPrevious);
@@ -155,7 +150,7 @@ public class PlayerInputMapper : MonoBehaviour
         {
             if (state.HasFlag(State.DASH))
             {
-                body.velocity = InputFlickVelocityDash * moveSpeed * dashMoveSpeedMultiplier;
+                body.velocity = InputFlickVelocityDash.normalized * moveSpeed * dashMoveSpeedMultiplier;
             }
             else
             {
@@ -185,7 +180,7 @@ public class PlayerInputMapper : MonoBehaviour
         }
     }
 
-    private void Dash()
+    private void Dash(float dashTimeLength)
     {
         Debug.Log("DASH");
         state |= State.DASH;

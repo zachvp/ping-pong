@@ -126,7 +126,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 0.2}
+  m_LocalScale: {x: 5, y: 5, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3583515943747715361}
@@ -154,7 +154,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 807b060905f90754690e222a54747471, type: 2}
+  - {fileID: 2100000, guid: 46d9eb158efbba247917969ee09a17b1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -226,13 +226,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90bf824f16fdbdc45b614b85ff17168f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 12
-  dashMoveSpeedMultiplier: 2
-  dashTimeLength: 0.2
+  moveSpeed: 10
+  dashMoveSpeedMultiplier: 4
+  dashTimeLength: 0.22
   hitTimeLength: 0.4
+  initialColorMaterialPropertyName: _Color
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   stationaryFlickMultiplier: 2
   state: 0
+  cursorMoveThreshold: 0.1
+  debugValues:
+    vector2_0: {x: 0, y: 0}
+    vector2_1: {x: 0, y: 0}
+    vector2Int_0: {x: 0, y: 0}
+    vector3: {x: 0, y: 0, z: 0}
+    str: 
+    flt: 0
 --- !u!54 &5972274319968965094
 Rigidbody:
   m_ObjectHideFlags: 0
