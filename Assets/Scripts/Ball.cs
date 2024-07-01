@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public Vector3 initialVelocity;
-    private Vector3 initialPosition;
-
     [Tooltip("Determines player velocity effect on ball curve.")]
     public float curveMultiplier = 0.5f;
     public float dashSpinMultiplier = 8;
@@ -18,12 +15,16 @@ public class Ball : MonoBehaviour
     public float hitMultiplier = 2;
     public Vector2 hitDampening = Vector2.one;
 
-    public float debugDuration = 2;
+    public Vector3 initialVelocity;
+    private Vector3 initialPosition;
 
     public Rigidbody Body { get { return body; } }
     private Rigidbody body;
 
     private IEnumerator currentCurveCoroutine;
+
+    // TODO: DBG
+    public float debugDuration = 2;
 
     private void Awake()
     {

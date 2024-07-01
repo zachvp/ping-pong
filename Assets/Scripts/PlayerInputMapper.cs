@@ -115,11 +115,6 @@ public class PlayerInputMapper : MonoBehaviour
                 cursorWorldVelocity = Vector3.zero;
             }
 
-            //cursorWorldVelocity = Vector3.ClampMagnitude((newPosition - originalPosition) / Time.fixedDeltaTime, moveSpeed);
-            //cursorWorldVelocity = (newPosition - originalPosition) / Time.fixedDeltaTime;
-
-            // todo: no boundaries to where the cursor
-
             debugValues.vector3 = newPosition;
         }
 
@@ -136,6 +131,7 @@ public class PlayerInputMapper : MonoBehaviour
         debugValues.flt = cursorPositionSampled.sqrMagnitude;
     }
 
+    // todo: move to shared class
     public Vector2Int FromFloat(Vector2 source)
     {
         return new Vector2Int((int)source.x, (int)source.y);
@@ -159,10 +155,6 @@ public class PlayerInputMapper : MonoBehaviour
         }
         else
         {
-            Debug.Log("use non-gamepad control scheme");
-            //body.MovePosition(cursorWorldPosition);
-            //Velocity = ;
-
             if (cursorPositionSampled.sqrMagnitude > cursorMoveThreshold)
                 body.velocity = cursorWorldVelocity;
         }
