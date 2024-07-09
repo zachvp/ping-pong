@@ -90,6 +90,16 @@ public class PlayerInputMapper : MonoBehaviour
                 InputFlickVelocityDash = InputFlickVelocity;
             }
         }
+        if (inputFlick.sqrMagnitude < Mathf.Epsilon)
+        {
+            StartCoroutine(Task.Delayed(0.2f, () =>
+            {
+                if (inputFlick.sqrMagnitude < Mathf.Epsilon)
+                {
+                    InputFlickVelocity = Vector2.zero;
+                }
+            }));
+        }
 
         var cursor = input.actions["cursor-mouse"].ReadValue<Vector2>();
         var touch = input.actions["touch-cursor"].ReadValue<TouchState>();

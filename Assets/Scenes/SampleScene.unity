@@ -14697,10 +14697,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2220692565
       objectReference: {fileID: 0}
-    - target: {fileID: 7568673611291566319, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
-      propertyPath: hitColor.g
-      value: 0.9225849
-      objectReference: {fileID: 0}
     - target: {fileID: 7680811247988728210, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
       propertyPath: m_Camera
       value: 

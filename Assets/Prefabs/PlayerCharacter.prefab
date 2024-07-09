@@ -230,11 +230,13 @@ MonoBehaviour:
   moveSpeed: 10
   dashMoveSpeedMultiplier: 4
   dashTimeLength: 0.22
+  dashCooldownLength: 1
   hitTimeLength: 0.4
   initialColorMaterialPropertyName: _Color
-  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  hitColor: {r: 1, g: 0.9225849, b: 0, a: 1}
   stationaryFlickMultiplier: 2
   state: 0
+  cooldowns: 0
   cursorMoveThreshold: 0.1
   trailRenderer: {fileID: 8130150000445248280}
   debugValues:
@@ -357,7 +359,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.1
+  m_Time: 0.15
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -414,7 +416,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 4
+  m_MinVertexDistance: 0
   m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 0
