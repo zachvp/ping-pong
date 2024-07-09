@@ -10,6 +10,7 @@ public class PlayerInputMapper : MonoBehaviour
 
     public float dashMoveSpeedMultiplier = 1.5f;
     public float dashTimeLength = 0.5f;
+    public float dashCooldownLength = 1;
 
     public float hitTimeLength = 0.4f;
 
@@ -31,6 +32,7 @@ public class PlayerInputMapper : MonoBehaviour
     public float stationaryFlickMultiplier = 2;
 
     public State state;// { get; private set; }
+    public State cooldowns;
 
     private Vector3 cursorWorldPosition;
     private Vector3 cursorWorldVelocity;
@@ -80,7 +82,7 @@ public class PlayerInputMapper : MonoBehaviour
 
         var inputFlick = input.actions["flick"].ReadValue<Vector2>();
         InputFlickVelocity = inputFlick - InputFlickVelocity;
-        if (!state.HasFlag(State.DASH))
+        if (!state.HasFlag(State.DASH) && !cooldowns.HasFlag(State.DASH))
         {
             if (InputFlickVelocity.sqrMagnitude > 0.25f)
             {
@@ -181,6 +183,7 @@ public class PlayerInputMapper : MonoBehaviour
     {
         Debug.Log("DASH");
         state |= State.DASH;
+        cooldowns |= State.DASH;
 
         trailRenderer.emitting = true;
 
@@ -189,6 +192,11 @@ public class PlayerInputMapper : MonoBehaviour
             trailRenderer.emitting = false;
             state &= ~State.DASH;
             InputFlickVelocity = Vector3.zero;
+        }));
+
+        StartCoroutine(Task.Delayed(dashTimeLength + dashCooldownLength, () =>
+        {
+            cooldowns &= ~State.DASH;
         }));
     }
 
