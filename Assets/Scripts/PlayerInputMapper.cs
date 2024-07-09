@@ -69,7 +69,8 @@ public class PlayerInputMapper : MonoBehaviour
             state |= State.HIT;
 
             hitColor.a = initialColor.a;
-            material.color = hitColor;
+            material.SetColor(initialColorMaterialPropertyName, hitColor);
+            //material.color = hitColor;
             StartCoroutine(Task.Delayed(hitTimeLength, () =>
             {
                 material.color = initialColor;
@@ -175,6 +176,7 @@ public class PlayerInputMapper : MonoBehaviour
         }
     }
 
+    // todo: add a cooldown
     private void Dash(float dashTimeLength)
     {
         Debug.Log("DASH");
