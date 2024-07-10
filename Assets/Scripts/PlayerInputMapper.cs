@@ -198,12 +198,15 @@ public class PlayerInputMapper : MonoBehaviour
 
         var roundedDashDirection = new Vector2(Mathf.Round(InputFlickVelocity.x), Mathf.Round(InputFlickVelocity.y));
         dashDirection.vector3.Set(roundedDashDirection);
-        
+
+        trailRenderer.enabled = true;
         trailRenderer.emitting = true;
 
         StartCoroutine(Task.Delayed(dashTimeLength, () =>
         {
             trailRenderer.emitting = false;
+            trailRenderer.enabled = false;
+
             InputFlickVelocity = Vector3.zero;
             state &= ~State.DASH;
         }));
