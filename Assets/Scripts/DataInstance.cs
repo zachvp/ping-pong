@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class DataInstance : MonoBehaviour
 {
+#if DEBUG
     public string label = "DEFAULT";
-
-    public abstract float Normalized { get; }
+#endif
 }

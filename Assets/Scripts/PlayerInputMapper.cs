@@ -43,7 +43,7 @@ public class PlayerInputMapper : MonoBehaviour
 
     public TrailRenderer trailRenderer;
 
-    public Vector3 dashDirection;
+    public SharedVector3 dashDirection;
 
     // todo: dbg
     public DebugValues debugValues;
@@ -88,8 +88,8 @@ public class PlayerInputMapper : MonoBehaviour
         {
             if (InputFlickVelocity.sqrMagnitude > 0.25f)
             {
-                Dash(dashTimeLength);
                 InputFlickVelocityDash = InputFlickVelocity;
+                Dash(dashTimeLength);
             }
         }
         if (inputFlick.sqrMagnitude < Mathf.Epsilon)
@@ -196,17 +196,21 @@ public class PlayerInputMapper : MonoBehaviour
         state |= State.DASH;
         cooldowns |= State.DASH;
 
+        var roundedDashDirection = new Vector2(Mathf.Round(InputFlickVelocity.x), Mathf.Round(InputFlickVelocity.y));
+        dashDirection.vector3.Set(roundedDashDirection);
+        
         trailRenderer.emitting = true;
 
         StartCoroutine(Task.Delayed(dashTimeLength, () =>
         {
             trailRenderer.emitting = false;
-            state &= ~State.DASH;
             InputFlickVelocity = Vector3.zero;
+            state &= ~State.DASH;
         }));
 
         StartCoroutine(Task.Delayed(dashTimeLength + dashCooldownLength, () =>
         {
+            InputFlickVelocity = Vector3.zero;
             cooldowns &= ~State.DASH;
         }));
     }

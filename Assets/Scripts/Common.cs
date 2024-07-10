@@ -28,3 +28,45 @@ public struct SharedDataWrapper
     [CoreConditional(nameof(dataGlobal), null)]
     public DataInstance dataLocal;
 }
+
+[Serializable]
+public struct VarWatch<T> where T : struct
+{
+    public T Value { get => value; }
+    public T InitialValue { get => initialValue; }
+    public T OldValue { get; private set; }
+
+    [SerializeField]
+    private T value;
+
+    [SerializeField]
+    private T initialValue;
+
+    // Change event that sends (oldValue, newValue)
+    public Action<T, T> onChanged;
+    public Action<T, T> onSet;
+
+    // todo: override '=' operator
+    public void Set(T newValue)
+    {
+        value = newValue;
+
+        onSet?.Invoke(OldValue, newValue);
+
+        if (!OldValue.Equals(newValue))
+        {
+            onChanged?.Invoke(OldValue, newValue);
+            OldValue = value;
+        }
+    }
+
+    public void Reset()
+    {
+        value = initialValue;
+    }
+
+    public override string ToString()
+    {
+        return value.ToString();
+    }
+}

@@ -2,15 +2,17 @@ using UnityEngine;
 
 public class OffsetTransform : MonoBehaviour
 {
+    public Transform source;
     public Vector3 offset;
-    public Vector3 Direction;
-
-    private Vector3 initialPosition;
+    public SharedVector3 direction;
 
     public void Awake()
     {
-        initialPosition = transform.position;
-        
-        transform.position = initialPosition + Vector3.Scale(offset, Direction);
+        direction.vector3.onChanged += (oldValue, newValue) =>
+        {
+            var resolvedOffset = offset;
+
+            transform.position = source.position + Vector3.Scale(offset, newValue);
+        };
     }
 }
