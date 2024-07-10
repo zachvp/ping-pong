@@ -64,6 +64,8 @@ public class PlayerInputMapper : MonoBehaviour
 
         initialColor = material.GetColor(initialColorMaterialPropertyName);
         positionInitial = body.position;
+
+        dashDirection.Reset();
     }
 
     private void Update()
