@@ -50,13 +50,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ba6a3eba0eb0146ac86588e2e1f1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialVelocity: {x: 0, y: 0, z: -8}
   curveMultiplier: 0.55
   dashSpinMultiplier: 0.2
   curveSpinAngularMultiplier: 16
-  centripetalForceMultiplier: 1.32
+  centripetalForceMultiplier: 1.2
   hitMultiplier: 2.5
   hitDampening: {x: 1, y: 1}
+  initialVelocity: {x: 0, y: 0, z: -8}
   debugDuration: 0.4
 --- !u!33 &2479387154023948608
 MeshFilter:
