@@ -112,7 +112,7 @@ public class Ball : MonoBehaviour
                 }
 
                 // check for a hit in the player state buffer to forgive slightly late timing
-                StartCoroutine(Task.Continuous(Constants.FRAME_TIME * hitLateBufferFrames, () =>
+                StartCoroutine(Task.Continuous(hitLateBufferFrames, () =>
                 {
                     var hitSpeed = Mathf.Abs(hitMultiplier * initialVelocity.z);
                     if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.HIT) &&
