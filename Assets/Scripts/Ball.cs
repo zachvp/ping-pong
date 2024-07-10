@@ -108,6 +108,22 @@ public class Ball : MonoBehaviour
                     currentCurveCoroutine = CurveCoroutine(newVelocity);
                     StartCoroutine(currentCurveCoroutine);
                 }
+
+                // check for delayed hit
+                StartCoroutine(Task.Delayed(playerCharacter.hitTimeLength - Constants.FRAME_TIME * 2, () =>
+                {
+                    if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.HIT))
+                    {
+                        newVelocity.z *= hitMultiplier;
+                        newVelocity.z = Mathf.Clamp(newVelocity.z, -hitMultiplier * initialVelocity.z, hitMultiplier * initialVelocity.z);
+
+                        var spin = new Vector3(
+                            playerVelocity.x * curveMultiplier * hitDampening.x,
+                            playerVelocity.y * curveMultiplier * hitDampening.y,
+                            0);
+                        newVelocity -= spin;
+                    }
+                }));
             }
         }
         else

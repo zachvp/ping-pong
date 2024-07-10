@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
 using UnityEngine.InputSystem.LowLevel;
+using System.Collections;
 
 // todo: refactor - too many lines
 public class PlayerInputMapper : MonoBehaviour
@@ -33,6 +34,8 @@ public class PlayerInputMapper : MonoBehaviour
 
     public State state;// { get; private set; }
     public State cooldowns;
+    public State buffer;
+    public IEnumerator bufferRoutine;
 
     private Vector3 cursorWorldPosition;
     private Vector3 cursorWorldVelocity;
@@ -73,6 +76,7 @@ public class PlayerInputMapper : MonoBehaviour
         if (!state.HasFlag(State.HIT) && input.actions["hit"].WasPressedThisFrame())
         {
             state |= State.HIT;
+            BufferState(state);
 
             hitColor.a = initialColor.a;
             material.SetColor(initialColorMaterialPropertyName, hitColor);
@@ -197,6 +201,7 @@ public class PlayerInputMapper : MonoBehaviour
         Debug.Log("DASH");
         state |= State.DASH;
         cooldowns |= State.DASH;
+        BufferState(state);
 
         var roundedDashDirection = new Vector2(Mathf.Round(InputFlickVelocity.x), Mathf.Round(InputFlickVelocity.y));
         dashDirection.vector3.Set(roundedDashDirection);
@@ -220,19 +225,29 @@ public class PlayerInputMapper : MonoBehaviour
         }));
     }
 
-    // todo: move to shared file
-    [Serializable]
-    public struct DebugValues
+    // todo: use and test this
+    private State UpdateState(State current, State updated)
     {
-        public Vector2 vector2_0;
-        public Vector2 vector2_1;
+        var resolved = current | updated;
+        cooldowns |= updated;
+        BufferState(resolved);
 
-        public Vector2Int vector2Int_0;
+        return resolved;
+    }
 
-        public Vector3 vector3;
+    private void BufferState(State s)
+    {
+        buffer |= s;
 
-        public string str;
+        if (bufferRoutine != null)
+        {
+            StopCoroutine(bufferRoutine);
+        }
 
-        public float flt;
+        bufferRoutine = Task.Delayed(hitTimeLength * 2, () =>
+        {
+            buffer &= ~s;
+        });
+        StartCoroutine(bufferRoutine);
     }
 }

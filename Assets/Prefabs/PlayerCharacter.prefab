@@ -391,6 +391,7 @@ MonoBehaviour:
   stationaryFlickMultiplier: 2
   state: 0
   cooldowns: 0
+  buffer: 0
   cursorMoveThreshold: 0.1
   trailRenderer: {fileID: 991550719359484964}
   dashDirection: {fileID: 11400000, guid: f5c36b4c929677d47b2c0ba8ce8fd3ea, type: 2}

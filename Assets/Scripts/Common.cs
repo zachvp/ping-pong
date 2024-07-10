@@ -1,6 +1,21 @@
 using System;
 using UnityEngine;
 
+[Serializable]
+public struct DebugValues
+{
+    public Vector2 vector2_0;
+    public Vector2 vector2_1;
+
+    public Vector2Int vector2Int_0;
+
+    public Vector3 vector3;
+
+    public string str;
+
+    public float flt;
+}
+
 [AttributeUsage(AttributeTargets.Field)]
 public class CoreConditionalAttribute : PropertyAttribute
 {
@@ -71,4 +86,9 @@ public struct VarWatch<T> where T : struct
     {
         return value.ToString();
     }
+}
+
+public static class Constants
+{
+    public const float FRAME_TIME = 1 / 60;
 }
