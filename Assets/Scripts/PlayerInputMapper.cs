@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using System;
 using UnityEngine.InputSystem.LowLevel;
 
-// todo: refactor
+// todo: refactor - too many lines
 public class PlayerInputMapper : MonoBehaviour
 {
     public float moveSpeed = 5;
@@ -42,6 +42,8 @@ public class PlayerInputMapper : MonoBehaviour
     public float cursorMoveThreshold = 0.1f;
 
     public TrailRenderer trailRenderer;
+
+    public Vector3 dashDirection;
 
     // todo: dbg
     public DebugValues debugValues;
@@ -188,7 +190,6 @@ public class PlayerInputMapper : MonoBehaviour
         }
     }
 
-    // todo: add a cooldown
     private void Dash(float dashTimeLength)
     {
         Debug.Log("DASH");
