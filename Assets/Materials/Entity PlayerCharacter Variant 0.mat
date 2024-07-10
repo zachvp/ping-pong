@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: custom default 0 Variant 0
+  m_Name: Entity PlayerCharacter Variant 0
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 2100000, guid: 46d9eb158efbba247917969ee09a17b1, type: 2}
   m_ModifiedSerializedProperties: 0
@@ -28,6 +28,6 @@ Material:
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0.015267372, a: 0.77254903}
+    - _Color: {r: 1, g: 0.070605986, b: 0, a: 0.13333334}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
