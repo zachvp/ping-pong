@@ -13,16 +13,18 @@ Shader "Custom/HullOutline"
         Pass
         {
             Name "Hull Fill"
-            Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+            Tags { "Queue"="Transparent" "RenderType"="Transparent" } // todo: move these to SubShader block
 
             Blend SrcAlpha OneMinusSrcAlpha
 
+            // definitions
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
 
+            // structs
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -31,8 +33,8 @@ Shader "Custom/HullOutline"
 
             struct v2f
             {
-                float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
             };
 
             // input properties
