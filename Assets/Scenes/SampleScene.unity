@@ -11393,7 +11393,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1693019585
 Transform:
   m_ObjectHideFlags: 0
@@ -14819,10 +14819,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 636151246}
     m_Modifications:
+    - target: {fileID: 57322770230496971, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 95831ae20c1810040a000326c52bed15, type: 2}
+    - target: {fileID: 233780644131611180, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -15.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1647533295906581850, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 95831ae20c1810040a000326c52bed15, type: 2}
+    - target: {fileID: 2774803488578017129, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5209225686480382414, guid: 65359d019c9418449ac007b87e92058c, type: 3}
       propertyPath: m_Name
       value: arena - box
       objectReference: {fileID: 0}
+    - target: {fileID: 6806932080605901884, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 595f3a6d99e17e245a6ed71c5caafc4a, type: 2}
+    - target: {fileID: 6928084462820432325, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 595f3a6d99e17e245a6ed71c5caafc4a, type: 2}
+    - target: {fileID: 6999055816026151836, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439429154176566585, guid: 65359d019c9418449ac007b87e92058c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 95831ae20c1810040a000326c52bed15, type: 2}
     - target: {fileID: 8698947871459522030, guid: 65359d019c9418449ac007b87e92058c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
