@@ -118,7 +118,6 @@ public class Ball : MonoBehaviour
                     if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.HIT) &&
                         Mathf.Abs(body.velocity.z) < hitSpeed)
                     {
-                        Debug.Log($"apply hit in collision buffer");
                         newVelocity.z *= hitMultiplier;
                         newVelocity.z = Mathf.Clamp(newVelocity.z, -hitSpeed, hitSpeed);
 

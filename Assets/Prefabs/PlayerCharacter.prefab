@@ -152,7 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 8248426018585878287}
-  offset: {x: -2.4, y: -2.4, z: 0}
+  sourceCollider: {fileID: 6773017468204297096}
+  offset: {x: 0, y: 0, z: 0}
   direction: {fileID: 11400000, guid: f5c36b4c929677d47b2c0ba8ce8fd3ea, type: 2}
 --- !u!1 &3982366352217583681
 GameObject:
