@@ -6,4 +6,6 @@ using UnityEngine;
 public class SharedVector3 : DataAsset
 {
     public VarWatch<Vector3> vector3;
+
+    // todo: reset on scene load
 }

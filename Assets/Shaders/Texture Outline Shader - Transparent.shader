@@ -7,7 +7,7 @@ Shader "Custom/Texture Outline Shader - Transparent"
     }
     SubShader
     {
-        Tags { "Queue"="Transparent" "RenderType"="Transparent" } // todo: move these to SubShader block
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
         Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
@@ -53,7 +53,12 @@ Shader "Custom/Texture Outline Shader - Transparent"
             {
                 // sample the texture
                 fixed4 sample = tex2D(_MainTex, i.uv);
-                return sample * _Color;
+
+                // only apply the configured transparency to the fill
+                // assumes black-colored outline
+                fixed4 result = sample * _Color;
+                result.a = lerp(1, _Color.a, sample.r);
+                return result;
             }
             ENDCG
         }

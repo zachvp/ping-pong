@@ -63,6 +63,8 @@ public struct VarWatch<T> where T : struct
     public void Reset()
     {
         value = initialValue;
+        onChanged = null;
+        onSet = null;
     }
 
     public override string ToString()
