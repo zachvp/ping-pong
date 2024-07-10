@@ -383,8 +383,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   dashMoveSpeedMultiplier: 4
-  dashTimeLength: 0.22
-  dashCooldownLength: 1
+  dashTimeLength: 0.16
+  dashCooldownLength: 0.5
   hitTimeLength: 0.4
   initialColorMaterialPropertyName: _Color
   hitColor: {r: 1, g: 0.9225849, b: 0, a: 1}
