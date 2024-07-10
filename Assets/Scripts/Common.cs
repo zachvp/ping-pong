@@ -90,5 +90,5 @@ public struct VarWatch<T> where T : struct
 
 public static class Constants
 {
-    public const float FRAME_TIME = 1 / 60;
+    public const float FRAME_TIME = 1f / 60f;
 }

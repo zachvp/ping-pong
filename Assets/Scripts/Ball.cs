@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -14,6 +15,7 @@ public class Ball : MonoBehaviour
     
     public float hitMultiplier = 2;
     public Vector2 hitDampening = Vector2.one;
+    public int hitLateBufferFrames = 10;
 
     public Vector3 initialVelocity;
     private Vector3 initialPosition;
@@ -109,19 +111,24 @@ public class Ball : MonoBehaviour
                     StartCoroutine(currentCurveCoroutine);
                 }
 
-                // check for delayed hit
-                StartCoroutine(Task.Delayed(playerCharacter.hitTimeLength - Constants.FRAME_TIME * 2, () =>
+                // check for a hit in the player state buffer to forgive slightly late timing
+                StartCoroutine(Task.Continuous(Constants.FRAME_TIME * hitLateBufferFrames, () =>
                 {
-                    if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.HIT))
+                    var hitSpeed = Mathf.Abs(hitMultiplier * initialVelocity.z);
+                    if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.HIT) &&
+                        Mathf.Abs(body.velocity.z) < hitSpeed)
                     {
+                        Debug.Log($"apply hit in collision buffer");
                         newVelocity.z *= hitMultiplier;
-                        newVelocity.z = Mathf.Clamp(newVelocity.z, -hitMultiplier * initialVelocity.z, hitMultiplier * initialVelocity.z);
+                        newVelocity.z = Mathf.Clamp(newVelocity.z, -hitSpeed, hitSpeed);
 
                         var spin = new Vector3(
                             playerVelocity.x * curveMultiplier * hitDampening.x,
                             playerVelocity.y * curveMultiplier * hitDampening.y,
                             0);
                         newVelocity -= spin;
+
+                        body.velocity = newVelocity;
                     }
                 }));
             }

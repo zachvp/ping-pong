@@ -13,11 +13,22 @@ public static class Task
         }
     }
 
-    public static IEnumerator Continuous(Action task, Func<bool> isActive)
+    public static IEnumerator Continuous(Func<bool> isActive, Action task)
     {
         while (isActive())
         {
             task();
+            yield return null;
+        }
+    }
+
+    public static IEnumerator Continuous(float duration, Action task)
+    {
+        var time = 0f;
+        while (time < duration)
+        {
+            task();
+            time += Time.deltaTime;
             yield return null;
         }
     }

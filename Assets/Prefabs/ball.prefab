@@ -56,6 +56,7 @@ MonoBehaviour:
   centripetalForceMultiplier: 1.2
   hitMultiplier: 2.5
   hitDampening: {x: 1, y: 1}
+  hitLateBufferFrames: 6
   initialVelocity: {x: 0, y: 0, z: -8}
   debugDuration: 0.4
 --- !u!33 &2479387154023948608
