@@ -10,10 +10,11 @@ public class PlayerInputMapper : MonoBehaviour
     public float moveSpeed = 5;
 
     public float dashMoveSpeedMultiplier = 1.5f;
-    public float dashTimeLength = 0.5f;
-    public float dashCooldownLength = 1;
+    public int dashMoveFrames = 10; // 0.16 sec
+    public int dashCooldownFrames = 18; // .3 sec
 
-    public float hitTimeLength = 0.4f;
+    public int hitDurationFrames = 24; // .4
+    public int hitStateBufferFrames = 12;
 
     private PlayerInput input;
 
@@ -81,7 +82,7 @@ public class PlayerInputMapper : MonoBehaviour
             hitColor.a = initialColor.a;
             material.SetColor(initialColorMaterialPropertyName, hitColor);
             //material.color = hitColor;
-            StartCoroutine(Task.Delayed(hitTimeLength, () =>
+            StartCoroutine(Task.Delayed(hitDurationFrames, () =>
             {
                 material.color = initialColor;
                 state &= ~State.HIT;
@@ -95,7 +96,7 @@ public class PlayerInputMapper : MonoBehaviour
             if (InputFlickVelocity.sqrMagnitude > 0.25f)
             {
                 InputFlickVelocityDash = InputFlickVelocity;
-                Dash(dashTimeLength);
+                Dash(dashMoveFrames);
             }
         }
         if (inputFlick.sqrMagnitude < Mathf.Epsilon)
@@ -196,7 +197,7 @@ public class PlayerInputMapper : MonoBehaviour
         }
     }
 
-    private void Dash(float dashTimeLength)
+    private void Dash(int dashFrameLength)
     {
         Debug.Log("DASH");
         state |= State.DASH;
@@ -209,7 +210,7 @@ public class PlayerInputMapper : MonoBehaviour
         trailRenderer.enabled = true;
         trailRenderer.emitting = true;
 
-        StartCoroutine(Task.Delayed(dashTimeLength, () =>
+        StartCoroutine(Task.Delayed(dashFrameLength * Constants.FRAME_TIME, () =>
         {
             trailRenderer.emitting = false;
             trailRenderer.enabled = false;
@@ -218,7 +219,7 @@ public class PlayerInputMapper : MonoBehaviour
             state &= ~State.DASH;
         }));
 
-        StartCoroutine(Task.Delayed(dashTimeLength + dashCooldownLength, () =>
+        StartCoroutine(Task.Delayed(dashFrameLength + dashCooldownFrames, () =>
         {
             InputFlickVelocity = Vector3.zero;
             cooldowns &= ~State.DASH;
@@ -244,7 +245,7 @@ public class PlayerInputMapper : MonoBehaviour
             StopCoroutine(bufferRoutine);
         }
 
-        bufferRoutine = Task.Delayed(hitTimeLength * 2, () =>
+        bufferRoutine = Task.Delayed(hitStateBufferFrames, () =>
         {
             buffer &= ~s;
         });

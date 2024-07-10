@@ -33,6 +33,11 @@ public static class Task
         }
     }
 
+    public static IEnumerator Continuous(int durationFrames, Action task)
+    {
+        return Continuous(durationFrames * Constants.FRAME_TIME, task);
+    }
+
     public static IEnumerator Repeat(float interval, Action task)
     {
         while (true)
@@ -41,6 +46,11 @@ public static class Task
             task();
             yield return null;
         }
+    }
+
+    public static IEnumerator Repeat(int intervalFrames, Action task)
+    {
+        return Repeat(intervalFrames * Constants.FRAME_TIME, task);
     }
 
     public static IEnumerator FixedUpdate(Action task)
@@ -70,16 +80,31 @@ public static class Task
         task();
     }
 
+    public static IEnumerator Delayed(int delayFrames, Action task)
+    {
+        return Delayed(delayFrames * Constants.FRAME_TIME, task);
+    }
+
     public static IEnumerator Delayed<T>(float delay, T arg0, Action<T> task)
     {
         yield return new WaitForSeconds(delay);
         task(arg0);
     }
 
+    public static IEnumerator Delayed<T>(int delayFrames, T arg0, Action<T> task)
+    {
+        return Delayed(delayFrames * Constants.FRAME_TIME, arg0, task);
+    }
+
     public static IEnumerator Delayed<T, U>(float delay, T arg0, U arg1, Action<T, U> task)
     {
         yield return new WaitForSeconds(delay);
         task(arg0, arg1);
+    }
+
+    public static IEnumerator Delayed<T, U>(int delayFrames, T arg0, U arg1, Action<T, U> task)
+    {
+        return Delayed(delayFrames * Constants.FRAME_TIME, arg0, arg1, task);
     }
 }
 

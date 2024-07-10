@@ -383,9 +383,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   dashMoveSpeedMultiplier: 4
-  dashTimeLength: 0.16
-  dashCooldownLength: 0.3
-  hitTimeLength: 0.4
+  dashMoveFrames: 10
+  dashCooldownFrames: 18
+  hitDurationFrames: 12
+  hitStateBufferFrames: 12
   initialColorMaterialPropertyName: _Color
   hitColor: {r: 1, g: 0.9225849, b: 0, a: 1}
   stationaryFlickMultiplier: 2
