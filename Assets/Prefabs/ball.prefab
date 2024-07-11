@@ -51,7 +51,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curveMultiplier: 0.55
-  dashSpinMultiplier: 0.2
+  dashSpinMultiplier: 0.05
+  isDashBufferApplied: 0
   curveSpinAngularMultiplier: 16
   centripetalForceMultiplier: 1.2
   hitMultiplier: 2.5

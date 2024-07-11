@@ -239,12 +239,8 @@ public class PlayerInputMapper : MonoBehaviour
     private void BufferState(State s)
     {
         buffer |= s;
-
-        if (bufferRoutine != null)
-        {
-            StopCoroutine(bufferRoutine);
-        }
-
+        
+        Common.StopNullableCoroutine(this, bufferRoutine);
         bufferRoutine = Task.Delayed(hitStateBufferFrames, () =>
         {
             buffer &= ~s;

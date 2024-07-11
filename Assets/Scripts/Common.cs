@@ -1,5 +1,17 @@
 using System;
+using System.Collections;
 using UnityEngine;
+
+public static class Common
+{
+    public static void StopNullableCoroutine(MonoBehaviour behavior, IEnumerator enumerator)
+    {
+        if (enumerator != null)
+        {
+            behavior.StopCoroutine(enumerator);
+        }
+    }
+}
 
 [Serializable]
 public struct DebugValues
@@ -92,3 +104,5 @@ public static class Constants
 {
     public const float FRAME_TIME = 1f / 60f;
 }
+
+

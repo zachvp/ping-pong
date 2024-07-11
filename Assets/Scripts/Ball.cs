@@ -1,12 +1,12 @@
 using System.Collections;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
     [Tooltip("Determines player velocity effect on ball curve.")]
     public float curveMultiplier = 0.5f;
-    public float dashSpinMultiplier = 8;
+    public float dashSpinMultiplier = 8; // todo: rename: playerDashVelocityMultiplier
+    public bool isDashBufferApplied;
 
     [Tooltip("Determines how much spin torque to apply on player hit.")]
     public float curveSpinAngularMultiplier = 10;
@@ -68,7 +68,7 @@ public class Ball : MonoBehaviour
         // check for a hit at either end
         if (Mathf.Abs(contactNormalDotForward) > 0.9f)
         {
-            StopNullableCoroutine(currentCurveCoroutine);
+            Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
             var playerCharacter = collision.gameObject.GetComponent<PlayerInputMapper>();
 
@@ -103,15 +103,25 @@ public class Ball : MonoBehaviour
                 if (playerVelocity.sqrMagnitude > Mathf.Epsilon)
                 {
                     // apply spin effect via torque
+
                     var torque = new Vector3(playerVelocity.y, -playerVelocity.x, 0) * curveSpinAngularMultiplier;
+                    var curveTickStep = 2;
+
+                    if (playerCharacter.state.HasFlag(PlayerInputMapper.State.DASH))
+                    {
+                        torque *= 2;
+                        curveTickStep = 1;
+                    }
+
                     StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
 
                     // apply centripetal force for a curved motion
-                    currentCurveCoroutine = CurveCoroutine(newVelocity);
+                    currentCurveCoroutine = CurveCoroutine(newVelocity, curveTickStep);
                     StartCoroutine(currentCurveCoroutine);
                 }
 
                 // check for a hit in the player state buffer to forgive slightly late timing
+                // todo: reduce dupe implementation
                 StartCoroutine(Task.Continuous(hitLateBufferFrames, () =>
                 {
                     var hitSpeed = Mathf.Abs(hitMultiplier * initialVelocity.z);
@@ -130,11 +140,42 @@ public class Ball : MonoBehaviour
                         body.velocity = newVelocity;
                     }
                 }));
+
+                // todo: implement buffer for dash
+                // todo: reduce dupe implementation
+                StartCoroutine(Task.Continuous(hitLateBufferFrames, () =>
+                {
+                    if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.DASH) && !isDashBufferApplied)
+                    {
+                        Debug.Log($"apply dash buffer");
+                        isDashBufferApplied = true;
+
+                        newVelocity.x += playerVelocity.x * dashSpinMultiplier;
+                        newVelocity.y -= playerVelocity.y * dashSpinMultiplier;
+
+                        var torque = new Vector3(playerVelocity.y, -playerVelocity.x, 0) * curveSpinAngularMultiplier;
+                        var curveTickStep = 2;
+
+                        if (playerCharacter.state.HasFlag(PlayerInputMapper.State.DASH))
+                        {
+                            torque *= 2;
+                            curveTickStep = 1;
+                        }
+
+                        StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
+
+                        // apply centripetal force for a curved motion
+                        currentCurveCoroutine = CurveCoroutine(newVelocity, curveTickStep);
+                        StartCoroutine(currentCurveCoroutine);
+
+                        body.velocity = newVelocity;
+                    }
+                }));
             }
         }
         else
         {
-            StopNullableCoroutine(currentCurveCoroutine);
+            Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
             // check for steep upward/downward deflection
             var contactNormalDotUp = Vector3.Dot(contact.normal, Vector3.up);
@@ -162,23 +203,13 @@ public class Ball : MonoBehaviour
         body.velocity = newVelocity;
     }
 
-    // todo: move to shared class
-    private void StopNullableCoroutine(IEnumerator enumerator)
-    {
-        if (enumerator != null)
-        {
-            StopCoroutine(enumerator);
-        }
-    }
-
-    private IEnumerator CurveCoroutine(Vector3 spinVelocity)
+    private IEnumerator CurveCoroutine(Vector3 spinVelocity, int tickStep)
     {
         // at any given frame, the force is directed to the "center" relative to the ball's velocity
         var centripetalForce = -spinVelocity;
         centripetalForce.z = 0;
 
         var tick = 0;
-        var tickStep = 2;
         return Task.FixedUpdateContinuous(() =>
         {
             tick++;
