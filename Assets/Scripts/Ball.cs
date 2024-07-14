@@ -4,9 +4,13 @@ using System;
 
 public class Ball : MonoBehaviour
 {
-    [Tooltip("Determines player velocity effect on ball curve.")]
-    public float curveMultiplier = 0.5f;
-    public float dashSpinMultiplier = 8; // todo: rename: playerDashVelocityMultiplier
+    public Vector3 defaultSpinSpeed = new Vector2(10, 10);
+    public Vector3 bigSpinSpeed = new Vector2(15, 15);
+
+    public Vector3 defaultCurveSpeed = new Vector2(10, 10);
+    public Vector3 bigCurveSpeed = new Vector2(15, 15);
+
+    public int curveLateBufferFrames = 12;
 
     [Tooltip("Determines how much spin torque to apply on player hit.")]
     public float curveSpinAngularMultiplier = 10;
@@ -22,6 +26,7 @@ public class Ball : MonoBehaviour
 
     public Vector3 initialVelocity;
     private Vector3 initialPosition;
+    public Vector3 minSpeeds;
 
     public Rigidbody Body { get { return body; } }
     private Rigidbody body;
@@ -52,6 +57,8 @@ public class Ball : MonoBehaviour
 
     private void Update()
     {
+        debugValues.str = state.ToString();
+
         if (state.HasFlag(State.HIT) && !cooldown.HasFlag(State.HIT))
         {
             //Debug.Log($"handle hit for state: {state}");
@@ -60,32 +67,38 @@ public class Ball : MonoBehaviour
 
             var newVelocity = body.velocity;
             var maxSpeedZ = hitMultiplier * Mathf.Abs(initialVelocity.z) * hitStackCount;
+            var resolvedCurveSpeed = Common.SignMultiply(defaultCurveSpeed, playerVelocity);
 
             newVelocity.z *= hitMultiplier;
             newVelocity.z = Mathf.Clamp(newVelocity.z, -maxSpeedZ, maxSpeedZ);
 
-            var spin = new Vector3(
-                playerVelocity.x * curveMultiplier * hitDampening.x,
-                playerVelocity.y * curveMultiplier * hitDampening.y,
-                0);
-            newVelocity -= spin;
-            
-            ApplySpinCurve(newVelocity);
+            //var spin = new Vector3(
+            //    playerVelocity.x * curveMultiplier * hitDampening.x,
+            //    playerVelocity.y * curveMultiplier * hitDampening.y,
+            //    0);
+            newVelocity += Vector3.Scale(Common.Round(playerVelocity.normalized), defaultSpinSpeed);
+            newVelocity.x = Mathf.Clamp(newVelocity.x, -defaultSpinSpeed.x * 1.5f, defaultSpinSpeed.x * 1.5f);
+            newVelocity.y = Mathf.Clamp(newVelocity.y, -defaultSpinSpeed.y * 1.5f, defaultSpinSpeed.y * 1.5f);
+
+            ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
             StartCoroutine(Task.FixedUpdate(() => body.velocity = newVelocity));
             StartCoroutine(Task.Delayed(hitCooldownFrames, () => cooldown &= ~State.HIT));
         }
 
         if (state.HasFlag(State.SPIN) && !cooldown.HasFlag(State.SPIN))
-        //if (!(state & cooldown).HasFlag(State.SPIN)) // todo: test efficient check
         {
             state &= ~State.SPIN;
             cooldown |= State.SPIN;
 
-            var newVelocity = body.velocity;
-            newVelocity.x += playerVelocity.x * dashSpinMultiplier;
-            newVelocity.y -= playerVelocity.y * dashSpinMultiplier;
+            var newVelocity = body.velocity + Vector3.Scale(Common.Round(playerVelocity.normalized), bigSpinSpeed);
+            newVelocity.x = Mathf.Clamp(newVelocity.x, -bigSpinSpeed.x * 1.5f, bigSpinSpeed.x * 1.5f);
+            newVelocity.y = Mathf.Clamp(newVelocity.y, -bigSpinSpeed.y * 1.5f, bigSpinSpeed.y * 1.5f);
+            newVelocity.z = body.velocity.z;
 
-            ApplySpinCurve(newVelocity);
+            var resolvedCurveSpeed = Common.SignMultiply(bigCurveSpeed, playerVelocity); // todo: move to ApplySpinCurve()
+            resolvedCurveSpeed.z = 0;
+
+            ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
             StartCoroutine(Task.FixedUpdate(() => body.velocity = newVelocity));
             StartCoroutine(Task.Delayed(hitCooldownFrames, () => cooldown &= ~State.SPIN));
         }
@@ -95,13 +108,15 @@ public class Ball : MonoBehaviour
     {
         Debug.DrawLine(body.position, body.position + Vector3.forward * 0.15f, Color.blue, debugDuration);
 
-        //// cap/cushion velocity for collision with neutral player
-        //var maxSpeedZ =  Mathf.Abs(initialVelocity.z * hitMultiplier);
-        //var newVelocity = body.velocity;
-        //newVelocity.z = Mathf.Clamp(body.velocity.z, -maxSpeedZ, maxSpeedZ);
-        //body.velocity = newVelocity;
-
         debugValues.flt = Mathf.Max(debugValues.flt, body.velocity.z);
+
+        // enforce min speed
+        if (Mathf.Abs(body.velocity.z) < minSpeeds.z)
+        {
+            var newVelocity = body.velocity;
+            newVelocity.z = Common.SignMultiply(body.velocity.z) * minSpeeds.z;
+            body.velocity = newVelocity;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -135,9 +150,12 @@ public class Ball : MonoBehaviour
                 }
                 else
                 {
-                    newVelocity.x += playerVelocity.x * curveMultiplier;
-                    newVelocity.y -= playerVelocity.y * curveMultiplier;
-                    ApplySpinCurve(newVelocity);
+                    var resolvedCurveSpeed = Common.SignMultiply(defaultCurveSpeed, playerVelocity);
+                    newVelocity += Vector3.Scale(Common.Round(playerVelocity.normalized), defaultSpinSpeed);
+                    newVelocity.x = Mathf.Clamp(newVelocity.x, -defaultSpinSpeed.x * 1.5f, defaultSpinSpeed.x * 1.5f);
+                    newVelocity.y = Mathf.Clamp(newVelocity.y, -defaultSpinSpeed.y * 1.5f, defaultSpinSpeed.y * 1.5f);
+
+                    ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
                 }
 
                 // Player state buffer checks
@@ -152,7 +170,7 @@ public class Ball : MonoBehaviour
                     }
                 }));
 
-                StartCoroutine(Task.Continuous(hitLateBufferFrames, () =>
+                StartCoroutine(Task.Continuous(curveLateBufferFrames, () =>
                 {
                     if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.DASH) &&
                         !(state | cooldown).HasFlag(State.SPIN))
@@ -187,28 +205,27 @@ public class Ball : MonoBehaviour
         body.velocity = newVelocity;
     }
 
-    private void ApplySpinCurve(Vector3 spinVelocity)
+    private void ApplySpinCurve(Vector3 spinVelocity, Vector3 curveVelocity, int curveTickSteps)
     {
         // apply spin + curve effect
         if (playerVelocity.sqrMagnitude > Mathf.Epsilon)
         {
             var torque = new Vector3(spinVelocity.y, -spinVelocity.x, 0) * curveSpinAngularMultiplier;
-            var curveTickStep = 3;
 
             // apply torque so the ball spins
             StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
 
             // apply centripetal force over time for a curved motion
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
-            currentCurveCoroutine = CurveCoroutine(spinVelocity, curveTickStep, centripetalMotionDurationFrames);
+            currentCurveCoroutine = CurveCoroutine(curveVelocity, curveTickSteps, centripetalMotionDurationFrames);
             StartCoroutine(currentCurveCoroutine);
         }
     }
 
-    private IEnumerator CurveCoroutine(Vector3 spinVelocity, int tickStep, int durationFrames)
+    private IEnumerator CurveCoroutine(Vector3 curveVelocity, int tickStep, int durationFrames)
     {
         // at any given frame, the force is directed to the "center" relative to the ball's velocity
-        var centripetalMotion = -spinVelocity * centripetalForceMultiplier;
+        var centripetalMotion = -curveVelocity * centripetalForceMultiplier;
         centripetalMotion.z = 0;
 
         var tick = 0;

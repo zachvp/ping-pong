@@ -50,10 +50,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ba6a3eba0eb0146ac86588e2e1f1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curveMultiplier: 0.55
-  dashSpinMultiplier: 0.05
+  defaultSpinSpeed: {x: 5, y: 3, z: 0}
+  bigSpinSpeed: {x: 10, y: 6, z: 0}
+  defaultCurveSpeed: {x: 0, y: 0, z: 0}
+  bigCurveSpeed: {x: 15, y: 15, z: 0}
+  curveLateBufferFrames: 12
   curveSpinAngularMultiplier: 16
-  centripetalForceMultiplier: 1.2
+  centripetalForceMultiplier: 1
   centripetalMotionDurationFrames: 120
   hitMultiplier: 1.5
   hitStackCount: 4
@@ -61,6 +64,7 @@ MonoBehaviour:
   hitLateBufferFrames: 6
   hitCooldownFrames: 15
   initialVelocity: {x: 0, y: 0, z: -8}
+  minSpeeds: {x: 0, y: 0, z: 8}
   state: 0
   cooldown: 0
   steepDeflectDotValue: 0.95
@@ -132,7 +136,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791846433709945142}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5a69dbe483efb4e4a991e7a9839d10cd, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

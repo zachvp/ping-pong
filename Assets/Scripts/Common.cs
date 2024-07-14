@@ -18,9 +18,19 @@ public static class Common
         return new Vector2Int((int)source.x, (int)source.y);
     }
 
-    public static int SignMultiplier(float value)
+    public static Vector3 Round(Vector3 source)
+    {
+        return new Vector3(Mathf.Round(source.x), Mathf.Round(source.y), Mathf.Round(source.z));
+    }
+
+    public static int SignMultiply(float value)
     {
         return value < 0 ? -1 : 1;
+    }
+
+    public static Vector3 SignMultiply(Vector3 source, Vector3 multiplier)
+    {
+        return Vector3.Scale(source, Round(multiplier.normalized));
     }
 }
 
