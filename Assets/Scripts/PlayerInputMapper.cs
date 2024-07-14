@@ -10,10 +10,10 @@ public class PlayerInputMapper : MonoBehaviour
     public float moveSpeed = 5;
 
     public float dashMoveSpeedMultiplier = 1.5f;
-    public int dashMoveFrames = 10; // 0.16 sec
-    public int dashCooldownFrames = 18; // .3 sec
+    public int dashMoveFrames = 10;
+    public int dashCooldownFrames = 18;
 
-    public int hitDurationFrames = 24; // .4
+    public int hitDurationFrames = 24;
     public int hitStateBufferFrames = 12;
 
     private PlayerInput input;
@@ -121,8 +121,6 @@ public class PlayerInputMapper : MonoBehaviour
         debugValues.vector2_0 = cursor;
         if (cursorPositionSampled.sqrMagnitude > cursorMoveThreshold)
         {
-            //cursor += Vector2.SmoothDamp(cursor, cursorPositionPrevious, ref cursorPositionSampled, 1 / cursorSmoothing);
-
             var originalPosition = body.position;
             var newPosition = originalPosition;
             var zeroedPos = new Vector3(cursor.x, cursor.y, -input.camera.transform.position.z);
@@ -148,18 +146,11 @@ public class PlayerInputMapper : MonoBehaviour
             cursorWorldVelocity = Vector3.zero;
         }
 
-        cursorPositionSampled = FromFloat(cursor) - FromFloat(cursorPositionPrevious);
+        cursorPositionSampled = Common.FromFloat(cursor) - Common.FromFloat(cursorPositionPrevious);
         cursorPositionPrevious = cursor;
 
-        //Debug.Log($"FromFloat(cursor) - sampledCursorPosition: {FromFloat(cursor)} - {cursorPositionSampled}");
         debugValues.vector2_1 = cursorPositionSampled;
         debugValues.flt = cursorPositionSampled.sqrMagnitude;
-    }
-
-    // todo: move to shared class
-    public Vector2Int FromFloat(Vector2 source)
-    {
-        return new Vector2Int((int)source.x, (int)source.y);
     }
 
     private void FixedUpdate()
@@ -199,7 +190,6 @@ public class PlayerInputMapper : MonoBehaviour
 
     private void Dash(int dashFrameLength)
     {
-        Debug.Log("DASH");
         state |= State.DASH;
         cooldowns |= State.DASH;
         BufferState(state);

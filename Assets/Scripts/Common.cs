@@ -11,6 +11,12 @@ public static class Common
             behavior.StopCoroutine(enumerator);
         }
     }
+
+    // todo: move to shared class
+    public static Vector2Int FromFloat(Vector2 source)
+    {
+        return new Vector2Int((int)source.x, (int)source.y);
+    }
 }
 
 [Serializable]
