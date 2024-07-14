@@ -17,6 +17,11 @@ public static class Common
     {
         return new Vector2Int((int)source.x, (int)source.y);
     }
+
+    public static int SignMultiplier(float value)
+    {
+        return value < 0 ? -1 : 1;
+    }
 }
 
 [Serializable]

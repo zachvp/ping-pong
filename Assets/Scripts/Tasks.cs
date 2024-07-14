@@ -74,6 +74,22 @@ public static class Task
         }
     }
 
+    public static IEnumerator FixedUpdate(float duration, Action task)
+    {
+        var time = 0f;
+        while (time < duration)
+        {
+            yield return new WaitForFixedUpdate();
+            time += Time.fixedDeltaTime;
+            task();
+        }
+    }
+
+    public static IEnumerator FixedUpdate(int durationFrames, Action task)
+    {
+        return FixedUpdate(durationFrames * Constants.FRAME_TIME, task);
+    }
+
     public static IEnumerator Delayed(float delay, Action task)
     {
         yield return new WaitForSeconds(delay);
@@ -105,13 +121,5 @@ public static class Task
     public static IEnumerator Delayed<T, U>(int delayFrames, T arg0, U arg1, Action<T, U> task)
     {
         return Delayed(delayFrames * Constants.FRAME_TIME, arg0, arg1, task);
-    }
-}
-
-public static class Utils
-{
-    public static int SignMultiplier(float value)
-    {
-        return value < 0 ? -1 : 1;
     }
 }

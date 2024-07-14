@@ -52,14 +52,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curveMultiplier: 0.55
   dashSpinMultiplier: 0.05
-  isDashBufferApplied: 0
   curveSpinAngularMultiplier: 16
   centripetalForceMultiplier: 1.2
-  hitMultiplier: 2.5
+  centripetalMotionDurationFrames: 120
+  hitMultiplier: 1.5
+  hitStackCount: 4
   hitDampening: {x: 1, y: 1}
   hitLateBufferFrames: 6
+  hitCooldownFrames: 15
   initialVelocity: {x: 0, y: 0, z: -8}
+  state: 0
+  cooldown: 0
+  steepDeflectDotValue: 0.95
+  steepDeflectVelocityNerf: 0.65
   debugDuration: 0.4
+  debugValues:
+    vector2_0: {x: 0, y: 0}
+    vector2_1: {x: 0, y: 0}
+    vector2Int_0: {x: 0, y: 0}
+    vector3: {x: 0, y: 0, z: 0}
+    str: 
+    flt: 0
 --- !u!33 &2479387154023948608
 MeshFilter:
   m_ObjectHideFlags: 0
