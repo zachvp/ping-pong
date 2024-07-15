@@ -198,6 +198,8 @@ public class Ball : MonoBehaviour
             }
         }
 
+        Debug.Log($"collision  impulse: {collision.impulse}");
+
         body.velocity = newVelocity;
     }
 

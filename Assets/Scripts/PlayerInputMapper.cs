@@ -32,9 +32,12 @@ public class PlayerInputMapper : MonoBehaviour
     public Vector2 InputFlickVelocity { get; private set; }
     public Vector3 InputFlickVelocityDash { get; private set; }
     public float stationaryFlickMultiplier = 2;
+    public float inputFlickVelocityThreshold = 0.25f;
+    private float inputFlickDeadTimestamp = float.MaxValue;
+    public int inputFlickDeadDurationFrames = 5;
 
     public State state;// { get; private set; }
-    public State cooldowns;
+    public State cooldown;
     public State buffer;
     public IEnumerator bufferRoutine;
 
@@ -74,6 +77,8 @@ public class PlayerInputMapper : MonoBehaviour
 
     private void Update()
     {
+        debugValues.vector2_2 = InputFlickVelocity;
+
         if (!state.HasFlag(State.HIT) && input.actions["hit"].WasPressedThisFrame())
         {
             state |= State.HIT;
@@ -81,7 +86,6 @@ public class PlayerInputMapper : MonoBehaviour
 
             hitColor.a = initialColor.a;
             material.SetColor(initialColorMaterialPropertyName, hitColor);
-            //material.color = hitColor;
             StartCoroutine(Task.Delayed(hitDurationFrames, () =>
             {
                 material.color = initialColor;
@@ -91,24 +95,40 @@ public class PlayerInputMapper : MonoBehaviour
 
         var inputFlick = input.actions["flick"].ReadValue<Vector2>();
         InputFlickVelocity = inputFlick - InputFlickVelocity;
-        if (!state.HasFlag(State.DASH) && !cooldowns.HasFlag(State.DASH))
+        if (!state.HasFlag(State.DASH) && !cooldown.HasFlag(State.DASH))
         {
-            if (InputFlickVelocity.sqrMagnitude > 0.25f)
+            if (InputFlickVelocity.sqrMagnitude > inputFlickVelocityThreshold)
             {
                 InputFlickVelocityDash = InputFlickVelocity;
                 Dash(dashMoveFrames);
             }
         }
-        if (inputFlick.sqrMagnitude < Mathf.Epsilon)
-        {
-            StartCoroutine(Task.Delayed(0.2f, () =>
-            {
-                if (inputFlick.sqrMagnitude < Mathf.Epsilon)
-                {
-                    InputFlickVelocity = Vector2.zero;
-                }
-            }));
-        }
+
+        // check for no flick input for consecutive frames to reset the velocity
+        //if (inputFlick.sqrMagnitude < Mathf.Epsilon)
+        //{
+        //    // set dead time start
+        //    if (inputFlickDeadTimestamp < float.MaxValue)
+        //    {
+        //        if (Time.time - inputFlickDeadTimestamp > Constants.FRAME_TIME * inputFlickDeadDurationFrames)
+        //        {
+        //            InputFlickVelocity = Vector2.zero;
+        //            inputFlickDeadTimestamp = float.MaxValue;
+        //            Debug.Log($"dead flick, resetting");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        inputFlickDeadTimestamp = Time.time;
+        //        Debug.Log($"start timer for dead flick");
+        //    }
+        //}
+        //else
+        //{
+        //    // reset dead time
+        //    inputFlickDeadTimestamp = float.MaxValue;
+        //    Debug.Log($"live flick; reset dead timestamp");
+        //}
 
         var cursor = input.actions["cursor-mouse"].ReadValue<Vector2>();
         var touch = input.actions["touch-cursor"].ReadValue<TouchState>();
@@ -191,7 +211,7 @@ public class PlayerInputMapper : MonoBehaviour
     private void Dash(int dashFrameLength)
     {
         state |= State.DASH;
-        cooldowns |= State.DASH;
+        cooldown |= State.DASH;
         BufferState(state);
 
         var roundedDashDirection = new Vector2(Mathf.Round(InputFlickVelocity.x), Mathf.Round(InputFlickVelocity.y));
@@ -200,7 +220,7 @@ public class PlayerInputMapper : MonoBehaviour
         trailRenderer.enabled = true;
         trailRenderer.emitting = true;
 
-        StartCoroutine(Task.Delayed(dashFrameLength * Constants.FRAME_TIME, () =>
+        StartCoroutine(Task.Delayed(dashFrameLength, () =>
         {
             trailRenderer.emitting = false;
             trailRenderer.enabled = false;
@@ -212,7 +232,7 @@ public class PlayerInputMapper : MonoBehaviour
         StartCoroutine(Task.Delayed(dashFrameLength + dashCooldownFrames, () =>
         {
             InputFlickVelocity = Vector3.zero;
-            cooldowns &= ~State.DASH;
+            cooldown &= ~State.DASH;
         }));
     }
 
@@ -220,7 +240,7 @@ public class PlayerInputMapper : MonoBehaviour
     private State UpdateState(State current, State updated)
     {
         var resolved = current | updated;
-        cooldowns |= updated;
+        cooldown |= updated;
         BufferState(resolved);
 
         return resolved;

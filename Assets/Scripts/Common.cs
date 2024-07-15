@@ -39,6 +39,7 @@ public struct DebugValues
 {
     public Vector2 vector2_0;
     public Vector2 vector2_1;
+    public Vector2 vector2_2;
 
     public Vector2Int vector2Int_0;
 
