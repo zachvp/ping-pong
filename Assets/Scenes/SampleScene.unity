@@ -2480,6 +2480,31 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8175901116463179508, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
   m_PrefabInstance: {fileID: 1697874414359076796}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &327354777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327354768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff095f92ea9626f43881f0778d0b3937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHitPressed: 0
+  inputFlick: {x: 0, y: 0}
+  inputFlickVelocityThreshold: 0.25
+  isFlick: 0
+  move: {x: 0, y: 0}
+  debugValues:
+    vector2_0: {x: 0, y: 0}
+    vector2_1: {x: 0, y: 0}
+    vector2_2: {x: 0, y: 0}
+    vector2Int_0: {x: 0, y: 0}
+    vector3: {x: 0, y: 0, z: 0}
+    str: 
+    flt: 0
 --- !u!1001 &341603743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14361,6 +14386,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2220692565
       objectReference: {fileID: 0}
+    - target: {fileID: 7568673611291566319, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
+      propertyPath: inputMapper
+      value: 
+      objectReference: {fileID: 327354777}
     - target: {fileID: 7680811247988728210, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
       propertyPath: m_Camera
       value: 
@@ -14412,7 +14441,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8175901116463179508, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 327354777}
   m_SourcePrefab: {fileID: 100100000, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
 --- !u!1001 &1812340629486212625
 PrefabInstance:

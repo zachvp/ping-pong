@@ -1,232 +1,52 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
-using UnityEngine.InputSystem.LowLevel;
-using System.Collections;
 
-// todo: refactor - too many lines
 public class PlayerInputMapper : MonoBehaviour
 {
-    public float moveSpeed = 5;
-
-    public float dashMoveSpeedMultiplier = 1.5f;
-    public int dashMoveFrames = 10;
-    public int dashCooldownFrames = 18;
-
-    public int hitDurationFrames = 24;
-    public int hitStateBufferFrames = 12;
-
     private PlayerInput input;
 
-    public Vector3 Velocity { get; private set; }
-    public Rigidbody Body { get { return body; } }
-    private Rigidbody body;
-    private Vector3 positionInitial;
-    private Vector3 positionPrevious;
+    public bool isHitPressed;
+    //public Action OnHitPressed; // todo: convert to event listener from PlayerInput
 
-    private Material material;
-    private Color initialColor;
-    public string initialColorMaterialPropertyName = "_Color";
-    public Color hitColor = Color.red;
-
+    // todo: remove 'input' from name prefixes
+    public Vector2 inputFlick;
     public Vector2 InputFlickVelocity { get; private set; }
-    public Vector3 InputFlickVelocityDash { get; private set; }
-    public float stationaryFlickMultiplier = 2;
     public float inputFlickVelocityThreshold = 0.25f;
+    public Vector3 InputFlickVelocityDash { get; private set; } // todo: replace 'dash' with 'flick'
 
-    public State state { get; private set; }
-    public State cooldown;
-    public State buffer;
-    public IEnumerator bufferRoutine;
+    public bool isFlick;
 
-    private Vector3 cursorWorldPosition;
-    private Vector3 cursorWorldVelocity;
-    private Vector3 cursorWorldPositionPrevious;
-    private Vector2 cursorPositionPrevious;
-    private Vector2 cursorPositionSampled;
-    public float cursorMoveThreshold = 0.1f;
-
-    public TrailRenderer trailRenderer;
-
-    public SharedVector3 dashDirection;
+    public Vector2 move;
 
     // todo: dbg
     public DebugValues debugValues;
 
-    [Flags]
-    public enum State
-    {
-        NONE = 0,
-        HIT = 1 << 0,
-        DASH = 1 << 1,
-    }
-
     private void Awake()
     {
         input = GetComponent<PlayerInput>();
-        body = GetComponent<Rigidbody>();
-        material = GetComponent<MeshRenderer>().material;
-
-        initialColor = material.GetColor(initialColorMaterialPropertyName);
-        positionInitial = body.position;
-
-        dashDirection.Reset();
     }
 
     private void Update()
     {
-        debugValues.vector2_2 = InputFlickVelocity;
-
-        if (!state.HasFlag(State.HIT) && input.actions["hit"].WasPressedThisFrame())
-        {
-            state |= State.HIT;
-            BufferState(state);
-
-            hitColor.a = initialColor.a;
-            material.SetColor(initialColorMaterialPropertyName, hitColor);
-            StartCoroutine(Task.Delayed(hitDurationFrames, () =>
-            {
-                material.color = initialColor;
-                state &= ~State.HIT;
-            }));
-        }
-
-        var inputFlick = input.actions["flick"].ReadValue<Vector2>();
-        InputFlickVelocity = inputFlick - InputFlickVelocity;
-        if (!state.HasFlag(State.DASH) && !cooldown.HasFlag(State.DASH))
-        {
-            if (InputFlickVelocity.sqrMagnitude > inputFlickVelocityThreshold)
-            {
-                InputFlickVelocityDash = InputFlickVelocity;
-                Dash(dashMoveFrames);
-            }
-        }
-
-        var cursor = input.actions["cursor-mouse"].ReadValue<Vector2>();
-        var touch = input.actions["touch-cursor"].ReadValue<TouchState>();
-        if (input.currentControlScheme.Equals("touchscreen"))
-        {
-            cursor = touch.position;
-            Debug.Log($"touchscreen pos: {cursor}");
-        }
-
-        debugValues.vector2_0 = cursor;
-        if (cursorPositionSampled.sqrMagnitude > cursorMoveThreshold)
-        {
-            var originalPosition = body.position;
-            var newPosition = originalPosition;
-            var zeroedPos = new Vector3(cursor.x, cursor.y, -input.camera.transform.position.z);
-            newPosition = input.camera.ScreenToWorldPoint(zeroedPos);
-            newPosition.z = positionInitial.z;
-            cursorWorldPosition = newPosition;
-
-            var deltaPosition = newPosition - originalPosition;
-            if (deltaPosition.sqrMagnitude > 0.5f)
-            {
-                cursorWorldVelocity = (deltaPosition).normalized * moveSpeed;
-            }
-            else
-            {
-                cursorWorldVelocity = Vector3.zero;
-            }
-
-            debugValues.vector3 = newPosition;
-        }
-
-        if (!touch.isInProgress)
-        {
-            cursorWorldVelocity = Vector3.zero;
-        }
-
-        cursorPositionSampled = Common.FromFloat(cursor) - Common.FromFloat(cursorPositionPrevious);
-        cursorPositionPrevious = cursor;
-
-        debugValues.vector2_1 = cursorPositionSampled;
-        debugValues.flt = cursorPositionSampled.sqrMagnitude;
-    }
-
-    private void FixedUpdate()
-    {
-        var move = (Vector3) input.actions["move"].ReadValue<Vector2>();
         debugValues.str = input.currentControlScheme;
+        debugValues.vector2_0 = InputFlickVelocity;
 
-        if (input.currentControlScheme.Equals("gamepad"))
+        isHitPressed = input.actions["hit"].WasPressedThisFrame();
+
+        inputFlick = input.actions["flick"].ReadValue<Vector2>();
+        InputFlickVelocity = inputFlick - InputFlickVelocity;
+
+        isFlick = InputFlickVelocity.sqrMagnitude > inputFlickVelocityThreshold;
+        if (isFlick)
         {
-            if (state.HasFlag(State.DASH))
-            {
-                body.velocity = InputFlickVelocityDash.normalized * moveSpeed * dashMoveSpeedMultiplier;
-            }
-            else
-            {
-                body.velocity = move * moveSpeed;
-            }
-        }
-        else
-        {
-            if (cursorPositionSampled.sqrMagnitude > cursorMoveThreshold)
-                body.velocity = cursorWorldVelocity;
+            InputFlickVelocityDash = InputFlickVelocity;
         }
 
-        Velocity = body.velocity;
-        positionPrevious = body.position;
+        move = input.actions["move"].ReadValue<Vector2>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void ResetFlick()
     {
-        var ball = collision.gameObject.GetComponent<Ball>();
-        if (ball)
-        {
-            body.velocity = Vector3.zero;
-        }
-    }
-
-    private void Dash(int dashFrameLength)
-    {
-        state |= State.DASH;
-        cooldown |= State.DASH;
-        BufferState(state);
-
-        var roundedDashDirection = new Vector2(Mathf.Round(InputFlickVelocity.x), Mathf.Round(InputFlickVelocity.y));
-        dashDirection.vector3.Set(roundedDashDirection);
-
-        trailRenderer.enabled = true;
-        trailRenderer.emitting = true;
-
-        StartCoroutine(Task.Delayed(dashFrameLength, () =>
-        {
-            trailRenderer.emitting = false;
-            trailRenderer.enabled = false;
-
-            InputFlickVelocity = Vector3.zero;
-            state &= ~State.DASH;
-        }));
-
-        StartCoroutine(Task.Delayed(dashFrameLength + dashCooldownFrames, () =>
-        {
-            InputFlickVelocity = Vector3.zero;
-            cooldown &= ~State.DASH;
-        }));
-    }
-
-    // todo: use and test this
-    private State UpdateState(State current, State updated)
-    {
-        var resolved = current | updated;
-        cooldown |= updated;
-        BufferState(resolved);
-
-        return resolved;
-    }
-
-    private void BufferState(State s)
-    {
-        buffer |= s;
-        
-        Common.StopNullableCoroutine(this, bufferRoutine);
-        bufferRoutine = Task.Delayed(hitStateBufferFrames, () =>
-        {
-            buffer &= ~s;
-        });
-        StartCoroutine(bufferRoutine);
+        InputFlickVelocity = Vector3.zero;
     }
 }

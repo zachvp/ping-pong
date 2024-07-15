@@ -107,6 +107,17 @@
                 },
                 {
                     "name": "",
+                    "id": "c8895328-02d6-4afe-8cb9-7fd40d9f8687",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "gamepad",
+                    "action": "hit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "615f9c66-aa4c-4415-aeda-bdd9d1c3dc00",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
