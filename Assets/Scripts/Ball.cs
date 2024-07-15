@@ -161,7 +161,7 @@ public class Ball : MonoBehaviour
                     if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.HIT) &&
                         !(state | cooldown).HasFlag(State.HIT))
                     {
-                        Debug.Log($"set hit input for state: {state}");
+                        //Debug.Log($"set hit input for state: {state}");
                         state |= State.HIT;
                     }
                 }));
@@ -171,7 +171,7 @@ public class Ball : MonoBehaviour
                     if (playerCharacter.buffer.HasFlag(PlayerInputMapper.State.DASH) &&
                         !(state | cooldown).HasFlag(State.SPIN))
                     {
-                        Debug.Log($"set hit input for state: {state}");
+                        //Debug.Log($"set hit input for state: {state}");
                         state |= State.SPIN;
                     }
                 }));

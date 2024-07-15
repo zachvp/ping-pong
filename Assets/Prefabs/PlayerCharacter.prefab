@@ -391,8 +391,8 @@ MonoBehaviour:
   initialColorMaterialPropertyName: _Color
   hitColor: {r: 1, g: 0.9225849, b: 0, a: 1}
   stationaryFlickMultiplier: 2
-  state: 0
-  cooldowns: 0
+  inputFlickVelocityThreshold: 0.25
+  cooldown: 0
   buffer: 0
   cursorMoveThreshold: 0.1
   trailRenderer: {fileID: 991550719359484964}
@@ -400,6 +400,7 @@ MonoBehaviour:
   debugValues:
     vector2_0: {x: 0, y: 0}
     vector2_1: {x: 0, y: 0}
+    vector2_2: {x: 0, y: 0}
     vector2Int_0: {x: 0, y: 0}
     vector3: {x: 0, y: 0, z: 0}
     str: 

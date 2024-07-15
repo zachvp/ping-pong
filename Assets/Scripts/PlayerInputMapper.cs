@@ -33,10 +33,8 @@ public class PlayerInputMapper : MonoBehaviour
     public Vector3 InputFlickVelocityDash { get; private set; }
     public float stationaryFlickMultiplier = 2;
     public float inputFlickVelocityThreshold = 0.25f;
-    private float inputFlickDeadTimestamp = float.MaxValue;
-    public int inputFlickDeadDurationFrames = 5;
 
-    public State state;// { get; private set; }
+    public State state { get; private set; }
     public State cooldown;
     public State buffer;
     public IEnumerator bufferRoutine;
@@ -103,32 +101,6 @@ public class PlayerInputMapper : MonoBehaviour
                 Dash(dashMoveFrames);
             }
         }
-
-        // check for no flick input for consecutive frames to reset the velocity
-        //if (inputFlick.sqrMagnitude < Mathf.Epsilon)
-        //{
-        //    // set dead time start
-        //    if (inputFlickDeadTimestamp < float.MaxValue)
-        //    {
-        //        if (Time.time - inputFlickDeadTimestamp > Constants.FRAME_TIME * inputFlickDeadDurationFrames)
-        //        {
-        //            InputFlickVelocity = Vector2.zero;
-        //            inputFlickDeadTimestamp = float.MaxValue;
-        //            Debug.Log($"dead flick, resetting");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        inputFlickDeadTimestamp = Time.time;
-        //        Debug.Log($"start timer for dead flick");
-        //    }
-        //}
-        //else
-        //{
-        //    // reset dead time
-        //    inputFlickDeadTimestamp = float.MaxValue;
-        //    Debug.Log($"live flick; reset dead timestamp");
-        //}
 
         var cursor = input.actions["cursor-mouse"].ReadValue<Vector2>();
         var touch = input.actions["touch-cursor"].ReadValue<TouchState>();
