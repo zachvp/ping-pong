@@ -54,15 +54,15 @@ MonoBehaviour:
   bigSpinSpeed: {x: 10, y: 6, z: 0}
   defaultCurveSpeed: {x: 0, y: 0, z: 0}
   bigCurveSpeed: {x: 15, y: 15, z: 0}
-  curveLateBufferFrames: 12
+  curveLateBufferFrames: 18
   curveSpinAngularMultiplier: 16
   centripetalForceMultiplier: 1
   centripetalMotionDurationFrames: 120
   hitMultiplier: 1.5
   hitStackCount: 4
   hitDampening: {x: 1, y: 1}
-  hitLateBufferFrames: 6
-  hitCooldownFrames: 15
+  hitLateBufferFrames: 8
+  hitCooldownFrames: 10
   initialVelocity: {x: 0, y: 0, z: -8}
   minSpeeds: {x: 0, y: 0, z: 8}
   state: 0

@@ -72,10 +72,6 @@ public class Ball : MonoBehaviour
             newVelocity.z *= hitMultiplier;
             newVelocity.z = Mathf.Clamp(newVelocity.z, -maxSpeedZ, maxSpeedZ);
 
-            //var spin = new Vector3(
-            //    playerVelocity.x * curveMultiplier * hitDampening.x,
-            //    playerVelocity.y * curveMultiplier * hitDampening.y,
-            //    0);
             newVelocity += Vector3.Scale(Common.Round(playerVelocity.normalized), defaultSpinSpeed);
             newVelocity.x = Mathf.Clamp(newVelocity.x, -defaultSpinSpeed.x * 1.5f, defaultSpinSpeed.x * 1.5f);
             newVelocity.y = Mathf.Clamp(newVelocity.y, -defaultSpinSpeed.y * 1.5f, defaultSpinSpeed.y * 1.5f);
