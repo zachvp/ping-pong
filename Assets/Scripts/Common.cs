@@ -12,7 +12,6 @@ public static class Common
         }
     }
 
-    // todo: move to shared class
     public static Vector2Int FromFloat(Vector2 source)
     {
         return new Vector2Int((int)source.x, (int)source.y);
@@ -21,6 +20,31 @@ public static class Common
     public static Vector3 Round(Vector3 source)
     {
         return new Vector3(Mathf.Round(source.x), Mathf.Round(source.y), Mathf.Round(source.z));
+    }
+
+    public static Vector2 SmoothStep(Vector2 source)
+    {
+        var result = Vector2.zero;
+
+        if (source.x > 0)
+        {
+            result.x = Mathf.SmoothStep(0, 1, source.x);
+        }
+        else
+        {
+            result.x = Mathf.SmoothStep(-1, 0, source.x);
+        }
+
+        if (source.y > 0)
+        {
+            result.y = Mathf.SmoothStep(0, 1, source.y);
+        }
+        else
+        {
+            result.y = Mathf.SmoothStep(-1, 0, source.y);
+        }
+
+        return result;
     }
 
     public static int SignMultiply(float value)

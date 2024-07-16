@@ -89,7 +89,7 @@ public class PlayerCharacter : MonoBehaviour
         var move = (Vector3) inputMapper.move;
         if (state.HasFlag(State.DASH))
         {
-            body.velocity = inputMapper.InputFlickVelocityDash.normalized * moveSpeed * dashMoveSpeedMultiplier;
+            body.velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
         }
         else
         {

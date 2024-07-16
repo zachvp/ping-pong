@@ -7,20 +7,22 @@ public class PlayerInputMapper : MonoBehaviour
     private PlayerInput input;
 
     public bool isHitPressed;
-    //public Action OnHitPressed; // todo: convert to event listener from PlayerInput
 
     // todo: remove 'input' from name prefixes
     public Vector2 inputFlick;
     public Vector2 InputFlickVelocity { get; private set; }
     public float inputFlickVelocityThreshold = 0.25f;
-    public Vector3 InputFlickVelocityDash { get; private set; } // todo: replace 'dash' with 'flick'
+    public Vector3 InputFlickVelocityTriggered { get; private set; }
 
     public bool isFlick;
 
     public Vector2 move;
 
-    [Tooltip("This is expected to be a GameObject with a RectTransform")]
-    private Transform cursor;
+    public TouchCursor touchCursor;
+    public float touchDeltaThreshold = 1;
+    public float touchDeltaJoystickThreshold = 64;
+    public bool touchJoystickEnabled;
+
 
     // todo: dbg
     public DebugValues debugValues;
@@ -30,7 +32,6 @@ public class PlayerInputMapper : MonoBehaviour
         input = GetComponent<PlayerInput>();
 
         input.camera = GameObject.FindGameObjectWithTag(Constants.Tags.CAMERA).GetComponent<Camera>();
-        cursor = GameObject.FindGameObjectWithTag(Constants.Tags.CURSOR).transform;
     }
 
     private void Update()
@@ -46,7 +47,7 @@ public class PlayerInputMapper : MonoBehaviour
         isFlick = InputFlickVelocity.sqrMagnitude > inputFlickVelocityThreshold;
         if (isFlick)
         {
-            InputFlickVelocityDash = InputFlickVelocity;
+            InputFlickVelocityTriggered = InputFlickVelocity;
         }
 
         move = input.actions["move"].ReadValue<Vector2>();  // todo: rename to cursor0, cursor1
@@ -69,9 +70,14 @@ public class PlayerInputMapper : MonoBehaviour
                 // check for a move cursor...
                 if (touch.position.x < Screen.width / 2)
                 {
-                    if (touchMoveOrigin.sqrMagnitude > Mathf.Epsilon)
+                    touchJoystickEnabled = true;
+
+                    var deltaFromOrigin = (touch.position - touchMoveOrigin);
+                    if (touchMoveOrigin.sqrMagnitude > Mathf.Epsilon &&
+                        (touch.delta.sqrMagnitude > touchDeltaThreshold) || deltaFromOrigin.sqrMagnitude > touchDeltaJoystickThreshold)
                     {
-                        move = (touch.position - touchMoveOrigin).normalized;
+                        //move = deltaFromOrigin.normalized;
+                        //move = Common.SmoothStep(move);
                         Debug.Log($"touch move");
                     }
                     else
@@ -86,24 +92,26 @@ public class PlayerInputMapper : MonoBehaviour
                     // todo: 
                 }
 
-                var newCursorPosition = input.camera.ScreenToWorldPoint(touch.position);
-                newCursorPosition.z = cursor.position.z;
-                Debug.DrawLine(input.camera.ScreenToWorldPoint(touchMoveOrigin), newCursorPosition, Color.blue, 0.05f);
-
-                debugValues.vector2_2 = newCursorPosition;
-                cursor.gameObject.SetActive(true);
-                cursor.position = touch.position;
+                // adjust cursor
+                var cursorOffset = touchCursor.ComputeJoystickOffset(touch.position);
+                debugValues.vector2_2 = cursorOffset;
+                touchCursor.MoveCursor(touchCursor.ComputeJoystickPosition(cursorOffset));
+                move = Common.SmoothStep(cursorOffset.normalized);
+                //touchCursor.MoveCursor(touch.position);
             }
             else
             {
                 // released, reset move origin
-                touchMoveOrigin = Vector2.zero;
+                touchJoystickEnabled = true;
+                touchCursor.ResetPosition();
+                //touchMoveOrigin = Vector2.zero;
                 move = Vector2.zero;
-                cursor.gameObject.SetActive(false);
+                //cursor.gameObject.SetActive(false);
             }
 
             debugValues.vector2_0 = touch.position;
             debugValues.vector2_1 = touch.delta;
+            debugValues.flt = Mathf.Max(touch.delta.sqrMagnitude, debugValues.flt);
         }
     }
 

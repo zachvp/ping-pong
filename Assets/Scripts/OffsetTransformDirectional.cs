@@ -40,7 +40,7 @@ public class OffsetTransform : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, 0.75f);
+        //Gizmos.DrawWireSphere(transform.position, 0.75f);
     }
 
     public void Update()
