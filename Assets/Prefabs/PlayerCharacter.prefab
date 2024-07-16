@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -736.80566, y: -300.23605}
+  m_AnchoredPosition: {x: -617.4666, y: -237.92291}
   m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3273391462684571994
@@ -487,7 +487,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -736.80566, y: -300.23605}
+  m_AnchoredPosition: {x: -617.46655, y: -237.9229}
   m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8817316490049201916
@@ -696,7 +696,7 @@ MonoBehaviour:
   move: {x: 0, y: 0}
   touchCursor: {fileID: 5095142756203920101}
   touchDeltaThreshold: 1
-  touchDeltaJoystickThreshold: 128
+  touchDeltaJoystickThreshold: 96
   touchJoystickEnabled: 0
   debugValues:
     vector2_0: {x: 0, y: 0}

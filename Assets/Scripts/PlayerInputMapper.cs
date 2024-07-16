@@ -96,7 +96,7 @@ public class PlayerInputMapper : MonoBehaviour
                 var cursorOffset = touchCursor.ComputeJoystickOffset(touch.position);
                 debugValues.vector2_2 = cursorOffset;
                 touchCursor.MoveCursor(touchCursor.ComputeJoystickPosition(cursorOffset));
-                move = Common.SmoothStep(cursorOffset.normalized);
+                move = cursorOffset / touchCursor.joystickRadius;
                 //touchCursor.MoveCursor(touch.position);
             }
             else
