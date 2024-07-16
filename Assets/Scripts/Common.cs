@@ -51,6 +51,7 @@ public struct DebugValues
     public float flt;
 
     public bool bool_0;
+    public bool bool_1;
 }
 
 [AttributeUsage(AttributeTargets.Field)]

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class PlayerInputMapper : MonoBehaviour
 {
@@ -30,7 +31,6 @@ public class PlayerInputMapper : MonoBehaviour
     {
         debugValues.str_0 = input.currentControlScheme;
         debugValues.str_1 = input.currentActionMap.name;
-        debugValues.vector2_0 = InputFlickVelocity;
 
         isHitPressed = input.actions["hit"].WasPressedThisFrame();
 
@@ -43,19 +43,57 @@ public class PlayerInputMapper : MonoBehaviour
             InputFlickVelocityDash = InputFlickVelocity;
         }
 
-        move = input.actions["move"].ReadValue<Vector2>();
+        move = input.actions["move"].ReadValue<Vector2>();  // todo: rename to cursor0, cursor1
 
         // touchscreen
         if (input.currentControlScheme.Equals("touchscreen"))
         {
-            var touch = input.actions["touch.tap"];
-            isHitPressed = touch.WasPressedThisFrame();
+            var tap = input.actions["touch.tap"];
+            isHitPressed = tap.WasPressedThisFrame();
             if (isHitPressed)
             {
                 Debug.Log("tap detected");
             }
+
+            var touch = input.actions["touch.move"].ReadValue<TouchState>();
+            debugValues.bool_0 = touch.isInProgress;
+
+            if (touch.isInProgress)
+            {
+                // check for a move cursor...
+                if (touch.position.x < Screen.width / 2)
+                {
+                    if (touchMoveOrigin.sqrMagnitude > Mathf.Epsilon)
+                    {
+                        move = (touch.position - touchMoveOrigin).normalized;
+                        Debug.Log($"touch move");
+                    }
+                    else
+                    {
+                        touchMoveOrigin = touch.position;
+                    }
+                    // todo:
+                }
+                // ...or flick cursor
+                else
+                {
+                    // todo: 
+                }
+            }
+            else
+            {
+                // released, reset move origin
+                touchMoveOrigin = Vector2.zero;
+                move = Vector2.zero;
+            }
+
+            debugValues.vector2_0 = touch.position;
+            debugValues.vector2_1 = new Vector2(Screen.width, Screen.height);
         }
     }
+
+    // todo: move to top of file and organize
+    private Vector2 touchMoveOrigin;
 
     public void ResetFlick()
     {

@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "touch.move",
+                    "type": "Value",
+                    "id": "0d05c45c-a34b-4981-9585-2af56c153b63",
+                    "expectedControlType": "Touch",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -150,6 +159,17 @@
                     "processors": "",
                     "groups": "touchscreen",
                     "action": "touch.tap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fb09dc68-16d0-4597-a38f-ac330d8d2e6e",
+                    "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "touchscreen",
+                    "action": "touch.move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
