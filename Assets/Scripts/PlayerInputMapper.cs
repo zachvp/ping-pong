@@ -19,10 +19,6 @@ public class PlayerInputMapper : MonoBehaviour
     public Vector2 move;
 
     public TouchCursor touchCursor;
-    public float touchDeltaThreshold = 1;
-    public float touchDeltaJoystickThreshold = 64;
-    public bool touchJoystickEnabled;
-
 
     // todo: dbg
     public DebugValues debugValues;
@@ -55,6 +51,8 @@ public class PlayerInputMapper : MonoBehaviour
         // touchscreen
         if (input.currentControlScheme.Equals("touchscreen"))
         {
+            touchCursor.gameObject.SetActive(true);
+
             var tap = input.actions["touch.tap"];
             isHitPressed = tap.WasPressedThisFrame();
             if (isHitPressed)
@@ -63,55 +61,38 @@ public class PlayerInputMapper : MonoBehaviour
             }
 
             var touch = input.actions["touch.move"].ReadValue<TouchState>();
-            debugValues.bool_0 = touch.isInProgress;
 
             if (touch.isInProgress)
             {
                 // check for a move cursor...
                 if (touch.position.x < Screen.width / 2)
                 {
-                    touchJoystickEnabled = true;
-
-                    var deltaFromOrigin = (touch.position - touchMoveOrigin);
-                    if (touchMoveOrigin.sqrMagnitude > Mathf.Epsilon &&
-                        (touch.delta.sqrMagnitude > touchDeltaThreshold) || deltaFromOrigin.sqrMagnitude > touchDeltaJoystickThreshold)
-                    {
-                        //move = deltaFromOrigin.normalized;
-                        //move = Common.SmoothStep(move);
-                        Debug.Log($"touch move");
-                    }
-                    else
-                    {
-                        touchMoveOrigin = touch.position;
-                    }
-                    // todo:
+                    // adjust and respond to cursor
+                    var joystickRaw = touchCursor.JoystickRaw(touch.position);
+                    debugValues.vector2_2 = joystickRaw;
+                    touchCursor.MoveCursor(touchCursor.JoystickScreenPosition(joystickRaw));
+                    move = touchCursor.JoystickNormalized(joystickRaw);
                 }
                 // ...or flick cursor
                 else
                 {
                     // todo: 
                 }
-
-                // adjust cursor
-                var cursorOffset = touchCursor.ComputeJoystickOffset(touch.position);
-                debugValues.vector2_2 = cursorOffset;
-                touchCursor.MoveCursor(touchCursor.ComputeJoystickPosition(cursorOffset));
-                move = cursorOffset / touchCursor.joystickRadius;
-                //touchCursor.MoveCursor(touch.position);
             }
             else
             {
-                // released, reset move origin
-                touchJoystickEnabled = true;
+                // released, reset
                 touchCursor.ResetPosition();
-                //touchMoveOrigin = Vector2.zero;
                 move = Vector2.zero;
-                //cursor.gameObject.SetActive(false);
             }
 
             debugValues.vector2_0 = touch.position;
             debugValues.vector2_1 = touch.delta;
             debugValues.flt = Mathf.Max(touch.delta.sqrMagnitude, debugValues.flt);
+        }
+        else
+        {
+            touchCursor.gameObject.SetActive(false);
         }
     }
 

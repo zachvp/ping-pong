@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.Windows;
 
 [RequireComponent (typeof(RectTransform))]
 public class TouchCursor : MonoBehaviour
@@ -9,33 +7,41 @@ public class TouchCursor : MonoBehaviour
     public Transform anchor;
 
     private Vector3 initialPosition;
-    private RectTransform rectTransform;
 
     public DebugValues debugValues;
 
     private void Awake()
     {
-        initialPosition = transform.position;
-        rectTransform = GetComponent<RectTransform>();
-        //initialPosition = rectTransform.rect.position;
+        initialPosition = anchor.position;
         debugValues.vector2_0 = initialPosition;
+
+        Debug.Log($"initialPosition: {initialPosition}\t anchor position: {anchor.position}");
     }
 
-    private void OnDrawGizmos()
+    private void OnEnable()
     {
-        var camera = GameObject.FindGameObjectWithTag(Constants.Tags.CAMERA).GetComponent<Camera>();
-        Gizmos.DrawWireSphere(camera.ScreenToWorldPoint(initialPosition), 0.1f);
+        anchor.gameObject.SetActive(true);
     }
 
-    public Vector2 ComputeJoystickOffset(Vector2 screenPosition)
+    private void OnDisable()
+    {
+        anchor.gameObject.SetActive(false);
+    }
+
+    public Vector2 JoystickRaw(Vector2 screenPosition)
     {
         var fromTo = screenPosition - (Vector2)anchor.position;
         return Vector2.ClampMagnitude(fromTo, joystickRadius);
     }
 
-    public Vector2 ComputeJoystickPosition(Vector2 offset)
+    public Vector2 JoystickScreenPosition(Vector2 offset)
     {
         return (Vector2) anchor.position + offset;
+    }
+
+    public Vector2 JoystickNormalized(Vector2 joystickRaw)
+    {
+        return joystickRaw / joystickRadius;
     }
 
     public void MoveCursor(Vector2 screenPosition)
