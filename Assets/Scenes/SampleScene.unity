@@ -2480,31 +2480,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8175901116463179508, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
   m_PrefabInstance: {fileID: 1697874414359076796}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &327354777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327354768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff095f92ea9626f43881f0778d0b3937, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isHitPressed: 0
-  inputFlick: {x: 0, y: 0}
-  inputFlickVelocityThreshold: 0.25
-  isFlick: 0
-  move: {x: 0, y: 0}
-  debugValues:
-    vector2_0: {x: 0, y: 0}
-    vector2_1: {x: 0, y: 0}
-    vector2_2: {x: 0, y: 0}
-    vector2Int_0: {x: 0, y: 0}
-    vector3: {x: 0, y: 0, z: 0}
-    str: 
-    flt: 0
 --- !u!1001 &341603743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5536,6 +5511,74 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7620803999743843017, guid: 519c7f9beffe6b04281453382cd7d4f9, type: 3}
   m_PrefabInstance: {fileID: 845327634}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &860925940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 860925943}
+  - component: {fileID: 860925942}
+  - component: {fileID: 860925941}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &860925941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860925940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &860925942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860925940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &860925943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860925940}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &878956775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14386,10 +14429,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2220692565
       objectReference: {fileID: 0}
-    - target: {fileID: 7568673611291566319, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
-      propertyPath: inputMapper
-      value: 
-      objectReference: {fileID: 327354777}
     - target: {fileID: 7680811247988728210, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
       propertyPath: m_Camera
       value: 
@@ -14441,10 +14480,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8175901116463179508, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
-      insertIndex: 4
-      addedObject: {fileID: 327354777}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d861a3289a453df4a9308ede2f213dfe, type: 3}
 --- !u!1001 &1812340629486212625
 PrefabInstance:
@@ -14755,3 +14791,4 @@ SceneRoots:
   - {fileID: 346435993}
   - {fileID: 354404462}
   - {fileID: 1794059906}
+  - {fileID: 860925943}

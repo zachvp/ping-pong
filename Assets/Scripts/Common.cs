@@ -129,6 +129,12 @@ public struct VarWatch<T> where T : struct
 public static class Constants
 {
     public const float FRAME_TIME = 1f / 60f;
+
+    public static class Tags
+    {
+        public const string CAMERA = "MainCamera";
+        public const string CURSOR = "Cursor";
+    }
 }
 
 

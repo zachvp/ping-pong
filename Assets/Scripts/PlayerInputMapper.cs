@@ -19,12 +19,18 @@ public class PlayerInputMapper : MonoBehaviour
 
     public Vector2 move;
 
+    [Tooltip("This is expected to be a GameObject with a RectTransform")]
+    private Transform cursor;
+
     // todo: dbg
     public DebugValues debugValues;
 
     private void Awake()
     {
         input = GetComponent<PlayerInput>();
+
+        input.camera = GameObject.FindGameObjectWithTag(Constants.Tags.CAMERA).GetComponent<Camera>();
+        cursor = GameObject.FindGameObjectWithTag(Constants.Tags.CURSOR).transform;
     }
 
     private void Update()
@@ -79,16 +85,25 @@ public class PlayerInputMapper : MonoBehaviour
                 {
                     // todo: 
                 }
+
+                var newCursorPosition = input.camera.ScreenToWorldPoint(touch.position);
+                newCursorPosition.z = cursor.position.z;
+                Debug.DrawLine(input.camera.ScreenToWorldPoint(touchMoveOrigin), newCursorPosition, Color.blue, 0.05f);
+
+                debugValues.vector2_2 = newCursorPosition;
+                cursor.gameObject.SetActive(true);
+                cursor.position = touch.position;
             }
             else
             {
                 // released, reset move origin
                 touchMoveOrigin = Vector2.zero;
                 move = Vector2.zero;
+                cursor.gameObject.SetActive(false);
             }
 
             debugValues.vector2_0 = touch.position;
-            debugValues.vector2_1 = new Vector2(Screen.width, Screen.height);
+            debugValues.vector2_1 = touch.delta;
         }
     }
 
