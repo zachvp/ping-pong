@@ -71,7 +71,13 @@ public class PlayerInputMapper : MonoBehaviour
                     var joystickRaw = touchCursor.JoystickRaw(touch.position);
                     debugValues.vector2_2 = joystickRaw;
                     touchCursor.MoveCursor(touchCursor.JoystickScreenPosition(joystickRaw));
-                    move = touchCursor.JoystickNormalized(joystickRaw);
+
+                    var joystickNormalized = touchCursor.JoystickNormalized(joystickRaw);
+                    if (Mathf.Abs(joystickNormalized.x) > touchCursor.joystickDeadzone ||
+                        Mathf.Abs(joystickNormalized.y) > touchCursor.joystickDeadzone)
+                    {
+                        move = touchCursor.JoystickNormalized(joystickRaw);
+                    }
                 }
                 // ...or flick cursor
                 else

@@ -4,6 +4,7 @@ using UnityEngine;
 public class TouchCursor : MonoBehaviour
 {
     public float joystickRadius = 64;
+    public float joystickDeadzone = 0.1f;
     public Transform anchor;
 
     private Vector3 initialPosition;
