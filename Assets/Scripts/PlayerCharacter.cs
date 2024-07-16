@@ -60,7 +60,6 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Update()
     {
-
         if (!state.HasFlag(State.HIT) && inputMapper.isHitPressed)
         {
             state |= State.HIT;
@@ -140,10 +139,10 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     // todo: use and test this
-    private State UpdateState(State current, State updated)
+    private State AddState(State current, State added)
     {
-        var resolved = current | updated;
-        cooldown |= updated;
+        var resolved = current | added;
+        cooldown |= added;
         BufferState(resolved);
 
         return resolved;

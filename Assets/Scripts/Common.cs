@@ -45,9 +45,12 @@ public struct DebugValues
 
     public Vector3 vector3;
 
-    public string str;
+    public string str_0;
+    public string str_1;
 
     public float flt;
+
+    public bool bool_0;
 }
 
 [AttributeUsage(AttributeTargets.Field)]

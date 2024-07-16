@@ -28,7 +28,8 @@ public class PlayerInputMapper : MonoBehaviour
 
     private void Update()
     {
-        debugValues.str = input.currentControlScheme;
+        debugValues.str_0 = input.currentControlScheme;
+        debugValues.str_1 = input.currentActionMap.name;
         debugValues.vector2_0 = InputFlickVelocity;
 
         isHitPressed = input.actions["hit"].WasPressedThisFrame();
@@ -43,6 +44,17 @@ public class PlayerInputMapper : MonoBehaviour
         }
 
         move = input.actions["move"].ReadValue<Vector2>();
+
+        // touchscreen
+        if (input.currentControlScheme.Equals("touchscreen"))
+        {
+            var touch = input.actions["touch.tap"];
+            isHitPressed = touch.WasPressedThisFrame();
+            if (isHitPressed)
+            {
+                Debug.Log("tap detected");
+            }
+        }
     }
 
     public void ResetFlick()

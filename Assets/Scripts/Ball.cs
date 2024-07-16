@@ -57,7 +57,7 @@ public class Ball : MonoBehaviour
 
     private void Update()
     {
-        debugValues.str = state.ToString();
+        debugValues.str_0 = state.ToString();
 
         if (state.HasFlag(State.HIT) && !cooldown.HasFlag(State.HIT))
         {

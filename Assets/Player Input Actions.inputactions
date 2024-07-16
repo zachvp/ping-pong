@@ -33,31 +33,13 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "touch-cursor",
-                    "type": "Value",
-                    "id": "db56597b-262d-4269-bc51-bc46a328f7df",
-                    "expectedControlType": "Touch",
+                    "name": "touch.tap",
+                    "type": "Button",
+                    "id": "8c30088d-aaeb-4db9-9cff-609b6b3a8b34",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "cursor-mouse",
-                    "type": "Value",
-                    "id": "d86590a5-1bcc-47d9-8678-66c1a5e3fc1b",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "touch-tilt",
-                    "type": "Value",
-                    "id": "557163b0-4984-4a4c-9f3c-d5c8d7f10f67",
-                    "expectedControlType": "Vector3",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -68,17 +50,6 @@
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "gamepad",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6f0d56f8-5aca-4166-997b-06a8b09d9206",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -129,34 +100,56 @@
                 },
                 {
                     "name": "",
-                    "id": "b1b53672-fa45-45e4-9858-5315fed7d445",
-                    "path": "<Touchscreen>/primaryTouch",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "mobile;touchscreen",
-                    "action": "touch-cursor",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c2151b5e-e6af-4422-86e9-95a73ce9c451",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard+mouse",
-                    "action": "cursor-mouse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "98b2d33d-46ee-4031-b698-bf74b0f90175",
-                    "path": "<Touchscreen>/{Tilt}",
+                    "id": "5d90da95-1fa3-42da-b63b-dc773a4373be",
+                    "path": "<Touchscreen>/primaryTouch/tap",
                     "interactions": "",
                     "processors": "",
                     "groups": "touchscreen",
-                    "action": "touch-tilt",
+                    "action": "touch.tap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4bd7aea1-20a7-447c-a7db-61b185621362",
+                    "path": "<Touchscreen>/touch1/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "touchscreen",
+                    "action": "touch.tap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4d8c26ec-3d42-44a6-98e9-0d756b049126",
+                    "path": "<Touchscreen>/touch2/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "touchscreen",
+                    "action": "touch.tap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a0ee1d3-ce7f-47a3-a511-177bd9e7bda4",
+                    "path": "<Touchscreen>/touch3/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "touchscreen",
+                    "action": "touch.tap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "20a5c1f4-7a77-461f-bed5-8d7067cb5f05",
+                    "path": "<Touchscreen>/touch4/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "touchscreen",
+                    "action": "touch.tap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
