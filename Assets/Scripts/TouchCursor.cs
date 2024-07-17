@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// todo: migrate this to top of prefab hierarchy - will contain refs to cursor, anchor
 [RequireComponent (typeof(RectTransform))]
 public class TouchCursor : MonoBehaviour
 {

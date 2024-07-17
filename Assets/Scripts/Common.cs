@@ -161,4 +161,12 @@ public static class Constants
     }
 }
 
-
+[Flags]
+public enum Direction2D
+{
+    NONE = 0,
+    LEFT = 1 << 1,
+    RIGHT = 1 << 2,
+    DOWN = 1 << 3,
+    UP = 1 << 4
+}

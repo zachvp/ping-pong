@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "touch.flick",
+                    "type": "Value",
+                    "id": "1ffa5273-bb4d-4b91-a895-0294d8bdc615",
+                    "expectedControlType": "Touch",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -170,6 +179,17 @@
                     "processors": "",
                     "groups": "touchscreen",
                     "action": "touch.move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5bd0c4c5-755e-4f98-a98e-d5bdab972805",
+                    "path": "<Touchscreen>/touch1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "touchscreen",
+                    "action": "touch.flick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
