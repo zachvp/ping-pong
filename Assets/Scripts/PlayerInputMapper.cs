@@ -1,9 +1,6 @@
-using Mono.Cecil;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.InputSystem.LowLevel;
-using static UnityEngine.GraphicsBuffer;
 
 public class PlayerInputMapper : MonoBehaviour
 {
@@ -63,13 +60,12 @@ public class PlayerInputMapper : MonoBehaviour
             var touch0 = input.actions["touch.0"].ReadValue<TouchState>();
             var touch1 = input.actions["touch.1"].ReadValue<TouchState>();
             var touchMove = touch0;
-            var touchFlick = touch1;
+            var touchFlick = touch0;
 
             if (touch0.isInProgress)
             {
                 if (touch0.position.x > Screen.width / 2)
                 {
-                    touchFlick = touch0;
                     if (!touch1.isInProgress)
                         touchMove.phase = UnityEngine.InputSystem.TouchPhase.None;
                 }
@@ -90,7 +86,7 @@ public class PlayerInputMapper : MonoBehaviour
                 else
                 {
                     touchMove = touch1;
-                    if (!touch1.isInProgress)
+                    if (!touch0.isInProgress)
                         touchFlick.phase = UnityEngine.InputSystem.TouchPhase.None;
                 }
             }
