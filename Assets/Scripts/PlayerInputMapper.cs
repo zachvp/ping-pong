@@ -22,6 +22,7 @@ public class PlayerInputMapper : MonoBehaviour
 
     public TouchCursor touchJoystickLeft;
     public TouchCursor touchJoystickRight;
+    private bool touchJoystickRightEnabled;
 
     // todo: dbg
     public DebugValues debugValues;
@@ -64,7 +65,19 @@ public class PlayerInputMapper : MonoBehaviour
                 // check for a move cursor...
                 if (touchMove.position.x < Screen.width / 2)
                 {
-                    ProcessTouchJoystick(touchMove, touchJoystickLeft);
+                    touchJoystickLeft.gameObject.SetActive(true);
+
+                    // adjust and respond to cursor
+                    var joystickRaw = touchJoystickLeft.JoystickRaw(touchMove.position);
+                    debugValues.vector2_2 = joystickRaw;
+                    touchJoystickLeft.MoveCursor(touchJoystickLeft.JoystickScreenPosition(joystickRaw));
+
+                    var joystickNormalized = touchJoystickLeft.JoystickNormalized(joystickRaw);
+                    if (Mathf.Abs(joystickNormalized.x) > touchJoystickLeft.joystickDeadzone ||
+                        Mathf.Abs(joystickNormalized.y) > touchJoystickLeft.joystickDeadzone)
+                    {
+                        move = joystickNormalized;
+                    }
                 }
             }
             else
@@ -80,25 +93,29 @@ public class PlayerInputMapper : MonoBehaviour
             {
                 if (touchFlick.position.x > Screen.width / 2)
                 {
-                    touchJoystickRight.gameObject.SetActive(true);
-
-                    // adjust and respond to cursor
-                    var joystickRaw = touchJoystickRight.JoystickRaw(touchFlick.position);
-                    debugValues.vector2_2 = joystickRaw;
-                    touchJoystickRight.MoveCursor(touchJoystickRight.JoystickScreenPosition(joystickRaw));
-
-                    var joystickNormalized = touchJoystickRight.JoystickNormalized(joystickRaw);
-                    if (Mathf.Abs(joystickNormalized.x) > touchJoystickRight.joystickDeadzone ||
-                        Mathf.Abs(joystickNormalized.y) > touchJoystickRight.joystickDeadzone)
+                    if (touchJoystickRightEnabled)
                     {
-                        inputFlick = joystickNormalized;
-                        debugValues.vector2_0 = joystickNormalized;
+                        // adjust and respond to cursor
+                        var joystickRaw = touchJoystickRight.JoystickRaw(touchFlick.position);
+                        debugValues.vector2_2 = joystickRaw;
+                        touchJoystickRight.MoveCursor(touchJoystickRight.JoystickScreenPosition(joystickRaw));
+
+                        inputFlick = touchJoystickRight.JoystickNormalized(joystickRaw);
+                    }
+                    else
+                    {
+                        touchJoystickRight.anchor.position = touchFlick.position;
+                        touchJoystickRightEnabled = true;
+                        touchJoystickRight.gameObject.SetActive(true);
+                        Debug.Log($"set anchor position");
                     }
                 }
             }
             else
             {
                 touchJoystickRight.ResetPosition();
+                touchJoystickRight.gameObject.SetActive(false);
+                touchJoystickRightEnabled = false;
                 inputFlick = Vector2.zero;
                 InputFlickVelocity = Vector2.zero;
             }
@@ -115,23 +132,6 @@ public class PlayerInputMapper : MonoBehaviour
         if (isFlick)
         {
             InputFlickVelocityTriggered = InputFlickVelocity;
-        }
-    }
-
-    private void ProcessTouchJoystick(TouchState touch, TouchCursor target)
-    {
-        target.gameObject.SetActive(true);
-
-        // adjust and respond to cursor
-        var joystickRaw = target.JoystickRaw(touch.position);
-        debugValues.vector2_2 = joystickRaw;
-        target.MoveCursor(target.JoystickScreenPosition(joystickRaw));
-
-        var joystickNormalized = target.JoystickNormalized(joystickRaw);
-        if (Mathf.Abs(joystickNormalized.x) > target.joystickDeadzone ||
-            Mathf.Abs(joystickNormalized.y) > target.joystickDeadzone)
-        {
-            move = joystickNormalized;
         }
     }
 
