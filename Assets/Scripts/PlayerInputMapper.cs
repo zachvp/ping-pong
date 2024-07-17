@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -58,8 +59,42 @@ public class PlayerInputMapper : MonoBehaviour
                 Debug.Log("tap detected");
             }
 
-            // touch move joystick
-            var touchMove = input.actions["touch.move"].ReadValue<TouchState>();
+            // touch joysticks
+            var touch0 = input.actions["touch.0"].ReadValue<TouchState>();
+            var touch1 = input.actions["touch.1"].ReadValue<TouchState>();
+            var touchMove = touch0;
+            var touchFlick = touch1;
+
+            if (touch0.isInProgress)
+            {
+                if (touch0.position.x > Screen.width / 2)
+                {
+                    touchFlick = touch0;
+                    if (!touch1.isInProgress)
+                        touchMove.phase = UnityEngine.InputSystem.TouchPhase.None;
+                }
+                else
+                {
+                    if (!touch1.isInProgress)
+                        touchFlick.phase = UnityEngine.InputSystem.TouchPhase.None;
+                }
+            }
+            if (touch1.isInProgress)
+            {
+                if (touch1.position.x > Screen.width / 2)
+                {
+                    touchFlick = touch1;
+                    if (!touch0.isInProgress)
+                        touchMove.phase = UnityEngine.InputSystem.TouchPhase.None;
+                }
+                else
+                {
+                    touchMove = touch1;
+                    if (!touch1.isInProgress)
+                        touchFlick.phase = UnityEngine.InputSystem.TouchPhase.None;
+                }
+            }
+
             if (touchMove.isInProgress)
             {
                 // check for a move cursor...
@@ -88,10 +123,9 @@ public class PlayerInputMapper : MonoBehaviour
             }
 
             // touch flick joystick
-            var touchFlick = input.actions["touch.flick"].ReadValue<TouchState>();
             if (touchFlick.isInProgress)
             {
-                if (touchFlick.position.x > Screen.width / 2)
+                //if (touchFlick.position.x > Screen.width / 2)
                 {
                     if (touchJoystickRightEnabled)
                     {

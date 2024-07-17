@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "touch.move",
+                    "name": "touch.0",
                     "type": "Value",
                     "id": "0d05c45c-a34b-4981-9585-2af56c153b63",
                     "expectedControlType": "Touch",
@@ -51,7 +51,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "touch.flick",
+                    "name": "touch.1",
                     "type": "Value",
                     "id": "1ffa5273-bb4d-4b91-a895-0294d8bdc615",
                     "expectedControlType": "Touch",
@@ -178,7 +178,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "touchscreen",
-                    "action": "touch.move",
+                    "action": "touch.0",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -189,7 +189,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "touchscreen",
-                    "action": "touch.flick",
+                    "action": "touch.1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

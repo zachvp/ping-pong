@@ -16,8 +16,6 @@ public class TouchCursor : MonoBehaviour
     {
         initialPosition = anchor.position;
         debugValues.vector2_0 = initialPosition;
-
-        Debug.Log($"initialPosition: {initialPosition}\t anchor position: {anchor.position}");
     }
 
     private void OnEnable()
