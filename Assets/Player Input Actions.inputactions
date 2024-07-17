@@ -174,7 +174,7 @@
                 {
                     "name": "",
                     "id": "fb09dc68-16d0-4597-a38f-ac330d8d2e6e",
-                    "path": "<Touchscreen>/primaryTouch",
+                    "path": "<Touchscreen>/touch0",
                     "interactions": "",
                     "processors": "",
                     "groups": "touchscreen",
@@ -184,7 +184,7 @@
                 },
                 {
                     "name": "",
-                    "id": "5bd0c4c5-755e-4f98-a98e-d5bdab972805",
+                    "id": "f436c1fa-6a74-4b67-8af3-695d289d7921",
                     "path": "<Touchscreen>/touch1",
                     "interactions": "",
                     "processors": "",

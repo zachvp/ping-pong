@@ -63,7 +63,7 @@ public class PlayerInputMapper : MonoBehaviour
             if (touchMove.isInProgress)
             {
                 // check for a move cursor...
-                if (touchMove.position.x < Screen.width / 2)
+                //if (touchMove.position.x < Screen.width / 2)
                 {
                     touchJoystickLeft.gameObject.SetActive(true);
 
