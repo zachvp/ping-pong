@@ -9,6 +9,7 @@ public class NetworkManagerGUI : MonoBehaviour
     public Color textColor = Color.black;
     public int fontSize = 24;
     public int padding = 16;
+    public int margin = 16;
     public FontStyle fontStyle = FontStyle.Bold;
 
     private GUIStyle defaultButtonStyle;
@@ -16,7 +17,6 @@ public class NetworkManagerGUI : MonoBehaviour
     private void Awake()
     {
         manager = GetComponent<NetworkManager>();
-        manager.StartHost();
 
         defaultLabelStyle = new GUIStyle();
         defaultButtonStyle = new GUIStyle();
@@ -30,7 +30,7 @@ public class NetworkManagerGUI : MonoBehaviour
         defaultLabelStyle.normal.textColor = textColor;
         defaultLabelStyle.fontSize = fontSize;
         defaultLabelStyle.fontStyle = fontStyle;
-        defaultLabelStyle.margin = new RectOffset(padding, padding, padding, padding);
+        defaultLabelStyle.margin = new RectOffset(margin, margin, margin, margin);
 
         // button style
         GUI.skin.button.normal.textColor = textColor;
@@ -39,8 +39,18 @@ public class NetworkManagerGUI : MonoBehaviour
         GUI.skin.button.stretchWidth = true;
         GUI.skin.button.fixedHeight = 48;
         GUI.skin.button.padding = new RectOffset(padding, padding, padding, padding);
+        GUI.skin.button.margin = new RectOffset(margin, margin, margin, margin);
 
-        GUILayout.BeginArea(new Rect(20, 20, 300, 300));
+        GUILayout.BeginArea(new Rect(margin, margin, 300, 300));
+
+        GUILayout.BeginHorizontal();
+        if (!manager.IsHost && !manager.IsClient)
+        {
+            if (GUILayout.Button("Start Host"))
+            {
+                manager.StartHost();
+            }
+        }
 
         if (!manager.IsClient)
         {
@@ -49,6 +59,7 @@ public class NetworkManagerGUI : MonoBehaviour
                 manager.StartClient();
             }
         }
+        GUILayout.EndHorizontal();
 
         // status labels
         var mode = "NONE";

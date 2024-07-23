@@ -406,22 +406,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkManager
       objectReference: {fileID: 0}
-    - target: {fileID: 6370824493469375215, guid: 85ef88f3e007f544089a35608bb13ff8, type: 3}
-      propertyPath: padding
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 6370824493469375215, guid: 85ef88f3e007f544089a35608bb13ff8, type: 3}
-      propertyPath: textColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6370824493469375215, guid: 85ef88f3e007f544089a35608bb13ff8, type: 3}
-      propertyPath: textColor.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6370824493469375215, guid: 85ef88f3e007f544089a35608bb13ff8, type: 3}
-      propertyPath: textColor.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8396275538703001730, guid: 85ef88f3e007f544089a35608bb13ff8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

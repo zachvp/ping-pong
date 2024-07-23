@@ -110,3 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9073fcf87bd5ccd409c739f2b4c08478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+  fontSize: 24
+  padding: 8
+  fontStyle: 1

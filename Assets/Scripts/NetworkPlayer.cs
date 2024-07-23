@@ -1,12 +1,16 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 
 public class NetworkPlayer : NetworkBehaviour
 {
     public NetworkVariable<Vector3> networkPosition = new();
+    public NetworkRigidbody networkRigidbody;
 
     public override void OnNetworkSpawn()
     {
+        networkRigidbody = GetComponent<NetworkRigidbody>();
+
         Debug.Log($"{nameof(NetworkPlayer)} OnNetworkSpawn: ID: {NetworkObjectId}");
 
         if (IsOwner)
@@ -31,6 +35,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void Update()
     {
-        transform.position = networkPosition.Value;
+        //networkPosition.Value = GetComponent<Rigidbody>().position;
+        //networkRigidbody.v
     }
 }
