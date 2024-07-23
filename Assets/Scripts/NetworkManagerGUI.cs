@@ -4,58 +4,69 @@ using Unity.Netcode;
 public class NetworkManagerGUI : MonoBehaviour
 {
     private NetworkManager manager;
+    
+    private GUIStyle defaultLabelStyle;
+    public Color textColor = Color.black;
+    public int fontSize = 24;
+    public int padding = 16;
+    public FontStyle fontStyle = FontStyle.Bold;
+
+    private GUIStyle defaultButtonStyle;
 
     private void Awake()
     {
         manager = GetComponent<NetworkManager>();
+        manager.StartHost();
+
+        defaultLabelStyle = new GUIStyle();
+        defaultButtonStyle = new GUIStyle();
     }
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+        // update styles
 
-        if (!manager.IsClient && !manager.IsServer)
+        // label style
+        defaultLabelStyle.normal.textColor = textColor;
+        defaultLabelStyle.fontSize = fontSize;
+        defaultLabelStyle.fontStyle = fontStyle;
+        defaultLabelStyle.margin = new RectOffset(padding, padding, padding, padding);
+
+        // button style
+        GUI.skin.button.normal.textColor = textColor;
+        GUI.skin.button.fontSize = fontSize;
+        GUI.skin.button.fontStyle = fontStyle;
+        GUI.skin.button.stretchWidth = true;
+        GUI.skin.button.fixedHeight = 48;
+        GUI.skin.button.padding = new RectOffset(padding, padding, padding, padding);
+
+        GUILayout.BeginArea(new Rect(20, 20, 300, 300));
+
+        if (!manager.IsClient)
         {
-            if (GUILayout.Button("Start Host"))
-            {
-                manager.StartHost();
-            }
             if (GUILayout.Button("Start Client"))
             {
                 manager.StartClient();
             }
-            if (GUILayout.Button("Start Server"))
-            {
-                manager.StartServer();
-            }
         }
-        else
+
+        // status labels
+        var mode = "NONE";
+        if (manager.IsHost)
         {
-            // status labels
-            string mode = "NONE";
-            if (manager.IsHost)
-            {
-                mode = "Host";
-            }
-            else if (manager.IsServer)
-            {
-                mode = "Server";
-            }
-            else if (manager.IsClient)
-            {
-                mode = "Client";
-            }
-
-            GUILayout.Label($"Transport: {manager.NetworkConfig.NetworkTransport.GetType().Name}");
-            GUILayout.Label($"Mode: {mode}");
-
-            // submit new position
-            if (GUILayout.Button(manager.IsServer ? "Move" : "Request Move"))
-            {
-
-
-            }
+            mode = "Host";
         }
+        else if (manager.IsServer)
+        {
+            mode = "Server";
+        }
+        else if (manager.IsClient)
+        {
+            mode = "Client";
+        }
+
+        //GUILayout.Label($"Transport: {manager.NetworkConfig.NetworkTransport.GetType().Name}");
+        GUILayout.Label($"Mode: {mode}", defaultLabelStyle);
 
         GUILayout.EndArea();
     }

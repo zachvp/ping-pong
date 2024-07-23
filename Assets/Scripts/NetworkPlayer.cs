@@ -19,7 +19,14 @@ public class NetworkPlayer : NetworkBehaviour
         }
 
         // set start position
-        networkPosition.Value = new Vector3(0, 8, -1);
+        if (NetworkObjectId < 2)
+        {
+            networkPosition.Value = new Vector3(0, 8, -1);
+        }
+        else
+        {
+            networkPosition.Value = new Vector3(0, 8, 23);
+        }
     }
 
     private void Update()
