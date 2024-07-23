@@ -73,10 +73,14 @@ MonoBehaviour:
   debugValues:
     vector2_0: {x: 0, y: 0}
     vector2_1: {x: 0, y: 0}
+    vector2_2: {x: 0, y: 0}
     vector2Int_0: {x: 0, y: 0}
     vector3: {x: 0, y: 0, z: 0}
-    str: 
+    str_0: 
+    str_1: 
     flt: 0
+    bool_0: 0
+    bool_1: 0
 --- !u!33 &2479387154023948608
 MeshFilter:
   m_ObjectHideFlags: 0
