@@ -13,6 +13,7 @@ public class NetworkManagerGUI : MonoBehaviour
     private void OnGUI()
     {
         GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+
         if (!manager.IsClient && !manager.IsServer)
         {
             if (GUILayout.Button("Start Host"))

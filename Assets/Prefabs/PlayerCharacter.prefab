@@ -820,7 +820,7 @@ GameObject:
   - component: {fileID: 5972274319968965094}
   - component: {fileID: 6773017468204297096}
   - component: {fileID: 6492712275424000021}
-  - component: {fileID: 7133714647021944081}
+  - component: {fileID: 169682541616819934}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -1044,7 +1044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2392825819
+  GlobalObjectIdHash: 2037244608
   InScenePlacedSourceGlobalObjectIdHash: 138868048
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &7133714647021944081
+--- !u!114 &169682541616819934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1062,6 +1062,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8175901116463179508}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10037656b4f8e22469420f75d66cc7f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b7de637f194ced44a8ff984869aa609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
