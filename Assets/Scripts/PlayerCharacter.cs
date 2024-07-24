@@ -18,7 +18,6 @@ public class PlayerCharacter : MonoBehaviour
     public int hitStateBufferFrames = 12;
 
     public Vector3 Velocity { get; private set; }
-    public Rigidbody Body { get { return body; } }
     private Rigidbody body;
     private Vector3 positionInitial;
     private Vector3 positionPrevious;
@@ -38,6 +37,8 @@ public class PlayerCharacter : MonoBehaviour
     public TrailRenderer trailRenderer;
 
     public SharedVector3 dashDirection;
+
+    public NetworkPlayer network;
 
     [Flags]
     public enum State
@@ -87,16 +88,21 @@ public class PlayerCharacter : MonoBehaviour
     private void FixedUpdate()
     {
         var move = (Vector3) inputMapper.move;
+        var velocity = move * moveSpeed;
         if (state.HasFlag(State.DASH))
         {
-            body.velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
+            velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
         }
         else
         {
-            body.velocity = move * moveSpeed;
+            //body.velocity = move * moveSpeed;
+            if (network.IsClient && network.IsOwner)
+                network.UpdateServerRPC(velocity);
+            //body.velocity = network.velocity.Value;
         }
 
-        Velocity = body.velocity;
+        body.MovePosition(body.position +  velocity * Time.fixedDeltaTime);
+        Velocity = velocity;
         positionPrevious = body.position;
     }
 

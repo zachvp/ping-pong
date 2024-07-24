@@ -113,4 +113,5 @@ MonoBehaviour:
   textColor: {r: 1, g: 1, b: 1, a: 1}
   fontSize: 24
   padding: 8
+  margin: 16
   fontStyle: 1

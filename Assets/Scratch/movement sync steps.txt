@@ -1,0 +1,7 @@
+movement sync steps
+	define a network variable for velocity
+	if IsClient and IsOwner
+		client calculates new velocity according to input
+		client sends Server RPC with new velocity
+	client moves according to network variable value
+
