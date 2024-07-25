@@ -1,85 +1,56 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.UI;
+using TMPro;
 
 public class NetworkManagerGUI : MonoBehaviour
 {
     private NetworkManager manager;
-    
-    private GUIStyle defaultLabelStyle;
-    public Color textColor = Color.black;
-    public int fontSize = 24;
-    public int padding = 16;
-    public int margin = 16;
-    public FontStyle fontStyle = FontStyle.Bold;
-    public Rect area;
 
-    private GUIStyle defaultButtonStyle;
+    public Button startHost;
+    public Button startClient;
+    public TextMeshProUGUI mode;
 
     private void Awake()
     {
         manager = GetComponent<NetworkManager>();
 
-        defaultLabelStyle = new GUIStyle();
-        defaultButtonStyle = new GUIStyle();
+        startHost.onClick.AddListener(() =>
+        {
+            manager.StartHost();
+            UpdateUI();
+        });
+
+        startClient.onClick.AddListener(() =>
+        {
+            manager.StartClient();
+            UpdateUI();
+        });
     }
 
-    private void OnGUI()
+
+    private void UpdateUI()
     {
-        // update styles
-
-        // label style
-        defaultLabelStyle.normal.textColor = textColor;
-        defaultLabelStyle.fontSize = fontSize;
-        defaultLabelStyle.fontStyle = fontStyle;
-        defaultLabelStyle.margin = new RectOffset(margin, margin, margin, margin);
-
-        // button style
-        GUI.skin.button.normal.textColor = textColor;
-        GUI.skin.button.fontSize = fontSize;
-        GUI.skin.button.fontStyle = fontStyle;
-        GUI.skin.button.stretchWidth = true;
-        GUI.skin.button.fixedHeight = 48;
-        GUI.skin.button.padding = new RectOffset(padding, padding, padding, padding);
-        GUI.skin.button.margin = new RectOffset(margin, margin, margin, margin);
-
-        GUILayout.BeginArea(area);
-
-        GUILayout.BeginHorizontal();
-        if (!manager.IsHost && !manager.IsClient)
-        {
-            if (GUILayout.Button("Start Host"))
-            {
-                manager.StartHost();
-            }
-        }
-
-        if (!manager.IsClient)
-        {
-            if (GUILayout.Button("Start Client"))
-            {
-                manager.StartClient();
-            }
-        }
-        GUILayout.EndHorizontal();
-
-        // status labels
-        var mode = "NONE";
+        var modeValue = "NONE";
         if (manager.IsHost)
         {
-            mode = "Host";
+            modeValue = "Host";
+            startHost.enabled = false;
+            startClient.enabled = false;
         }
         else if (manager.IsServer)
         {
-            mode = "Server";
+            modeValue = "Server";
+            startHost.enabled = false;
+            startClient.enabled = false;
         }
         else if (manager.IsClient)
         {
-            mode = "Client";
+            modeValue = "Client";
+            startHost.enabled = false;
+            startClient.enabled = false;
         }
 
-        //GUILayout.Label($"Transport: {manager.NetworkConfig.NetworkTransport.GetType().Name}");
-        GUILayout.Label($"Mode: {mode}", defaultLabelStyle);
-
-        GUILayout.EndArea();
+        mode.text = $"Mode: {modeValue}";
     }
 }

@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 734280194}
   - component: {fileID: 734280193}
   m_Layer: 0
-  m_Name: UIDebug 2
+  m_Name: UIDebug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -451,7 +451,7 @@ GameObject:
   - component: {fileID: 1359635192}
   - component: {fileID: 1359635191}
   m_Layer: 5
-  m_Name: MainCanvas
+  m_Name: Main Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1026,7 +1026,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6938928331177187882, guid: 06fe039123bf42f4982f266f3615711c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 5.24
       objectReference: {fileID: 0}
     - target: {fileID: 6938928331177187882, guid: 06fe039123bf42f4982f266f3615711c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1063,10 +1063,6 @@ PrefabInstance:
     - target: {fileID: 8444359246476756341, guid: 06fe039123bf42f4982f266f3615711c, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2487825001
-      objectReference: {fileID: 0}
-    - target: {fileID: 8444359246476756341, guid: 06fe039123bf42f4982f266f3615711c, type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 4103574057
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
