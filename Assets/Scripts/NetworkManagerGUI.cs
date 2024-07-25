@@ -11,6 +11,7 @@ public class NetworkManagerGUI : MonoBehaviour
     public int padding = 16;
     public int margin = 16;
     public FontStyle fontStyle = FontStyle.Bold;
+    public Rect area;
 
     private GUIStyle defaultButtonStyle;
 
@@ -41,7 +42,7 @@ public class NetworkManagerGUI : MonoBehaviour
         GUI.skin.button.padding = new RectOffset(padding, padding, padding, padding);
         GUI.skin.button.margin = new RectOffset(margin, margin, margin, margin);
 
-        GUILayout.BeginArea(new Rect(margin, margin, 300, 300));
+        GUILayout.BeginArea(area);
 
         GUILayout.BeginHorizontal();
         if (!manager.IsHost && !manager.IsClient)

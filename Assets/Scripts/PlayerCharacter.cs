@@ -92,16 +92,15 @@ public class PlayerCharacter : MonoBehaviour
         if (state.HasFlag(State.DASH))
         {
             velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
+            body.velocity = velocity;
         }
         else
         {
-            //body.velocity = move * moveSpeed;
-            if (network.IsClient && network.IsOwner)
-                network.UpdateServerRPC(velocity);
+            body.velocity = velocity;
             //body.velocity = network.velocity.Value;
         }
 
-        body.MovePosition(body.position +  velocity * Time.fixedDeltaTime);
+        //body.MovePosition(body.position +  velocity * Time.fixedDeltaTime);
         Velocity = velocity;
         positionPrevious = body.position;
     }
