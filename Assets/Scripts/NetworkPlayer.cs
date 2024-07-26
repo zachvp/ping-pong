@@ -13,11 +13,6 @@ public class NetworkPlayer : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
-        
-        if (IsServer)
-        {
-        }
-        //Debug.Log($"{nameof(NetworkPlayer)} OnNetworkSpawn: OwnerClientID: {OwnerClientId} NetworkObjectId: {NetworkObjectId} Is");
     }
 
     private void Start()
@@ -26,10 +21,8 @@ public class NetworkPlayer : NetworkBehaviour
         {
             UIDebug.Instance.Register($"Client {OwnerClientId} network position", () => position.Value);
             UIDebug.Instance.Register($"Client {OwnerClientId} client position", () => transform.position);
-
-            transform.position = startPosition;
-            UpdateServerRPC(startPosition);
         }
+        transform.position = startPosition;
     }
 
     private void Update()
@@ -42,6 +35,7 @@ public class NetworkPlayer : NetworkBehaviour
         if (IsClient && IsOwner)
         {
             var newPosition = PositionFromInput(Keyboard.current);
+
             UpdateServerRPC(newPosition);
         }
     }
