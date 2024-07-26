@@ -1068,9 +1068,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b7de637f194ced44a8ff984869aa609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkPosition:
+  position:
     m_InternalValue: {x: 0, y: 0, z: 0}
-  body: {fileID: 5972274319968965094}
+  startPosition: {x: 0, y: 5, z: -1}
+  speed: 4
 --- !u!114 &2169781331942490316
 MonoBehaviour:
   m_ObjectHideFlags: 0
