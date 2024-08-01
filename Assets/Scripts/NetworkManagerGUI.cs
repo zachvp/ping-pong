@@ -30,8 +30,11 @@ public class NetworkManagerGUI : MonoBehaviour
         startClient.onClick.AddListener(() =>
         {
             transport.ConnectionData.Address = ipInput.text;
-            manager.StartClient();
-            UpdateUI();
+            var success = manager.StartClient();
+            if (success)
+                UpdateUI();
+            else
+                Debug.LogError($"Client connection failed, how to debug?");
         });
 
         manager.OnServerStarted += () =>
