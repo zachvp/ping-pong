@@ -67,6 +67,7 @@ public class NetworkManagerGUI : MonoBehaviour
             modeValue = "Host";
             startHost.gameObject.SetActive(false);
             startClient.gameObject.SetActive(false);
+            ipInput.gameObject.SetActive(false);
         }
         else if (manager.IsServer)
         {
