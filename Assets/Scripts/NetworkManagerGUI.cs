@@ -5,6 +5,9 @@ using TMPro;
 using System.Net;
 using System.Net.Sockets;
 using Unity.Netcode.Transports.UTP;
+using BeaconLib;
+using UnityEditor.Search;
+using UnityEditor.Animations;
 
 public class NetworkManagerGUI : MonoBehaviour
 {
@@ -13,15 +16,23 @@ public class NetworkManagerGUI : MonoBehaviour
 
     public Button startHost;
     public Button startClient;
+    public Button search;
     public TextMeshProUGUI mode;
     public TMP_InputField ipInput;
 
     public SavedSettings settings;
+    
+    private Beacon beacon;
+    private Probe probe;
 
     private void Awake()
     {
         manager = GetComponent<NetworkManager>();
         transport = GetComponent<UnityTransport>();
+
+        var appName = "PingPong";
+        beacon = new(appName, transport.ConnectionData.Port);
+        probe = new(appName);
 
         if (settings.ipAddress.Trim().Length > 0 )
             ipInput.text = settings.ipAddress;
@@ -31,6 +42,10 @@ public class NetworkManagerGUI : MonoBehaviour
         {
             manager.StartHost();
             UpdateUI();
+
+            // start beacon server
+            beacon.BeaconData = $"PingPong Discover Server on {Dns.GetHostName()}";
+            beacon.Start();
         });
 
         startClient.onClick.AddListener(() =>
@@ -42,6 +57,22 @@ public class NetworkManagerGUI : MonoBehaviour
                 UpdateUI();
             else
                 Debug.LogError($"Client connection failed, how to debug?");
+        });
+
+        // search button
+        search.onClick.AddListener(() =>
+        {
+            Debug.Log($"start search");
+
+            probe.BeaconsUpdated += (beacons) =>
+            {
+                foreach (var beacon in beacons)
+                {
+                    Debug.LogFormat($"{beacon.Address}: {beacon.Data}");
+                }
+            };
+
+            probe.Start();
         });
 
         // client connected event
@@ -64,6 +95,12 @@ public class NetworkManagerGUI : MonoBehaviour
             if (!foundIP)
                 Debug.LogError("Unable to find local IP address");
         };
+    }
+
+    private void OnDestroy()
+    {
+        beacon.Stop();
+        probe.Stop();
     }
 
     private void UpdateUI()
