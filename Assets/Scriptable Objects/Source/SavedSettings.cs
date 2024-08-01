@@ -7,6 +7,7 @@ using UnityEngine;
 public class SavedSettings : ScriptableObject
 {
     public string ipAddress;
+    public string hostedGameName;
 
 #if DEBUG
     public IPEntry[] ipEntries;

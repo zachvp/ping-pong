@@ -6,8 +6,6 @@ using System.Net;
 using System.Net.Sockets;
 using Unity.Netcode.Transports.UTP;
 using BeaconLib;
-using UnityEditor.Search;
-using UnityEditor.Animations;
 
 public class NetworkManagerGUI : MonoBehaviour
 {
@@ -30,9 +28,8 @@ public class NetworkManagerGUI : MonoBehaviour
         manager = GetComponent<NetworkManager>();
         transport = GetComponent<UnityTransport>();
 
-        var appName = "PingPong";
-        beacon = new(appName, transport.ConnectionData.Port);
-        probe = new(appName);
+        beacon = new(settings.hostedGameName, transport.ConnectionData.Port);
+        probe = new(settings.hostedGameName);
 
         if (settings.ipAddress.Trim().Length > 0 )
             ipInput.text = settings.ipAddress;
@@ -44,7 +41,7 @@ public class NetworkManagerGUI : MonoBehaviour
             UpdateUI();
 
             // start beacon server
-            beacon.BeaconData = $"PingPong Discover Server on {Dns.GetHostName()}";
+            beacon.BeaconData = $"{settings.hostedGameName} Host: {Dns.GetHostName()}";
             beacon.Start();
         });
 
@@ -69,6 +66,7 @@ public class NetworkManagerGUI : MonoBehaviour
                 foreach (var beacon in beacons)
                 {
                     Debug.LogFormat($"{beacon.Address}: {beacon.Data}");
+                    settings.ipAddress = beacon.Address.Address.ToString();
                 }
             };
 
