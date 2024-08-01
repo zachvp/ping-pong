@@ -17,11 +17,6 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void Start()
     {
-        if (IsClient && IsOwner)
-        {
-            UIDebug.Instance.Register($"Client {OwnerClientId} network position", () => position.Value);
-            UIDebug.Instance.Register($"Client {OwnerClientId} client position", () => transform.position);
-        }
         transform.position = startPosition;
     }
 
