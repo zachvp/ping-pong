@@ -16,11 +16,17 @@ public class NetworkManagerGUI : MonoBehaviour
     public TextMeshProUGUI mode;
     public TMP_InputField ipInput;
 
+    public SavedSettings settings;
+
     private void Awake()
     {
         manager = GetComponent<NetworkManager>();
         transport = GetComponent<UnityTransport>();
 
+        if (settings.ipAddress.Trim().Length > 0 )
+            ipInput.text = settings.ipAddress;
+
+        // register UI button listeners to start host and client
         startHost.onClick.AddListener(() =>
         {
             manager.StartHost();
@@ -30,6 +36,7 @@ public class NetworkManagerGUI : MonoBehaviour
         startClient.onClick.AddListener(() =>
         {
             transport.ConnectionData.Address = ipInput.text;
+
             var success = manager.StartClient();
             if (success)
                 UpdateUI();
@@ -37,14 +44,13 @@ public class NetworkManagerGUI : MonoBehaviour
                 Debug.LogError($"Client connection failed, how to debug?");
         });
 
-        manager.OnServerStarted += () =>
+        // client connected event
+        manager.OnClientConnectedCallback += (clientId) =>
         {
-            if (!manager.IsHost)
-            {
-                return;
-            }
-            Debug.Log($"server started, i am the host");
+            if (manager.IsHost)
+                Debug.Log($"server started, i am the host");
 
+            // display the client's LAN IP address
             var host = Dns.GetHostEntry(Dns.GetHostName());
             var foundIP = false;
             foreach (var address in host.AddressList)
@@ -56,9 +62,7 @@ public class NetworkManagerGUI : MonoBehaviour
                 }
             }
             if (!foundIP)
-            {
                 Debug.LogError("Unable to find local IP address");
-            }
         };
     }
 

@@ -717,7 +717,7 @@ MonoBehaviour:
   ConnectionData:
     Address: 127.0.0.1
     Port: 7777
-    ServerListenAddress: 127.0.0.1
+    ServerListenAddress: 0.0.0.0
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
@@ -738,6 +738,7 @@ MonoBehaviour:
   startClient: {fileID: 1429458178566461084}
   mode: {fileID: 6290548928319893203}
   ipInput: {fileID: 3523745671075399452}
+  settings: {fileID: 11400000, guid: 88fb07dd11866e845a13f3bea9c49d88, type: 2}
 --- !u!1 &4418368512239484037
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,7 +989,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 128
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 2
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
