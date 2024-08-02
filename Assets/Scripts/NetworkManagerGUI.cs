@@ -106,6 +106,7 @@ public class NetworkManagerGUI : MonoBehaviour
             var beacon = probe.Beacons.First();
             settings.ipAddress = beacon.Address.Address.ToString();
             ipInput.text = settings.ipAddress;
+            probe.Stop();
         }
     }
 

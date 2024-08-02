@@ -61,10 +61,10 @@ namespace BeaconLib
 
         public void Stop()
         {
+            Running = false;
             waitHandle.Set();
             if (thread.IsAlive)
                 thread.Join();
-            Running = false;
         }
 
         private void ResponseReceived(IAsyncResult ar)
