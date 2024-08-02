@@ -21,14 +21,17 @@ namespace BeaconLib
         /// </summary>
         private static readonly TimeSpan BeaconTimeout = new TimeSpan(0, 0, 0, 5); // seconds
 
-        public event Action<IEnumerable<BeaconLocation>> BeaconsUpdated;
+        public event Action<IEnumerable<BeaconLocation>> BeaconsUpdated; // todo: pass single beacon location rather than list
 
         private readonly Thread thread;
         private readonly EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
         private readonly UdpClient udp = new UdpClient();
         private IEnumerable<BeaconLocation> currentBeacons = Enumerable.Empty<BeaconLocation>();
 
-        private bool running = true;
+        public string BeaconType { get; private set; }
+        public IEnumerable<BeaconLocation> Beacons { get { return currentBeacons; } }
+
+        public bool Running { get; private set; }
 
         public Probe(string beaconType)
         {
@@ -53,6 +56,15 @@ namespace BeaconLib
         public void Start()
         {
             thread.Start();
+            Running = true;
+        }
+
+        public void Stop()
+        {
+            waitHandle.Set();
+            if (thread.IsAlive)
+                thread.Join();
+            Running = false;
         }
 
         private void ResponseReceived(IAsyncResult ar)
@@ -80,11 +92,9 @@ namespace BeaconLib
             udp.BeginReceive(ResponseReceived, null);
         }
 
-        public string BeaconType { get; private set; }
-
         private void BackgroundLoop()
         {
-            while (running)
+            while (Running)
             {
                 try
                 {
@@ -134,14 +144,6 @@ namespace BeaconLib
         private static bool EnumsEqual<T>(IEnumerable<T> xs, IEnumerable<T> ys)
         {
             return xs.Zip(ys, (x, y) => x.Equals(y)).Count() == xs.Count();
-        }
-
-        public void Stop()
-        {
-            running = false;
-            waitHandle.Set();
-            if (thread.IsAlive)
-                thread.Join();
         }
 
         public void Dispose()

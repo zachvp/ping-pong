@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using Unity.Netcode.Transports.UTP;
 using BeaconLib;
+using UnityEngine.Rendering;
+using System.Linq;
 
 public class NetworkManagerGUI : MonoBehaviour
 {
@@ -66,8 +68,6 @@ public class NetworkManagerGUI : MonoBehaviour
                 foreach (var beacon in beacons)
                 {
                     Debug.LogFormat($"found host: {beacon.Data} @ {beacon.Address}");
-                    settings.ipAddress = beacon.Address.Address.ToString();
-                    ipInput.text = settings.ipAddress;
                 }
             };
 
@@ -97,6 +97,16 @@ public class NetworkManagerGUI : MonoBehaviour
         }
         if (!foundIP)
             Debug.LogError("Unable to find local IP address");
+    }
+
+    private void Update()
+    {
+        if (probe.Running && probe.Beacons.Count() > 0)
+        {
+            var beacon = probe.Beacons.First();
+            settings.ipAddress = beacon.Address.Address.ToString();
+            ipInput.text = settings.ipAddress;
+        }
     }
 
     private void OnDestroy()

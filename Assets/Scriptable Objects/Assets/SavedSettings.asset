@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27553921795c0644ba7da6e0f5df06af, type: 3}
   m_Name: SavedSettings
   m_EditorClassIdentifier: 
-  ipAddress: 192.168.50.192
+  ipAddress: 
   hostedGameName: PingPong
   ipEntries:
   - label: desktop
