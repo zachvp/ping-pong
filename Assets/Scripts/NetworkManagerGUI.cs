@@ -34,6 +34,21 @@ public class NetworkManagerGUI : MonoBehaviour
         if (settings.ipAddress.Trim().Length > 0 )
             ipInput.text = settings.ipAddress;
 
+        // display the client's LAN IP address
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        var foundIP = false;
+        foreach (var address in host.AddressList)
+        {
+            if (address.AddressFamily == AddressFamily.InterNetwork)
+            {
+                UIDebug.Instance.Register("IP Address", () => address.ToString());
+                foundIP = true;
+            }
+        }
+        if (!foundIP)
+            Debug.LogError("Unable to find local IP address");
+
+
         // register UI button listeners to start host and client
         startHost.onClick.AddListener(() =>
         {
@@ -65,8 +80,9 @@ public class NetworkManagerGUI : MonoBehaviour
             {
                 foreach (var beacon in beacons)
                 {
-                    Debug.LogFormat($"{beacon.Address}: {beacon.Data}");
+                    Debug.LogFormat($"found host: {beacon.Data} @ {beacon.Address}");
                     settings.ipAddress = beacon.Address.Address.ToString();
+                    ipInput.text = settings.ipAddress;
                 }
             };
 
@@ -78,20 +94,6 @@ public class NetworkManagerGUI : MonoBehaviour
         {
             if (manager.IsHost)
                 Debug.Log($"server started, i am the host");
-
-            // display the client's LAN IP address
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            var foundIP = false;
-            foreach (var address in host.AddressList)
-            {
-                if (address.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    UIDebug.Instance.Register("IP Address", () => address.ToString());
-                    foundIP = true;
-                }
-            }
-            if (!foundIP)
-                Debug.LogError("Unable to find local IP address");
         };
     }
 
