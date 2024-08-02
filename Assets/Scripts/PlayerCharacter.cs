@@ -38,7 +38,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public SharedVector3 dashDirection;
 
-    public NetworkPlayer network;
+    public TestNetworkPlayer network;
 
     [Flags]
     public enum State

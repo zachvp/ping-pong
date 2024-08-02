@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
 
-public class NetworkPlayer : NetworkBehaviour
+public class TestNetworkPlayer : NetworkBehaviour
 {
     public NetworkVariable<Vector3> position = new();
 
