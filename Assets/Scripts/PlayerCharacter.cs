@@ -19,8 +19,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public Vector3 Velocity { get; private set; }
     private Rigidbody body;
-    private Vector3 positionInitial;
-    private Vector3 positionPrevious;
+    public Vector3 positionSpawn = new Vector3(0, 5, -1);
 
     private Material material;
     private Color initialColor;
@@ -38,7 +37,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public SharedVector3 dashDirection;
 
-    public TestNetworkPlayer network;
+    public NetworkPlayer network;
 
     [Flags]
     public enum State
@@ -54,7 +53,7 @@ public class PlayerCharacter : MonoBehaviour
         material = GetComponent<MeshRenderer>().material;
 
         initialColor = material.GetColor(initialColorMaterialPropertyName);
-        positionInitial = body.position;
+        body.position = positionSpawn;
 
         dashDirection.Reset();
     }
@@ -102,7 +101,6 @@ public class PlayerCharacter : MonoBehaviour
 
         //body.MovePosition(body.position +  velocity * Time.fixedDeltaTime);
         Velocity = velocity;
-        positionPrevious = body.position;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -110,7 +108,9 @@ public class PlayerCharacter : MonoBehaviour
         var ball = collision.gameObject.GetComponent<Ball>();
         if (ball)
         {
-            body.velocity = Vector3.zero;
+            var zeroed = body.velocity;
+            zeroed.z = 0;
+            body.velocity = zeroed;
         }
     }
 

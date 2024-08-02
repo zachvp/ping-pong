@@ -30,7 +30,7 @@ public class TestNetworkPlayer : NetworkBehaviour
 
         if (IsClient && IsOwner)
         {
-            var newPosition = PositionFromInput(Keyboard.current);
+            var newPosition = DisplacedPositionFromInput(Keyboard.current);
 
             UpdateServerRPC(newPosition);
         }
@@ -42,7 +42,7 @@ public class TestNetworkPlayer : NetworkBehaviour
         position.Value = newPosition;
     }
 
-    private Vector3 PositionFromInput(Keyboard keyboard)
+    private Vector3 DisplacedPositionFromInput(Keyboard keyboard)
     {
         var direction = Vector3.zero;
 
