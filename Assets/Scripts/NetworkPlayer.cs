@@ -11,7 +11,8 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        UIDebug.Instance.Register($"ClientID", $"{OwnerClientId}");
+        if (IsOwner)
+            UIDebug.Instance.Register($"ClientID", $"{OwnerClientId}");
         //UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
     }
 

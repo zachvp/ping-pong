@@ -6,8 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using Unity.Netcode.Transports.UTP;
 using BeaconLib;
-using UnityEngine.Rendering;
 using System.Linq;
+using System.Collections;
 
 public class NetworkManagerGUI : MonoBehaviour
 {
@@ -24,6 +24,7 @@ public class NetworkManagerGUI : MonoBehaviour
     
     private Beacon beacon;
     private Probe probe;
+    private IEnumerator probePoll;
 
     private void Awake()
     {
@@ -56,6 +57,8 @@ public class NetworkManagerGUI : MonoBehaviour
                 UpdateUI();
             else
                 Debug.LogError($"Client connection failed, how to debug?");
+
+            StopCoroutine(probePoll);
         });
 
         // search button
@@ -72,6 +75,7 @@ public class NetworkManagerGUI : MonoBehaviour
             };
 
             probe.Start();
+            StartCoroutine(probePoll);
         });
 
         // client connected event
@@ -84,7 +88,7 @@ public class NetworkManagerGUI : MonoBehaviour
 
     private void Start()
     {
-        // display the client's LAN IP address
+        // display the LAN IP address
         var host = Dns.GetHostEntry(Dns.GetHostName());
         var foundIP = false;
         foreach (var address in host.AddressList)
@@ -97,17 +101,22 @@ public class NetworkManagerGUI : MonoBehaviour
         }
         if (!foundIP)
             Debug.LogError("Unable to find local IP address");
+
+        probePoll = Task.Repeat(2, () =>
+        {
+            if (probe.Running && probe.Beacons.Count() > 0)
+            {
+                var beacon = probe.Beacons.First();
+                settings.ipAddress = beacon.Address.Address.ToString();
+                ipInput.text = settings.ipAddress;
+                probe.Stop();
+            }
+        });
     }
 
     private void Update()
     {
-        if (probe.Running && probe.Beacons.Count() > 0)
-        {
-            var beacon = probe.Beacons.First();
-            settings.ipAddress = beacon.Address.Address.ToString();
-            ipInput.text = settings.ipAddress;
-            probe.Stop();
-        }
+        
     }
 
     private void OnDestroy()
