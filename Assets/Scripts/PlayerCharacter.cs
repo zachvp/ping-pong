@@ -110,7 +110,7 @@ public class PlayerCharacter : MonoBehaviour
 
             // todo:
             network.UpdateServerRPC(Velocity);
-            Debug.Log($"update server velocity: {Velocity} for input move {move}");
+            //Debug.Log($"update server velocity: {Velocity} for input move {move}");
         }
     }
 
