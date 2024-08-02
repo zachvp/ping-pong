@@ -2,6 +2,9 @@ using UnityEngine;
 using System;
 using UnityEngine.InputSystem.LowLevel;
 using System.Collections;
+using System.Globalization;
+using UnityEditor.PackageManager;
+using UnityEngine.TextCore.Text;
 
 // todo: refactor - too many lines
 public class PlayerCharacter : MonoBehaviour
@@ -37,7 +40,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public SharedVector3 dashDirection;
 
-    public NetworkPlayer network;
+    private NetworkPlayer network;
 
     [Flags]
     public enum State
@@ -51,6 +54,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         body = GetComponent<Rigidbody>();
         material = GetComponent<MeshRenderer>().material;
+        network = GetComponent<NetworkPlayer>();
 
         initialColor = material.GetColor(initialColorMaterialPropertyName);
         body.position = positionSpawn;
@@ -86,21 +90,28 @@ public class PlayerCharacter : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var move = (Vector3) inputMapper.move;
-        var velocity = move * moveSpeed;
-        if (state.HasFlag(State.DASH))
+        if (network.IsClient && network.IsOwner)
         {
-            velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
-            body.velocity = velocity;
-        }
-        else
-        {
-            body.velocity = velocity;
-            //body.velocity = network.velocity.Value;
-        }
+            var move = (Vector3)inputMapper.move;
+            var velocity = move * moveSpeed;
+            if (state.HasFlag(State.DASH))
+            {
+                velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
+                //body.velocity = velocity;
+            }
+            else
+            {
+                //body.velocity = velocity;
+                //body.velocity = network.velocity.Value;
+            }
 
-        //body.MovePosition(body.position +  velocity * Time.fixedDeltaTime);
-        Velocity = velocity;
+            //body.MovePosition(body.position +  velocity * Time.fixedDeltaTime);
+            Velocity = velocity;
+
+            // todo:
+            network.UpdateServerRPC(Velocity);
+            Debug.Log($"update server velocity: {Velocity} for input move {move}");
+        }
     }
 
     private void OnCollisionEnter(Collision collision)

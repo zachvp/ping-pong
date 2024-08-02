@@ -986,7 +986,6 @@ MonoBehaviour:
   buffer: 0
   trailRenderer: {fileID: 991550719359484964}
   dashDirection: {fileID: 11400000, guid: f5c36b4c929677d47b2c0ba8ce8fd3ea, type: 2}
-  network: {fileID: 7765682810652226691}
 --- !u!114 &7765682810652226691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -999,6 +998,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bce52b50dc3b950429a561d17e24c25e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!54 &5972274319968965094
 Rigidbody:
   m_ObjectHideFlags: 0
