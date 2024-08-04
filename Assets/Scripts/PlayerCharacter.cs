@@ -97,18 +97,10 @@ public class PlayerCharacter : MonoBehaviour
             if (state.HasFlag(State.DASH))
             {
                 velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
-                //body.velocity = velocity;
-            }
-            else
-            {
-                //body.velocity = velocity;
-                //body.velocity = network.velocity.Value;
             }
 
-            //body.MovePosition(body.position +  velocity * Time.fixedDeltaTime);
             Velocity = velocity;
 
-            // todo:
             network.UpdateServerRPC(Velocity);
             //Debug.Log($"update server velocity: {Velocity} for input move {move}");
         }

@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class CameraDefault : MonoBehaviour
+// todo: refactor to get target ref from hierarchy
+public class CameraPlayer : MonoBehaviour
 {
     public Vector3 offsetFromTarget;
 
@@ -8,7 +9,7 @@ public class CameraDefault : MonoBehaviour
 
     private void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player");
+        target = GetComponentInParent<PlayerCharacter>().gameObject;
     }
 
     private void LateUpdate()
