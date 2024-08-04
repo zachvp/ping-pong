@@ -1,10 +1,6 @@
 using UnityEngine;
 using System;
-using UnityEngine.InputSystem.LowLevel;
 using System.Collections;
-using System.Globalization;
-using UnityEditor.PackageManager;
-using UnityEngine.TextCore.Text;
 
 // todo: refactor - too many lines
 public class PlayerCharacter : MonoBehaviour
@@ -22,7 +18,6 @@ public class PlayerCharacter : MonoBehaviour
 
     public Vector3 Velocity { get; private set; }
     private Rigidbody body;
-    public Vector3 positionSpawn = new Vector3(0, 5, -1);
 
     private Material material;
     private Color initialColor;
@@ -57,7 +52,6 @@ public class PlayerCharacter : MonoBehaviour
         network = GetComponent<NetworkPlayer>();
 
         initialColor = material.GetColor(initialColorMaterialPropertyName);
-        body.position = positionSpawn;
 
         dashDirection.Reset();
     }
