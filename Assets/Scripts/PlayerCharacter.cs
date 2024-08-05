@@ -47,9 +47,9 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Awake()
     {
-        body = GetComponent<Rigidbody>();
-        material = GetComponent<MeshRenderer>().material;
-        network = GetComponent<NetworkPlayer>();
+        body = GetComponentInParent<Rigidbody>();
+        material = GetComponentInParent<MeshRenderer>().material;
+        network = GetComponentInParent<NetworkPlayer>();
 
         initialColor = material.GetColor(initialColorMaterialPropertyName);
 

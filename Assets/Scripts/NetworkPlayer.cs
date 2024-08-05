@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
 {
+    public GameObject ownerPrefab;
+    public GameObject ownerRoot;
+
     private Rigidbody body;
 
     public NetworkVariable<Vector3> velocity = new();
@@ -16,7 +19,10 @@ public class NetworkPlayer : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
+        {
             UIDebug.Instance.Register($"ClientID", $"{OwnerClientId}");
+            Instantiate(ownerPrefab, ownerRoot.transform);
+        }
         //UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
     }
 
