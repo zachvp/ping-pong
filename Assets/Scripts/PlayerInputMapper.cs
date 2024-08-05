@@ -45,6 +45,7 @@ public class PlayerInputMapper : MonoBehaviour
 
         // standard move input
         move = input.actions["move"].ReadValue<Vector2>();  // todo: rename to cursor0, cursor1
+        move.x *= input.camera.transform.forward.z;
 
         // touchscreen input overrides
         if (input.currentControlScheme.Equals("touchscreen"))

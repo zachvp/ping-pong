@@ -6,7 +6,7 @@ public class NetworkPlayer : NetworkBehaviour
     private Rigidbody body;
 
     public NetworkVariable<Vector3> velocity = new();
-    public Vector3 positionSpawn = new Vector3(0, 5, -1.5f);
+    public Vector3 positionSpawn = new Vector3(0, 5, -1f);
 
     private void Awake()
     {
@@ -22,8 +22,26 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void Start()
     {
+        if (IsOwner)
+        {
+            if (OwnerClientId > 0)
+            {
+                var camera = GetComponentInChildren<Camera>();
+
+                var faceDirection = camera.transform.forward;
+                faceDirection.z = -faceDirection.z;
+                camera.transform.forward = faceDirection;
+
+                var facePosition = camera.transform.position;
+                facePosition.z = -facePosition.z;
+                camera.transform.position = facePosition;
+            }
+        }
+
         if (IsServer)
-            StartCoroutine(Task.FixedUpdate(() => body.position = positionSpawn));
+        {
+            StartCoroutine(Task.FixedUpdate(() => body.position = HostGameState.Instance.spawns[OwnerClientId].position));
+        }
     }
 
     private void Update()
