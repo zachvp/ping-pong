@@ -49,7 +49,6 @@ public class PlayerInputMapper : MonoBehaviour
 
         // standard move input
         move = input.actions["move"].ReadValue<Vector2>();  // todo: rename to cursor0, cursor1
-        move.x *= input.camera.transform.forward.z;
 
         // touchscreen input overrides
         if (input.currentControlScheme != null && input.currentControlScheme.Equals("touchscreen"))
@@ -122,6 +121,9 @@ public class PlayerInputMapper : MonoBehaviour
                 touchJoystickLeft.ResetPosition();
                 move = Vector2.zero;
             }
+
+            // transform movement x-axis according to camera direction
+            move.x *= input.camera.transform.forward.z;
 
             // touch flick joystick
             if (touchFlick.isInProgress)
