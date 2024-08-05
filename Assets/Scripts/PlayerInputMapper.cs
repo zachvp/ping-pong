@@ -29,7 +29,9 @@ public class PlayerInputMapper : MonoBehaviour
     {
         input = GetComponent<PlayerInput>();
 
-        input.camera = GameObject.FindGameObjectWithTag(Constants.Tags.CAMERA).GetComponent<Camera>();
+        input.camera = GetComponentInChildren<Camera>();
+
+        Debug.Assert(input != null, $"player input ref is null");
     }
 
     private void Update()
@@ -48,7 +50,7 @@ public class PlayerInputMapper : MonoBehaviour
         move.x *= input.camera.transform.forward.z;
 
         // touchscreen input overrides
-        if (input.currentControlScheme.Equals("touchscreen"))
+        if (input.currentControlScheme != null && input.currentControlScheme.Equals("touchscreen"))
         {
             var tap = input.actions["touch.tap"];
             isHitPressed = tap.WasPressedThisFrame();
@@ -153,6 +155,7 @@ public class PlayerInputMapper : MonoBehaviour
         }
         else
         {
+            Debug.Log($"deactivate touch joysticks");
             touchJoystickLeft.gameObject.SetActive(false);
             touchJoystickRight.gameObject.SetActive(false);
         }
