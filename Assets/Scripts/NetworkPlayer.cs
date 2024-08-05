@@ -11,6 +11,8 @@ public class NetworkPlayer : NetworkBehaviour
     public NetworkVariable<Vector3> velocity = new();
     public Vector3 positionSpawn = new Vector3(0, 5, -1f);
 
+    private PlayerCharacter character;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
@@ -21,7 +23,8 @@ public class NetworkPlayer : NetworkBehaviour
         if (IsOwner)
         {
             UIDebug.Instance.Register($"ClientID", $"{OwnerClientId}");
-            Instantiate(ownerPrefab, ownerRoot.transform);
+            var owner = Instantiate(ownerPrefab, ownerRoot.transform);
+            character = owner.GetComponentInChildren<PlayerCharacter>();
         }
         //UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
     }
@@ -30,6 +33,7 @@ public class NetworkPlayer : NetworkBehaviour
     {
         if (IsOwner)
         {
+            // todo: hacks
             if (OwnerClientId > 0)
             {
                 var camera = GetComponentInChildren<Camera>();
@@ -55,6 +59,14 @@ public class NetworkPlayer : NetworkBehaviour
         if (IsServer)
         {
             body.velocity = velocity.Value;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsOwner)
+        {
+            UpdateServerRPC(character.Velocity);
         }
     }
 

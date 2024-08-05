@@ -39,6 +39,8 @@ public class PlayerInputMapper : MonoBehaviour
         debugValues.str_0 = input.currentControlScheme;
         debugValues.str_1 = input.currentActionMap.name;
 
+        Debug.LogFormat($"input.currentControlScheme: {input.currentControlScheme}");
+
         // hit input
         isHitPressed = input.actions["hit"].WasPressedThisFrame();
 

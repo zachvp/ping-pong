@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90bf824f16fdbdc45b614b85ff17168f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputMapper: {fileID: 2129830169711210655}
+  input: {fileID: 2129830169711210655}
   moveSpeed: 10
   dashMoveSpeedMultiplier: 4
   dashMoveFrames: 10

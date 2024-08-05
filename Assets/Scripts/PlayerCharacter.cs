@@ -5,7 +5,7 @@ using System.Collections;
 // todo: refactor - too many lines
 public class PlayerCharacter : MonoBehaviour
 {
-    public PlayerInputMapper inputMapper; // todo: rename to 'input'
+    public PlayerInputMapper input; // todo: rename to 'input'
 
     public float moveSpeed = 5;
 
@@ -35,8 +35,6 @@ public class PlayerCharacter : MonoBehaviour
 
     public SharedVector3 dashDirection;
 
-    private NetworkPlayer network;
-
     [Flags]
     public enum State
     {
@@ -49,7 +47,6 @@ public class PlayerCharacter : MonoBehaviour
     {
         body = GetComponentInParent<Rigidbody>();
         material = GetComponentInParent<MeshRenderer>().material;
-        network = GetComponentInParent<NetworkPlayer>();
 
         initialColor = material.GetColor(initialColorMaterialPropertyName);
 
@@ -58,7 +55,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Update()
     {
-        if (!state.HasFlag(State.HIT) && inputMapper.isHitPressed)
+        if (!state.HasFlag(State.HIT) && input.isHitPressed)
         {
             state |= State.HIT;
             BufferState(state);
@@ -72,10 +69,10 @@ public class PlayerCharacter : MonoBehaviour
             }));
         }
 
-        var inputFlick = inputMapper.inputFlick;
+        var inputFlick = input.inputFlick;
         if (!state.HasFlag(State.DASH) && !cooldown.HasFlag(State.DASH))
         {
-            if (inputMapper.isFlick)
+            if (input.isFlick)
             {
                 Dash(dashMoveFrames);
             }
@@ -84,20 +81,14 @@ public class PlayerCharacter : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (network.IsClient && network.IsOwner)
+        var move = (Vector3)input.move;
+        var velocity = move * moveSpeed;
+        if (state.HasFlag(State.DASH))
         {
-            var move = (Vector3)inputMapper.move;
-            var velocity = move * moveSpeed;
-            if (state.HasFlag(State.DASH))
-            {
-                velocity = inputMapper.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
-            }
-
-            Velocity = velocity;
-
-            network.UpdateServerRPC(Velocity);
-            //Debug.Log($"update server velocity: {Velocity} for input move {move}");
+            velocity = input.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
         }
+
+        Velocity = velocity;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -117,8 +108,8 @@ public class PlayerCharacter : MonoBehaviour
         cooldown |= State.DASH;
         BufferState(state);
 
-        var roundedDashDirection = new Vector2(Mathf.Round(inputMapper.InputFlickVelocity.x),
-                                               Mathf.Round(inputMapper.InputFlickVelocity.y));
+        var roundedDashDirection = new Vector2(Mathf.Round(input.InputFlickVelocity.x),
+                                               Mathf.Round(input.InputFlickVelocity.y));
         dashDirection.vector3.Set(roundedDashDirection);
 
         trailRenderer.enabled = true;
@@ -130,13 +121,13 @@ public class PlayerCharacter : MonoBehaviour
             trailRenderer.enabled = false;
 
             state &= ~State.DASH;
-            inputMapper.ResetFlick();
+            input.ResetFlick();
         }));
 
         StartCoroutine(Task.Delayed(dashFrameLength + dashCooldownFrames, () =>
         {
             cooldown &= ~State.DASH;
-            inputMapper.ResetFlick();
+            input.ResetFlick();
         }));
     }
 
