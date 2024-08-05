@@ -48,7 +48,8 @@ public class NetworkPlayer : NetworkBehaviour
             }
         }
 
-        if (IsServer)
+        //if (IsServer)
+        if (IsOwner)
         {
             StartCoroutine(Task.FixedUpdate(() => body.position = HostGameState.Instance.spawns[OwnerClientId].position));
         }
@@ -56,17 +57,20 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void Update()
     {
-        if (IsServer)
-        {
-            body.velocity = velocity.Value;
-        }
+        if (IsOwner)
+            body.velocity = character.Velocity;
+
+        //if (IsServer)
+        //{
+        //    body.velocity = velocity.Value;
+        //}
     }
 
     private void FixedUpdate()
     {
         if (IsOwner)
         {
-            UpdateServerRPC(character.Velocity);
+            //UpdateServerRPC(character.Velocity);
         }
     }
 

@@ -48,10 +48,10 @@ public class PlayerInputMapper : MonoBehaviour
         inputFlick = input.actions["flick"].ReadValue<Vector2>();
 
         // standard move input
-        move = input.actions["move"].ReadValue<Vector2>();  // todo: rename to cursor0, cursor1
+        move = input.actions["move"].ReadValue<Vector2>();
 
         // touchscreen input overrides
-        if (input.currentControlScheme != null && input.currentControlScheme.Equals("touchscreen"))
+        if (input.currentControlScheme.Equals("touchscreen"))
         {
             var tap = input.actions["touch.tap"];
             isHitPressed = tap.WasPressedThisFrame();
@@ -98,21 +98,18 @@ public class PlayerInputMapper : MonoBehaviour
             if (touchMove.isInProgress)
             {
                 // check for a move cursor...
-                //if (touchMove.position.x < Screen.width / 2)
+                touchJoystickLeft.gameObject.SetActive(true);
+
+                // adjust and respond to cursor
+                var joystickRaw = touchJoystickLeft.JoystickRaw(touchMove.position);
+                debugValues.vector2_2 = joystickRaw;
+                touchJoystickLeft.MoveCursor(touchJoystickLeft.JoystickScreenPosition(joystickRaw));
+
+                var joystickNormalized = touchJoystickLeft.JoystickNormalized(joystickRaw);
+                if (Mathf.Abs(joystickNormalized.x) > touchJoystickLeft.joystickDeadzone ||
+                    Mathf.Abs(joystickNormalized.y) > touchJoystickLeft.joystickDeadzone)
                 {
-                    touchJoystickLeft.gameObject.SetActive(true);
-
-                    // adjust and respond to cursor
-                    var joystickRaw = touchJoystickLeft.JoystickRaw(touchMove.position);
-                    debugValues.vector2_2 = joystickRaw;
-                    touchJoystickLeft.MoveCursor(touchJoystickLeft.JoystickScreenPosition(joystickRaw));
-
-                    var joystickNormalized = touchJoystickLeft.JoystickNormalized(joystickRaw);
-                    if (Mathf.Abs(joystickNormalized.x) > touchJoystickLeft.joystickDeadzone ||
-                        Mathf.Abs(joystickNormalized.y) > touchJoystickLeft.joystickDeadzone)
-                    {
-                        move = joystickNormalized;
-                    }
+                    move = joystickNormalized;
                 }
             }
             else
@@ -122,30 +119,24 @@ public class PlayerInputMapper : MonoBehaviour
                 move = Vector2.zero;
             }
 
-            // transform movement x-axis according to camera direction
-            move.x *= input.camera.transform.forward.z;
-
             // touch flick joystick
             if (touchFlick.isInProgress)
             {
-                //if (touchFlick.position.x > Screen.width / 2)
+                if (touchJoystickRightEnabled)
                 {
-                    if (touchJoystickRightEnabled)
-                    {
-                        // adjust and respond to cursor
-                        var joystickRaw = touchJoystickRight.JoystickRaw(touchFlick.position);
-                        debugValues.vector2_2 = joystickRaw;
-                        touchJoystickRight.MoveCursor(touchJoystickRight.JoystickScreenPosition(joystickRaw));
+                    // adjust and respond to cursor
+                    var joystickRaw = touchJoystickRight.JoystickRaw(touchFlick.position);
+                    debugValues.vector2_2 = joystickRaw;
+                    touchJoystickRight.MoveCursor(touchJoystickRight.JoystickScreenPosition(joystickRaw));
 
-                        inputFlick = touchJoystickRight.JoystickNormalized(joystickRaw);
-                    }
-                    else
-                    {
-                        touchJoystickRight.anchor.position = touchFlick.position;
-                        touchJoystickRightEnabled = true;
-                        touchJoystickRight.gameObject.SetActive(true);
-                        Debug.Log($"set anchor position");
-                    }
+                    inputFlick = touchJoystickRight.JoystickNormalized(joystickRaw);
+                }
+                else
+                {
+                    touchJoystickRight.anchor.position = touchFlick.position;
+                    touchJoystickRightEnabled = true;
+                    touchJoystickRight.gameObject.SetActive(true);
+                    Debug.Log($"set anchor position");
                 }
             }
             else
@@ -171,6 +162,9 @@ public class PlayerInputMapper : MonoBehaviour
         {
             InputFlickVelocityTriggered = InputFlickVelocity;
         }
+
+        // transform movement x-axis according to camera direction
+        move.x *= input.camera.transform.forward.z;
     }
 
     public void ResetFlick()
