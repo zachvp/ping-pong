@@ -25,13 +25,13 @@ public class NetworkBall : NetworkBehaviour
             
             ball.OnAddForce += (force, mode) =>
             {
-                Debug.Log($"network add force");
+                Debug.Log($"network add force {force}");
                 body.AddForce(force, mode);
             };
 
             ball.OnAddTorque += (torque) =>
             {
-                Debug.Log($"network add torque");
+                Debug.Log($"network add torque {torque}");
                 body.AddTorque(torque);
             };
         }

@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,9 @@ public class NetworkPlayer : NetworkBehaviour
     private Rigidbody body;
 
     public NetworkVariable<Vector3> velocity = new();
+    public NetworkVariable<PlayerCharacter.State> state = new();
+    public NetworkVariable<PlayerCharacter.State> buffer = new();
+
     public Vector3 positionSpawn = new Vector3(0, 5, -1f);
 
     private PlayerCharacter character;
@@ -33,18 +37,32 @@ public class NetworkPlayer : NetworkBehaviour
     private void Start()
     {
         Init();
+
+        if (IsOwner || IsServer)
+        {
+            //UIDebug.Instance.Register($"ClientID {OwnerClientId} Local Velocity", () => body.velocity);
+            //UIDebug.Instance.Register($"ClientID {OwnerClientId} Network Velocity", () => velocity.Value);
+        }
     }
 
     private void FixedUpdate()
     {
         if (IsOwner)
+        {
             body.velocity = character.Velocity;
+            UpdateServerRPC(character.Velocity, character.state, character.buffer);
+        }
     }
 
     [ServerRpc]
-    public void UpdateServerRPC(Vector3 newVelocity)
+    public void UpdateServerRPC(
+        Vector3 newVelocity,
+        PlayerCharacter.State newState,
+        PlayerCharacter.State newBuffer)
     {
         velocity.Value = newVelocity;
+        state.Value = newState;
+        buffer.Value = newBuffer;
     }
 
     private void Init()

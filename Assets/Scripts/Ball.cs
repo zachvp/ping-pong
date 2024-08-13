@@ -135,22 +135,22 @@ public class Ball : MonoBehaviour
         {
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
-            var playerCharacter = collision.gameObject.GetComponentInChildren<PlayerCharacter>();
-            Debug.Log($"hitDetected; player: {playerCharacter}");
+            var networkPlayer = collision.gameObject.GetComponentInChildren<NetworkPlayer>();
 
             // ball collides with player
             // apply ball curve physics effects depending on player state
-            if (playerCharacter)
+            if (networkPlayer)
             {
-                playerVelocity = playerCharacter.Velocity;
-                Debug.Log($"playerVelocity: {playerVelocity}");
+                playerVelocity = networkPlayer.velocity.Value;
+                var playerState = networkPlayer.state.Value;
+                var playerStateBuffer = networkPlayer.buffer.Value;
 
-                if (playerCharacter.state.HasFlag(PlayerCharacter.State.HIT) &&
+                if (playerState.HasFlag(PlayerCharacter.State.HIT) &&
                     !(state | cooldown).HasFlag(State.HIT))
                 {
                     state |= State.HIT;
                 }
-                else if (playerCharacter.state.HasFlag(PlayerCharacter.State.DASH) &&
+                else if (playerState.HasFlag(PlayerCharacter.State.DASH) &&
                     !(state | cooldown).HasFlag(State.SPIN))
                 {
                     state |= State.SPIN;
@@ -169,7 +169,7 @@ public class Ball : MonoBehaviour
                 // check for a hit in the player state buffer to forgive slightly late timing
                 StartCoroutine(Task.Continuous(hitLateBufferFrames, () =>
                 {
-                    if (playerCharacter.buffer.HasFlag(PlayerCharacter.State.HIT) &&
+                    if (playerStateBuffer.HasFlag(PlayerCharacter.State.HIT) &&
                         !(state | cooldown).HasFlag(State.HIT))
                     {
                         //Debug.Log($"set hit input for state: {state}");
@@ -179,7 +179,7 @@ public class Ball : MonoBehaviour
 
                 StartCoroutine(Task.Continuous(curveLateBufferFrames, () =>
                 {
-                    if (playerCharacter.buffer.HasFlag(PlayerCharacter.State.DASH) &&
+                    if (playerStateBuffer.HasFlag(PlayerCharacter.State.DASH) &&
                         !(state | cooldown).HasFlag(State.SPIN))
                     {
                         //Debug.Log($"set hit input for state: {state}");
