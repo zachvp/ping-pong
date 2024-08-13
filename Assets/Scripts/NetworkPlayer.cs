@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NetworkPlayer : NetworkBehaviour
 {
@@ -31,6 +32,25 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void Start()
     {
+        Init();
+    }
+
+    private void Update()
+    {
+        if (IsOwner)
+            body.velocity = character.Velocity;
+    }
+
+    [ServerRpc]
+    public void UpdateServerRPC(Vector3 newVelocity)
+    {
+        velocity.Value = newVelocity;
+    }
+
+    private void Init()
+    {
+        Debug.Log($"set spawn and camera position");
+
         if (IsOwner)
         {
             // todo: hacks
@@ -46,37 +66,8 @@ public class NetworkPlayer : NetworkBehaviour
                 facePosition.z = -facePosition.z;
                 camera.transform.position = facePosition;
             }
-        }
 
-        //if (IsServer)
-        if (IsOwner)
-        {
             StartCoroutine(Task.FixedUpdate(() => body.position = HostGameState.Instance.spawns[OwnerClientId].position));
         }
-    }
-
-    private void Update()
-    {
-        if (IsOwner)
-            body.velocity = character.Velocity;
-
-        //if (IsServer)
-        //{
-        //    body.velocity = velocity.Value;
-        //}
-    }
-
-    private void FixedUpdate()
-    {
-        if (IsOwner)
-        {
-            //UpdateServerRPC(character.Velocity);
-        }
-    }
-
-    [ServerRpc]
-    public void UpdateServerRPC(Vector3 newVelocity)
-    {
-        velocity.Value = newVelocity;
     }
 }

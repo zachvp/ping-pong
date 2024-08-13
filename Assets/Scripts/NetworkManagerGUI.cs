@@ -41,6 +41,7 @@ public class NetworkManagerGUI : MonoBehaviour
         startHost.onClick.AddListener(() =>
         {
             manager.StartHost();
+            
             UpdateUI();
 
             // start beacon server

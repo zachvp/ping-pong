@@ -52,7 +52,12 @@ public class Ball : MonoBehaviour
 
     private void Start()
     {
-        body.velocity = initialVelocity;
+        HostGameState.Instance.OnGameStart += () =>
+        {
+            state &= ~State.STOPPED;
+            body.velocity = initialVelocity;
+        };
+        state |= State.STOPPED;
     }
 
     private void Update()
@@ -107,7 +112,7 @@ public class Ball : MonoBehaviour
         debugValues.flt = Mathf.Max(debugValues.flt, body.velocity.z);
 
         // enforce min speed
-        if (Mathf.Abs(body.velocity.z) < minSpeeds.z)
+        if (!state.HasFlag(State.STOPPED) && Mathf.Abs(body.velocity.z) < minSpeeds.z)
         {
             var newVelocity = body.velocity;
             newVelocity.z = Common.SignMultiply(body.velocity.z) * minSpeeds.z;
@@ -240,6 +245,7 @@ public class Ball : MonoBehaviour
     {
         NONE = 0,
         HIT = 1 << 1,
-        SPIN = 1 << 2
+        SPIN = 1 << 2,
+        STOPPED = 1 << 3,
     }
 }

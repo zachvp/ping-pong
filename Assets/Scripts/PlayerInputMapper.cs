@@ -150,7 +150,6 @@ public class PlayerInputMapper : MonoBehaviour
         }
         else
         {
-            Debug.Log($"deactivate touch joysticks");
             touchJoystickLeft.gameObject.SetActive(false);
             touchJoystickRight.gameObject.SetActive(false);
         }
