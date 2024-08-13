@@ -98,7 +98,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             var zeroed = body.velocity;
             zeroed.z = 0;
-            body.velocity = zeroed;
+            Velocity = zeroed;
         }
     }
 

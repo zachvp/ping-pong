@@ -28,7 +28,6 @@ public class Ball : MonoBehaviour
     private Vector3 initialPosition;
     public Vector3 minSpeeds;
 
-    public Rigidbody Body { get { return body; } }
     private Rigidbody body;
 
     private IEnumerator currentCurveCoroutine;
@@ -40,13 +39,17 @@ public class Ball : MonoBehaviour
     public float steepDeflectDotValue = 0.95f;
     public float steepDeflectVelocityNerf = 0.65f;
 
+    public Vector3 Velocity { get; private set; }
+    public Action<Vector3, ForceMode> OnAddForce;
+    public Action<Vector3> OnAddTorque;
+
     // TODO: DBG
     public float debugDuration = 2;
     public DebugValues debugValues;
 
     private void Awake()
     {
-        body = GetComponent<Rigidbody>();
+        body = GetComponentInParent<Rigidbody>();
         initialPosition = transform.position;
     }
 
@@ -55,7 +58,7 @@ public class Ball : MonoBehaviour
         HostGameState.Instance.OnGameStart += () =>
         {
             state &= ~State.STOPPED;
-            body.velocity = initialVelocity;
+            Velocity = initialVelocity;
         };
         state |= State.STOPPED;
     }
@@ -82,7 +85,7 @@ public class Ball : MonoBehaviour
             newVelocity.y = Mathf.Clamp(newVelocity.y, -defaultSpinSpeed.y * 1.5f, defaultSpinSpeed.y * 1.5f);
 
             ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
-            StartCoroutine(Task.FixedUpdate(() => body.velocity = newVelocity));
+            StartCoroutine(Task.FixedUpdate(() => Velocity = newVelocity));
             StartCoroutine(Task.Delayed(hitCooldownFrames, () => cooldown &= ~State.HIT));
         }
 
@@ -100,7 +103,7 @@ public class Ball : MonoBehaviour
             resolvedCurveSpeed.z = 0;
 
             ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
-            StartCoroutine(Task.FixedUpdate(() => body.velocity = newVelocity));
+            StartCoroutine(Task.FixedUpdate(() => Velocity = newVelocity));
             StartCoroutine(Task.Delayed(hitCooldownFrames, () => cooldown &= ~State.SPIN));
         }
     }
@@ -116,14 +119,15 @@ public class Ball : MonoBehaviour
         {
             var newVelocity = body.velocity;
             newVelocity.z = Common.SignMultiply(body.velocity.z) * minSpeeds.z;
-            body.velocity = newVelocity;
+            Velocity = newVelocity;
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("ball collision enter");
         var newVelocity = body.velocity;
-        var contact = collision.contacts[collision.contacts.Length - 1];
+        var contact = collision.contacts[^1];
         var contactNormalDotForward = Vector3.Dot(contact.normal, Vector3.forward);
 
         // check for a hit at either end
@@ -131,13 +135,15 @@ public class Ball : MonoBehaviour
         {
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
-            var playerCharacter = collision.gameObject.GetComponent<PlayerCharacter>();
+            var playerCharacter = collision.gameObject.GetComponentInChildren<PlayerCharacter>();
+            Debug.Log($"hitDetected; player: {playerCharacter}");
 
             // ball collides with player
             // apply ball curve physics effects depending on player state
             if (playerCharacter)
             {
                 playerVelocity = playerCharacter.Velocity;
+                Debug.Log($"playerVelocity: {playerVelocity}");
 
                 if (playerCharacter.state.HasFlag(PlayerCharacter.State.HIT) &&
                     !(state | cooldown).HasFlag(State.HIT))
@@ -203,7 +209,8 @@ public class Ball : MonoBehaviour
             }
         }
 
-        body.velocity = newVelocity;
+        Velocity = newVelocity;
+        Debug.Log($"resolved velocity: {Velocity}");
     }
 
     private void ApplySpinCurve(Vector3 spinVelocity, Vector3 curveVelocity, int curveTickSteps)
@@ -214,7 +221,9 @@ public class Ball : MonoBehaviour
             var torque = new Vector3(spinVelocity.y, -spinVelocity.x, 0) * curveSpinAngularMultiplier;
 
             // apply torque so the ball spins
-            StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
+            Debug.Log($"addTorque: {torque}");
+            StartCoroutine(Task.FixedUpdate(() => OnAddTorque?.Invoke(torque)));
+            //StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
 
             // apply centripetal force over time for a curved motion
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
@@ -235,7 +244,10 @@ public class Ball : MonoBehaviour
             tick++;
             if (tick % tickStep == 0)
             {
-                body.AddForce(centripetalMotion, ForceMode.Acceleration);
+                // todo: apply on network
+                //body.AddForce(centripetalMotion, ForceMode.Acceleration);
+                Debug.Log($"addForce: {centripetalMotion}");
+                OnAddForce?.Invoke(centripetalMotion, ForceMode.Acceleration);
             }
         });
     }

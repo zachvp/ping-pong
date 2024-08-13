@@ -35,7 +35,7 @@ public class NetworkPlayer : NetworkBehaviour
         Init();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (IsOwner)
             body.velocity = character.Velocity;

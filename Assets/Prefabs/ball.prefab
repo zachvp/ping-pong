@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &545548564819786369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7544488936847885731}
+  m_Layer: 0
+  m_Name: owner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7544488936847885731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545548564819786369}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2060055902556777814}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &791846433709945142
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,14 +40,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2060055902556777814}
-  - component: {fileID: 4547044939558899942}
   - component: {fileID: 2479387154023948608}
   - component: {fileID: 6534941882075823193}
   - component: {fileID: 4762265100871669315}
   - component: {fileID: 8315452882003302167}
   - component: {fileID: 4675167870503471564}
   - component: {fileID: 8688852875180592761}
-  - component: {fileID: 8049314783973988371}
+  - component: {fileID: 7653284695241467814}
+  - component: {fileID: 1435730801952736943}
+  - component: {fileID: 8366624484256552181}
+  - component: {fileID: 6907547110099642325}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -37,52 +70,10 @@ Transform:
   m_LocalScale: {x: 1.75, y: 1.75, z: 1.75}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 7544488936847885731}
   - {fileID: 4241962484949776716}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4547044939558899942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 791846433709945142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ba6a3eba0eb0146ac86588e2e1f1c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultSpinSpeed: {x: 5, y: 3, z: 0}
-  bigSpinSpeed: {x: 10, y: 6, z: 0}
-  defaultCurveSpeed: {x: 0, y: 0, z: 0}
-  bigCurveSpeed: {x: 15, y: 15, z: 0}
-  curveLateBufferFrames: 18
-  curveSpinAngularMultiplier: 16
-  centripetalForceMultiplier: 1
-  centripetalMotionDurationFrames: 120
-  hitMultiplier: 1.5
-  hitStackCount: 4
-  hitDampening: {x: 1, y: 1}
-  hitLateBufferFrames: 8
-  hitCooldownFrames: 10
-  initialVelocity: {x: 0, y: 0, z: -8}
-  minSpeeds: {x: 0, y: 0, z: 8}
-  state: 0
-  cooldown: 0
-  steepDeflectDotValue: 0.95
-  steepDeflectVelocityNerf: 0.65
-  debugDuration: 0.4
-  debugValues:
-    vector2_0: {x: 0, y: 0}
-    vector2_1: {x: 0, y: 0}
-    vector2_2: {x: 0, y: 0}
-    vector2Int_0: {x: 0, y: 0}
-    vector3: {x: 0, y: 0, z: 0}
-    str_0: 
-    str_1: 
-    flt: 0
-    bool_0: 0
-    bool_1: 0
 --- !u!33 &2479387154023948608
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -225,7 +216,64 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &8049314783973988371
+--- !u!114 &7653284695241467814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791846433709945142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f6d2317de522f24ab1605a1dfd109ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerPrefab: {fileID: 7548597094748082826, guid: 0ebe06011f0ff1045a575889e197f15c, type: 3}
+  ownerRoot: {fileID: 545548564819786369}
+--- !u!114 &1435730801952736943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791846433709945142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62ba6a3eba0eb0146ac86588e2e1f1c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultSpinSpeed: {x: 5, y: 3, z: 0}
+  bigSpinSpeed: {x: 10, y: 6, z: 0}
+  defaultCurveSpeed: {x: 0, y: 0, z: 0}
+  bigCurveSpeed: {x: 15, y: 15, z: 0}
+  curveLateBufferFrames: 18
+  curveSpinAngularMultiplier: 16
+  centripetalForceMultiplier: 1
+  centripetalMotionDurationFrames: 120
+  hitMultiplier: 1.5
+  hitStackCount: 4
+  hitDampening: {x: 1, y: 1}
+  hitLateBufferFrames: 8
+  hitCooldownFrames: 10
+  initialVelocity: {x: 0, y: 0, z: -8}
+  minSpeeds: {x: 0, y: 0, z: 8}
+  state: 0
+  cooldown: 0
+  steepDeflectDotValue: 0.95
+  steepDeflectVelocityNerf: 0.65
+  debugDuration: 0.4
+  debugValues:
+    vector2_0: {x: 0, y: 0}
+    vector2_1: {x: 0, y: 0}
+    vector2_2: {x: 0, y: 0}
+    vector2Int_0: {x: 0, y: 0}
+    vector3: {x: 0, y: 0, z: 0}
+    str_0: 
+    str_1: 
+    flt: 0
+    bool_0: 0
+    bool_1: 0
+--- !u!114 &8366624484256552181
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -256,6 +304,18 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6907547110099642325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791846433709945142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7920385391446812127
 GameObject:
   m_ObjectHideFlags: 0
