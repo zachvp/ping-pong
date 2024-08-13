@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class NetworkBall : NetworkBehaviour
+public class NetworkBall : NetworkBehaviour, INetworkGameStateHandler
 {
     public GameObject ownerPrefab;
     public GameObject ownerRoot;
@@ -15,6 +15,11 @@ public class NetworkBall : NetworkBehaviour
     {
         body = GetComponent<Rigidbody>();
         ball = GetComponent<Ball>();
+    }
+
+    private void Start()
+    {
+        HostGameState.Instance.RegisterGameResetHandler(this);
     }
 
     public override void OnNetworkSpawn()
@@ -42,5 +47,22 @@ public class NetworkBall : NetworkBehaviour
     {
         if (IsOwner)
             body.velocity = ball.Velocity;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void HandleGameResetClientRpc()
+    {
+        if (IsOwner)
+        {
+            Debug.Log($"ball handle reset");
+            ball.Init();
+            StartCoroutine(Task.FixedUpdate(() =>
+            {
+                body.velocity = Vector3.zero;
+                body.position = ball.InitialPosition;
+                body.rotation = Quaternion.identity;
+                ball.Init();
+            }));
+        }
     }
 }

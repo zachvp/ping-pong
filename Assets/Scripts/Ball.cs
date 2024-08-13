@@ -25,7 +25,7 @@ public class Ball : MonoBehaviour
     public int hitCooldownFrames = 15;
 
     public Vector3 initialVelocity;
-    private Vector3 initialPosition;
+    public Vector3 InitialPosition { get; private set; }
     public Vector3 minSpeeds;
 
     private Rigidbody body;
@@ -50,7 +50,7 @@ public class Ball : MonoBehaviour
     private void Awake()
     {
         body = GetComponentInParent<Rigidbody>();
-        initialPosition = transform.position;
+        InitialPosition = transform.position;
     }
 
     private void Start()
@@ -60,7 +60,13 @@ public class Ball : MonoBehaviour
             state &= ~State.STOPPED;
             Velocity = initialVelocity;
         };
+        Init();
+    }
+
+    public void Init()
+    {
         state |= State.STOPPED;
+        Velocity = Vector3.zero;
     }
 
     private void Update()
@@ -125,7 +131,6 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("ball collision enter");
         var newVelocity = body.velocity;
         var contact = collision.contacts[^1];
         var contactNormalDotForward = Vector3.Dot(contact.normal, Vector3.forward);
@@ -198,14 +203,14 @@ public class Ball : MonoBehaviour
             if (Mathf.Abs(contactNormalDotUp) > steepDeflectDotValue)
             {
                 newVelocity.y *= steepDeflectVelocityNerf;
-                Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
+                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
             }
 
             // check for steep leftward/rightward deflection
             if (Mathf.Abs(contactNormalDotRight) > steepDeflectDotValue)
             {
                 newVelocity.x *= steepDeflectVelocityNerf;
-                Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
+                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
             }
         }
 
@@ -221,9 +226,8 @@ public class Ball : MonoBehaviour
             var torque = new Vector3(spinVelocity.y, -spinVelocity.x, 0) * curveSpinAngularMultiplier;
 
             // apply torque so the ball spins
-            Debug.Log($"addTorque: {torque}");
+            //Debug.Log($"addTorque: {torque}");
             StartCoroutine(Task.FixedUpdate(() => OnAddTorque?.Invoke(torque)));
-            //StartCoroutine(Task.FixedUpdate(() => body.AddTorque(torque)));
 
             // apply centripetal force over time for a curved motion
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
@@ -245,7 +249,6 @@ public class Ball : MonoBehaviour
             if (tick % tickStep == 0)
             {
                 // todo: apply on network
-                //body.AddForce(centripetalMotion, ForceMode.Acceleration);
                 Debug.Log($"addForce: {centripetalMotion}");
                 OnAddForce?.Invoke(centripetalMotion, ForceMode.Acceleration);
             }

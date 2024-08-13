@@ -39,8 +39,8 @@ public class RandomBS : MonoBehaviour
     public void Restart()
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //NetworkManager.Singleton.serv
-        NetworkManager.Singleton.Shutdown();
-        NetworkManager.Singleton.SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+        //NetworkManager.Singleton.Shutdown();
+        //NetworkManager.Singleton.SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+        HostGameState.Instance.ResetGame();
     }
 }

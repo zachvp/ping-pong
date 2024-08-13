@@ -203,7 +203,6 @@ GameObject:
   - component: {fileID: 6773017468204297096}
   - component: {fileID: 292398650384036914}
   - component: {fileID: 2772071379419444439}
-  - component: {fileID: 6456446908419913756}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -317,6 +316,10 @@ MonoBehaviour:
   ownerRoot: {fileID: 1211325918488745386}
   velocity:
     m_InternalValue: {x: 0, y: 0, z: 0}
+  state:
+    m_InternalValue: 0
+  buffer:
+    m_InternalValue: 0
   positionSpawn: {x: 0, y: 5, z: -1}
 --- !u!54 &5972274319968965094
 Rigidbody:
@@ -407,17 +410,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6456446908419913756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8175901116463179508}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2580664ae3adb374ba9898d9a7ab65ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

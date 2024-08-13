@@ -3,7 +3,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NetworkPlayer : NetworkBehaviour
+public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
 {
     public GameObject ownerPrefab;
     public GameObject ownerRoot;
@@ -23,6 +23,14 @@ public class NetworkPlayer : NetworkBehaviour
         body = GetComponent<Rigidbody>();
     }
 
+    private void Start()
+    {
+        Init();
+
+        Debug.Log($"{OwnerClientId} Register game reset");
+        HostGameState.Instance.RegisterGameResetHandler(this);
+    }
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -34,17 +42,6 @@ public class NetworkPlayer : NetworkBehaviour
         //UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
     }
 
-    private void Start()
-    {
-        Init();
-
-        if (IsOwner || IsServer)
-        {
-            //UIDebug.Instance.Register($"ClientID {OwnerClientId} Local Velocity", () => body.velocity);
-            //UIDebug.Instance.Register($"ClientID {OwnerClientId} Network Velocity", () => velocity.Value);
-        }
-    }
-
     private void FixedUpdate()
     {
         if (IsOwner)
@@ -54,24 +51,14 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    public void UpdateServerRPC(
-        Vector3 newVelocity,
-        PlayerCharacter.State newState,
-        PlayerCharacter.State newBuffer)
-    {
-        velocity.Value = newVelocity;
-        state.Value = newState;
-        buffer.Value = newBuffer;
-    }
-
     private void Init()
     {
         Debug.Log($"set spawn and camera position");
 
         if (IsOwner)
         {
-            // todo: hacks
+            // todo: hacks; move to NetworkCamera
+            // todo: rotate player character
             if (OwnerClientId > 0)
             {
                 var camera = GetComponentInChildren<Camera>();
@@ -86,6 +73,32 @@ public class NetworkPlayer : NetworkBehaviour
             }
 
             StartCoroutine(Task.FixedUpdate(() => body.position = HostGameState.Instance.spawns[OwnerClientId].position));
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void UpdateServerRPC(
+        Vector3 newVelocity,
+        PlayerCharacter.State newState,
+        PlayerCharacter.State newBuffer)
+    {
+        velocity.Value = newVelocity;
+        state.Value = newState;
+        buffer.Value = newBuffer;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void HandleGameResetClientRpc()
+    {
+        if (IsOwner)
+        {
+            Debug.Log($"{OwnerClientId} handle game reset");
+
+            StartCoroutine(Task.FixedUpdate(() =>
+            {
+                body.position = HostGameState.Instance.spawns[OwnerClientId].position;
+                body.velocity = Vector3.zero;
+            }));
         }
     }
 }
