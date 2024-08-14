@@ -50,19 +50,28 @@ public class NetworkBall : NetworkBehaviour, INetworkGameStateHandler
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void HandleGameResetClientRpc()
+    public void HandleGameStateChangeRpc(GameState old, GameState current)
     {
         if (IsOwner)
         {
-            Debug.Log($"ball handle reset");
-            ball.Init();
-            StartCoroutine(Task.FixedUpdate(() =>
+            switch (current)
             {
-                body.velocity = Vector3.zero;
-                body.position = ball.InitialPosition;
-                body.rotation = Quaternion.identity;
-                ball.Init();
-            }));
+                case GameState.MAIN:
+                    ball.StartGame();
+                    break;
+                case GameState.RESET:
+                    ball.Reset();
+                    StartCoroutine(Task.FixedUpdate(() =>
+                    {
+                        body.velocity = Vector3.zero;
+                        body.position = ball.InitialPosition;
+                        body.rotation = Quaternion.identity;
+                        body.angularVelocity = Vector3.zero;
+                    }));
+                    break;
+            }
+
+            Debug.Log($"ball handle reset");
         }
     }
 }

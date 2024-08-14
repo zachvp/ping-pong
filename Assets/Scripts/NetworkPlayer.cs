@@ -73,6 +73,8 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
             }
 
             StartCoroutine(Task.FixedUpdate(() => body.position = HostGameState.Instance.spawns[OwnerClientId].position));
+            StartCoroutine(Task.Delayed(Time.fixedDeltaTime * 2,
+                () => StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezePositionZ))));
         }
     }
 
@@ -88,17 +90,27 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void HandleGameResetClientRpc()
+    public void HandleGameStateChangeRpc(GameState old, GameState current)
     {
         if (IsOwner)
         {
-            Debug.Log($"{OwnerClientId} handle game reset");
-
-            StartCoroutine(Task.FixedUpdate(() =>
+            switch (current)
             {
-                body.position = HostGameState.Instance.spawns[OwnerClientId].position;
-                body.velocity = Vector3.zero;
-            }));
+                case GameState.MAIN:
+                    break;
+                case GameState.RESET:
+                    Debug.Log($"{OwnerClientId} handle game reset");
+
+                    StartCoroutine(Task.FixedUpdate(() =>
+                    {
+                        body.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+                        body.position = HostGameState.Instance.spawns[OwnerClientId].position;
+                        body.velocity = Vector3.zero;
+
+                        StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezePositionZ));
+                    }));
+                    break;
+            }
         }
     }
 }

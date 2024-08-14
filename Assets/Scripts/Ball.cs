@@ -55,18 +55,20 @@ public class Ball : MonoBehaviour
 
     private void Start()
     {
-        HostGameState.Instance.OnGameStart += () =>
-        {
-            state &= ~State.STOPPED;
-            Velocity = initialVelocity;
-        };
-        Init();
+        Reset();
     }
 
-    public void Init()
+    public void Reset()
     {
         state |= State.STOPPED;
         Velocity = Vector3.zero;
+        Common.StopNullableCoroutine(this, currentCurveCoroutine);
+    }
+
+    public void StartGame()
+    {
+        state &= ~State.STOPPED;
+        Velocity = initialVelocity;
     }
 
     private void Update()
