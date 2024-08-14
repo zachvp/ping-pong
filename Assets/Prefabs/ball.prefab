@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7544488936847885731}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: owner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 1435730801952736943}
   - component: {fileID: 8366624484256552181}
   - component: {fileID: 6907547110099642325}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +255,7 @@ MonoBehaviour:
   hitDampening: {x: 1, y: 1}
   hitLateBufferFrames: 8
   hitCooldownFrames: 10
-  initialVelocity: {x: 0, y: 0, z: -8}
+  initialVelocity: {x: 0, y: 0, z: 8}
   minSpeeds: {x: 0, y: 0, z: 8}
   state: 0
   cooldown: 0
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 4241962484949776716}
   - component: {fileID: 199104247678803544}
   - component: {fileID: 7885475260367928704}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}

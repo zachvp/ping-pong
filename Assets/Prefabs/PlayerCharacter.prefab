@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5435886101373166719}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Owner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 8647759743574576635}
   - component: {fileID: 991550719359484964}
   - component: {fileID: 6073886204253984885}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 6773017468204297096}
   - component: {fileID: 292398650384036914}
   - component: {fileID: 2772071379419444439}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerCharacter
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -319,6 +319,8 @@ MonoBehaviour:
   state:
     m_InternalValue: 0
   buffer:
+    m_InternalValue: 0
+  cameraForwardZ:
     m_InternalValue: 0
   positionSpawn: {x: 0, y: 5, z: -1}
 --- !u!54 &5972274319968965094

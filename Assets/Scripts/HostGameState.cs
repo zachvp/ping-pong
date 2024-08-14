@@ -13,6 +13,8 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
 
     public List<INetworkGameStateHandler> handlers = new();
 
+    public NetworkVariable<int> firstPlayerScore = new();
+
     public int minRequiredPlayers = 2;
     public float restartDelay = 0.7f;
 
@@ -59,6 +61,12 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
     public void RegisterGameResetHandler(INetworkGameStateHandler handler)
     {
         handlers.Add(handler);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void AddScoreRpc(int playerIndex, int points)
+    {
+        firstPlayerScore.Value += points;
     }
 }
 
