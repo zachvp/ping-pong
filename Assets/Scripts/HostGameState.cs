@@ -64,8 +64,9 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
     }
 
     [Rpc(SendTo.Server)]
-    public void AddScoreRpc(int playerIndex, int points)
+    public void AddScoreRpc(int playerID, int points)
     {
+        UpdateState(GameState.SCORE);
         firstPlayerScore.Value += points;
     }
 }
@@ -80,5 +81,6 @@ public enum GameState
 {
     NONE,
     MAIN,
-    RESET
+    RESET,
+    SCORE
 }

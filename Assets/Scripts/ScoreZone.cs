@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ScoreZone : MonoBehaviour
 {
+    public int playerID;
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log($"trigger enter");
@@ -9,8 +11,10 @@ public class ScoreZone : MonoBehaviour
         if (ball)
         {
             // todo:
-            //HostGameState.Instance.AddScore();
-            HostGameState.Instance.ResetGame();
+            var hostGameState = HostGameState.Instance;
+            hostGameState.AddScoreRpc(playerID, 1);
+            StartCoroutine(Task.Delayed(hostGameState.restartDelay, () => hostGameState.StartGame()));
+            //HostGameState.Instance.ResetGame();
         }
     }
 }
