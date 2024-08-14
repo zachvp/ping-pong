@@ -149,6 +149,7 @@ public class Ball : MonoBehaviour
             if (networkPlayer)
             {
                 playerVelocity = networkPlayer.velocity.Value;
+                playerVelocity = Common.SignMultiply(playerVelocity, networkPlayer.cameraForwardZ.Value);
                 var playerState = networkPlayer.state.Value;
                 var playerStateBuffer = networkPlayer.buffer.Value;
 
@@ -217,7 +218,6 @@ public class Ball : MonoBehaviour
         }
 
         Velocity = newVelocity;
-        Debug.Log($"resolved velocity: {Velocity}");
     }
 
     private void ApplySpinCurve(Vector3 spinVelocity, Vector3 curveVelocity, int curveTickSteps)

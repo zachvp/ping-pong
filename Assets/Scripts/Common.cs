@@ -56,6 +56,11 @@ public static class Common
     {
         return Vector3.Scale(source, Round(multiplier.normalized));
     }
+
+    public static Vector3 SignMultiply(Vector3 source, float multiplier)
+    {
+        return source * Mathf.Round(multiplier);
+    }
 }
 
 [Serializable]

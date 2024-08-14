@@ -1,7 +1,5 @@
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
 {
@@ -13,6 +11,7 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
     public NetworkVariable<Vector3> velocity = new();
     public NetworkVariable<PlayerCharacter.State> state = new();
     public NetworkVariable<PlayerCharacter.State> buffer = new();
+    public NetworkVariable<int> cameraForwardZ = new();
 
     public Vector3 positionSpawn = new Vector3(0, 5, -1f);
 
@@ -66,6 +65,7 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
                 var faceDirection = camera.transform.forward;
                 faceDirection.z = -faceDirection.z;
                 camera.transform.forward = faceDirection;
+                UpdateServerOneshotRpc((int) camera.transform.forward.z);
 
                 var facePosition = camera.transform.position;
                 facePosition.z = -facePosition.z;
@@ -87,6 +87,12 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         velocity.Value = newVelocity;
         state.Value = newState;
         buffer.Value = newBuffer;
+    }
+
+    [Rpc(SendTo.Server)]
+    public void UpdateServerOneshotRpc(int newCameraForwardZ)
+    {
+        cameraForwardZ.Value = newCameraForwardZ;
     }
 
     [Rpc(SendTo.ClientsAndHost)]
