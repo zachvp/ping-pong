@@ -19,11 +19,6 @@ public class PlayerCharacter : MonoBehaviour
     public Vector3 Velocity { get; private set; }
     private Rigidbody body;
 
-    private Material material;
-    private Color initialColor;
-    public string initialColorMaterialPropertyName = "_Color";
-    public Color hitColor = Color.red;
-
     public float stationaryFlickMultiplier = 2;
 
     public State state { get; private set; }
@@ -31,9 +26,9 @@ public class PlayerCharacter : MonoBehaviour
     public State buffer;
     public IEnumerator bufferRoutine;
 
-    public TrailRenderer trailRenderer;
-
     public SharedVector3 dashDirection;
+
+    public VisualsPlayerCharacter visuals;
 
     [Flags]
     public enum State
@@ -46,9 +41,6 @@ public class PlayerCharacter : MonoBehaviour
     private void Awake()
     {
         body = GetComponentInParent<Rigidbody>();
-        material = GetComponentInParent<MeshRenderer>().material;
-
-        initialColor = material.GetColor(initialColorMaterialPropertyName);
 
         dashDirection.Reset();
     }
@@ -60,13 +52,9 @@ public class PlayerCharacter : MonoBehaviour
             state |= State.HIT;
             BufferState(state);
 
-            hitColor.a = initialColor.a;
-            material.SetColor(initialColorMaterialPropertyName, hitColor);
-            StartCoroutine(Task.Delayed(hitDurationFrames, () =>
-            {
-                material.color = initialColor;
-                state &= ~State.HIT;
-            }));
+            visuals.Flash(hitDurationFrames);
+            StartCoroutine(Task.Delayed(hitDurationFrames, () => state &= ~State.HIT));
+
         }
 
         var inputFlick = input.flick;
@@ -112,14 +100,9 @@ public class PlayerCharacter : MonoBehaviour
                                                Mathf.Round(input.FlickVelocity.y));
         dashDirection.vector3.Set(roundedDashDirection);
 
-        trailRenderer.enabled = true;
-        trailRenderer.emitting = true;
-
+        visuals.Trail(dashFrameLength);
         StartCoroutine(Task.Delayed(dashFrameLength, () =>
         {
-            trailRenderer.emitting = false;
-            trailRenderer.enabled = false;
-
             state &= ~State.DASH;
             input.ResetFlick();
         }));

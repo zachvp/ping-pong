@@ -5,12 +5,8 @@ using UnityEngine;
 public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
 {
     public GameObject ownerRoot;
-
     private Rigidbody body;
-
     public NetworkPlayerSharedState sharedState;
-
-    public Vector3 positionSpawn = new Vector3(0, 5, -1f);
 
     private PlayerCharacter character;
 
