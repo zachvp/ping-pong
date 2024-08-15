@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
 {
-    public GameObject ownerPrefab;
     public GameObject ownerRoot;
 
     private Rigidbody body;
@@ -32,7 +31,6 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         if (IsOwner)
         {
             UIDebug.Instance.Register($"ClientID", $"{OwnerClientId}");
-            //var owner = Instantiate(ownerPrefab, ownerRoot.transform);
             character = ownerRoot.GetComponentInChildren<PlayerCharacter>();
         }
         else
