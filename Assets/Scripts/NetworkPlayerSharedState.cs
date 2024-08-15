@@ -9,7 +9,7 @@ public class NetworkPlayerSharedState : NetworkBehaviour
     public NetworkVariable<PlayerCharacter.State> buffer = new();
 
     [Rpc(SendTo.Server)]
-    public void UpdateServerRPC(
+    public void SetPlayerCharacterStateRPC(
     Vector3 newVelocity,
     PlayerCharacter.State newState,
     PlayerCharacter.State newBuffer)
@@ -20,7 +20,7 @@ public class NetworkPlayerSharedState : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    public void UpdateServerOneshotRpc(int newCameraForwardZ) // todo: rename for 'camera'
+    public void SetCameraStateRpc(int newCameraForwardZ)
     {
         cameraForwardZ.Value = newCameraForwardZ;
     }

@@ -217,6 +217,17 @@
                 },
                 {
                     "name": "",
+                    "id": "c1ad9ed1-dc77-416a-b335-7cc51dbc7d3d",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard+mouse",
+                    "action": "hit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "615f9c66-aa4c-4415-aeda-bdd9d1c3dc00",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",

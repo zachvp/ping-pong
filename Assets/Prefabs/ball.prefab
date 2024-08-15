@@ -248,12 +248,12 @@ MonoBehaviour:
   bigCurveSpeed: {x: 15, y: 15, z: 0}
   curveLateBufferFrames: 18
   curveSpinAngularMultiplier: 16
-  centripetalForceMultiplier: 1
-  centripetalMotionDurationFrames: 120
+  curveVelocityMultiplier: 1
+  curveDurationFrames: 120
   hitMultiplier: 1.5
   hitStackCount: 4
   hitDampening: {x: 1, y: 1}
-  hitLateBufferFrames: 8
+  hitLateBufferFrames: 16
   hitCooldownFrames: 10
   initialVelocity: {x: 0, y: 0, z: 8}
   minSpeeds: {x: 0, y: 0, z: 8}

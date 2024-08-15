@@ -11,20 +11,16 @@ public class NetworkCamera : NetworkBehaviour
 
         if (IsOwner)
         {
-            // todo: hacks; move to NetworkCamera
-            // todo: rotate player character
             if (OwnerClientId > 0)
             {
-                var camera = GetComponentInChildren<Camera>();
-
-                var faceDirection = camera.transform.forward;
+                var faceDirection = transform.forward;
                 faceDirection.z = -faceDirection.z;
-                camera.transform.forward = faceDirection;
-                sharedState.UpdateServerOneshotRpc((int)camera.transform.forward.z);
+                transform.forward = faceDirection;
+                sharedState.SetCameraStateRpc((int)transform.forward.z);
 
-                var facePosition = camera.transform.position;
+                var facePosition = transform.localPosition;
                 facePosition.z = -facePosition.z;
-                camera.transform.position = facePosition;
+                transform.localPosition = facePosition;
             }
         }
     }

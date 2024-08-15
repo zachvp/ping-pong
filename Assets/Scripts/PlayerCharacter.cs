@@ -5,7 +5,7 @@ using System.Collections;
 // todo: refactor - too many lines
 public class PlayerCharacter : MonoBehaviour
 {
-    public PlayerInputMapper input; // todo: rename to 'input'
+    public PlayerInputMapper input;
 
     public float moveSpeed = 5;
 
@@ -69,7 +69,7 @@ public class PlayerCharacter : MonoBehaviour
             }));
         }
 
-        var inputFlick = input.inputFlick;
+        var inputFlick = input.flick;
         if (!state.HasFlag(State.DASH) && !cooldown.HasFlag(State.DASH))
         {
             if (input.isFlick)
@@ -85,7 +85,7 @@ public class PlayerCharacter : MonoBehaviour
         var velocity = move * moveSpeed;
         if (state.HasFlag(State.DASH))
         {
-            velocity = input.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
+            velocity = input.FlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
         }
 
         Velocity = velocity;
@@ -108,8 +108,8 @@ public class PlayerCharacter : MonoBehaviour
         cooldown |= State.DASH;
         BufferState(state);
 
-        var roundedDashDirection = new Vector2(Mathf.Round(input.InputFlickVelocity.x),
-                                               Mathf.Round(input.InputFlickVelocity.y));
+        var roundedDashDirection = new Vector2(Mathf.Round(input.FlickVelocity.x),
+                                               Mathf.Round(input.FlickVelocity.y));
         dashDirection.vector3.Set(roundedDashDirection);
 
         trailRenderer.enabled = true;
@@ -129,16 +129,6 @@ public class PlayerCharacter : MonoBehaviour
             cooldown &= ~State.DASH;
             input.ResetFlick();
         }));
-    }
-
-    // todo: use and test this
-    private State AddState(State current, State added)
-    {
-        var resolved = current | added;
-        cooldown |= added;
-        BufferState(resolved);
-
-        return resolved;
     }
 
     private void BufferState(State s)

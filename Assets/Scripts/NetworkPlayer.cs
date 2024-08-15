@@ -45,18 +45,26 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         if (IsOwner)
         {
             body.velocity = character.Velocity;
-            sharedState.UpdateServerRPC(character.Velocity, character.state, character.buffer);
+            sharedState.SetPlayerCharacterStateRPC(character.Velocity, character.state, character.buffer);
         }
     }
 
     private void Init()
     {
+        if (OwnerClientId > 0)
+        {
+            var faceDirection = transform.forward;
+            faceDirection.z = -faceDirection.z;
+            transform.forward = faceDirection;
+        }
+
         if (IsOwner)
         {
             StartCoroutine(Task.FixedUpdate(() =>
             {
                 body.position = HostGameState.Instance.spawns[OwnerClientId].position;
                 StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezePositionZ));
+                StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezeRotationY));
             }));
         }
     }

@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2037244608
+  GlobalObjectIdHash: 882792697
   InScenePlacedSourceGlobalObjectIdHash: 138868048
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -330,7 +330,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 112
+  m_Constraints: 80
   m_CollisionDetection: 1
 --- !u!65 &6773017468204297096
 BoxCollider:
@@ -448,6 +448,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7789683421439558037, guid: 90568906ff4ecf944a3bfa43ba68595c, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1898439838438321164}
     - target: {fileID: 8482009978509759416, guid: 90568906ff4ecf944a3bfa43ba68595c, type: 3}
       propertyPath: sharedState
       value: 
@@ -457,6 +461,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90568906ff4ecf944a3bfa43ba68595c, type: 3}
+--- !u!20 &1898439838438321164 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 6522748364034094254, guid: 90568906ff4ecf944a3bfa43ba68595c, type: 3}
+  m_PrefabInstance: {fileID: 4674149181526628514}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5864483963003928953 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1278807879570217435, guid: 90568906ff4ecf944a3bfa43ba68595c, type: 3}

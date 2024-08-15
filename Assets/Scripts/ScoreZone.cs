@@ -10,11 +10,10 @@ public class ScoreZone : MonoBehaviour
         var ball = other.GetComponent<Ball>();
         if (ball)
         {
-            // todo:
+            // todo: implement score for real
             var hostGameState = HostGameState.Instance;
             hostGameState.AddScoreRpc(playerID, 1);
             StartCoroutine(Task.Delayed(hostGameState.restartDelay * 2, () => hostGameState.StartGame()));
-            //HostGameState.Instance.ResetGame();
         }
     }
 }

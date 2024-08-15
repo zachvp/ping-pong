@@ -8,11 +8,10 @@ public class PlayerInputMapper : MonoBehaviour
 
     public bool isHitPressed;
 
-    // todo: remove 'input' from name prefixes
-    public Vector2 inputFlick;
-    public Vector2 InputFlickVelocity { get; private set; }
-    public float inputFlickVelocityThreshold = 0.25f;
-    public Vector3 InputFlickVelocityTriggered { get; private set; }
+    public Vector2 flick;
+    public Vector2 FlickVelocity { get; private set; }
+    public float flickVelocityThreshold = 0.25f;
+    public Vector3 FlickVelocityTriggered { get; private set; }
 
     public bool isFlick;
 
@@ -29,8 +28,6 @@ public class PlayerInputMapper : MonoBehaviour
     {
         input = GetComponent<PlayerInput>();
 
-        input.camera = GetComponentInChildren<Camera>();
-
         Debug.Assert(input != null, $"player input ref is null");
     }
 
@@ -45,7 +42,7 @@ public class PlayerInputMapper : MonoBehaviour
         isHitPressed = input.actions["hit"].WasPressedThisFrame();
 
         //  flick input
-        inputFlick = input.actions["flick"].ReadValue<Vector2>();
+        flick = input.actions["flick"].ReadValue<Vector2>();
 
         // standard move input
         move = input.actions["move"].ReadValue<Vector2>();
@@ -129,7 +126,7 @@ public class PlayerInputMapper : MonoBehaviour
                     debugValues.vector2_2 = joystickRaw;
                     touchJoystickRight.MoveCursor(touchJoystickRight.JoystickScreenPosition(joystickRaw));
 
-                    inputFlick = touchJoystickRight.JoystickNormalized(joystickRaw);
+                    flick = touchJoystickRight.JoystickNormalized(joystickRaw);
                 }
                 else
                 {
@@ -144,8 +141,8 @@ public class PlayerInputMapper : MonoBehaviour
                 touchJoystickRight.ResetPosition();
                 touchJoystickRight.gameObject.SetActive(false);
                 touchJoystickRightEnabled = false;
-                inputFlick = Vector2.zero;
-                InputFlickVelocity = Vector2.zero;
+                flick = Vector2.zero;
+                FlickVelocity = Vector2.zero;
             }
         }
         else
@@ -155,11 +152,11 @@ public class PlayerInputMapper : MonoBehaviour
         }
 
         // compute flick input to trigger flick gesture
-        InputFlickVelocity = inputFlick - InputFlickVelocity;
-        isFlick = InputFlickVelocity.sqrMagnitude > inputFlickVelocityThreshold;
+        FlickVelocity = flick - FlickVelocity;
+        isFlick = FlickVelocity.sqrMagnitude > flickVelocityThreshold;
         if (isFlick)
         {
-            InputFlickVelocityTriggered = InputFlickVelocity;
+            FlickVelocityTriggered = FlickVelocity;
         }
 
         // transform movement x-axis according to camera direction
@@ -168,6 +165,6 @@ public class PlayerInputMapper : MonoBehaviour
 
     public void ResetFlick()
     {
-        InputFlickVelocity = Vector3.zero;
+        FlickVelocity = Vector3.zero;
     }
 }
