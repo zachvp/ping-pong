@@ -13,7 +13,7 @@ public class ScoreZone : MonoBehaviour
             // todo:
             var hostGameState = HostGameState.Instance;
             hostGameState.AddScoreRpc(playerID, 1);
-            StartCoroutine(Task.Delayed(hostGameState.restartDelay, () => hostGameState.StartGame()));
+            StartCoroutine(Task.Delayed(hostGameState.restartDelay * 2, () => hostGameState.StartGame()));
             //HostGameState.Instance.ResetGame();
         }
     }

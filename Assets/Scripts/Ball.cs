@@ -143,16 +143,16 @@ public class Ball : MonoBehaviour
         {
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
-            var networkPlayer = collision.gameObject.GetComponentInChildren<NetworkPlayer>();
+            var networkState = collision.gameObject.GetComponentInChildren<NetworkPlayerSharedState>();
 
             // ball collides with player
             // apply ball curve physics effects depending on player state
-            if (networkPlayer)
+            if (networkState)
             {
-                playerVelocity = networkPlayer.velocity.Value;
-                playerVelocity = Common.SignMultiply(playerVelocity, networkPlayer.cameraForwardZ.Value);
-                var playerState = networkPlayer.state.Value;
-                var playerStateBuffer = networkPlayer.buffer.Value;
+                playerVelocity = networkState.velocity.Value;
+                playerVelocity = Common.SignMultiply(playerVelocity, networkState.cameraForwardZ.Value);
+                var playerState = networkState.state.Value;
+                var playerStateBuffer = networkState.buffer.Value;
 
                 if (playerState.HasFlag(PlayerCharacter.State.HIT) &&
                     !(state | cooldown).HasFlag(State.HIT))
@@ -251,7 +251,7 @@ public class Ball : MonoBehaviour
             tick++;
             if (tick % tickStep == 0)
             {
-                Debug.Log($"addForce: {curveMotion}");
+                //Debug.Log($"addForce: {curveMotion}");
                 OnAddForce?.Invoke(curveMotion, ForceMode.Acceleration);
             }
         });

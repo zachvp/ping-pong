@@ -49,7 +49,7 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
     {
         var old = state;
         state = current;
-        Debug.Log($"update host GameState: {old} -> {current}");
+        //Debug.Log($"update host GameState: {old} -> {current}");
         foreach (var handler in handlers)
         {
             handler.HandleGameStateChangeRpc(old, state);
