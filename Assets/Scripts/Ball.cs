@@ -15,8 +15,9 @@ public class Ball : MonoBehaviour
     [Tooltip("Determines how much spin torque to apply on player hit.")]
     public float curveSpinAngularMultiplier = 10;
     [Tooltip("Determines the force the ball will drive to the center of its curve arc.")]
-    public float centripetalForceMultiplier = 2; // todo: rename to centripetalMotionMultiplier
-    public int centripetalMotionDurationFrames = 120;
+    public float curveVelocityMultiplier = 1;
+    [Tooltip("The time length of the curve.")]
+    public int curveDurationFrames = 120;
     
     public float hitMultiplier = 2;
     public int hitStackCount = 4;
@@ -107,7 +108,7 @@ public class Ball : MonoBehaviour
             newVelocity.y = Mathf.Clamp(newVelocity.y, -bigSpinSpeed.y * 1.5f, bigSpinSpeed.y * 1.5f);
             newVelocity.z = body.velocity.z;
 
-            var resolvedCurveSpeed = Common.SignMultiply(bigCurveSpeed, playerVelocity); // todo: move to ApplySpinCurve()
+            var resolvedCurveSpeed = Common.SignMultiply(bigCurveSpeed, playerVelocity);
             resolvedCurveSpeed.z = 0;
 
             ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
@@ -233,7 +234,7 @@ public class Ball : MonoBehaviour
 
             // apply centripetal force over time for a curved motion
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
-            currentCurveCoroutine = CurveCoroutine(curveVelocity, curveTickSteps, centripetalMotionDurationFrames);
+            currentCurveCoroutine = CurveCoroutine(curveVelocity, curveTickSteps, curveDurationFrames);
             StartCoroutine(currentCurveCoroutine);
         }
     }
@@ -241,8 +242,8 @@ public class Ball : MonoBehaviour
     private IEnumerator CurveCoroutine(Vector3 curveVelocity, int tickStep, int durationFrames)
     {
         // at any given frame, the force is directed to the "center" relative to the ball's velocity
-        var centripetalMotion = -curveVelocity * centripetalForceMultiplier;
-        centripetalMotion.z = 0;
+        var curveMotion = -curveVelocity * curveVelocityMultiplier;
+        curveMotion.z = 0;
 
         var tick = 0;
         return Task.FixedUpdate(durationFrames, () =>
@@ -250,9 +251,8 @@ public class Ball : MonoBehaviour
             tick++;
             if (tick % tickStep == 0)
             {
-                // todo: apply on network
-                Debug.Log($"addForce: {centripetalMotion}");
-                OnAddForce?.Invoke(centripetalMotion, ForceMode.Acceleration);
+                Debug.Log($"addForce: {curveMotion}");
+                OnAddForce?.Invoke(curveMotion, ForceMode.Acceleration);
             }
         });
     }

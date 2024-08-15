@@ -128,7 +128,6 @@ public struct VarWatch<T> where T : struct
     public Action<T, T> onChanged;
     public Action<T, T> onSet;
 
-    // todo: override '=' operator
     public void Set(T newValue)
     {
         value = newValue;

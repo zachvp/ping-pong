@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// todo: refactor to get target ref from hierarchy
 public class CameraPlayer : MonoBehaviour
 {
     public Vector3 offsetFromTarget;

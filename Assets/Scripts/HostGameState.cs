@@ -3,7 +3,6 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
 
-// todo: remove
 public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
 {
     public Transform[] spawns;
@@ -24,8 +23,6 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
         {
             if ((int)clientID + 1 >= minRequiredPlayers)
             {
-                // todo: spawn ball
-                Debug.Log($"players connected; spawn ball");
                 StartGame();
             }
         };
@@ -52,6 +49,7 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
     {
         var old = state;
         state = current;
+        Debug.Log($"update host GameState: {old} -> {current}");
         foreach (var handler in handlers)
         {
             handler.HandleGameStateChangeRpc(old, state);
