@@ -2,7 +2,6 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-// todo: refactor - too many lines
 public class PlayerCharacter : MonoBehaviour
 {
     public PlayerInputMapper input;

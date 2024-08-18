@@ -151,16 +151,27 @@ public class PlayerInputMapper : MonoBehaviour
             touchJoystickRight.gameObject.SetActive(false);
         }
 
+        // adjust movement x-axis according to camera direction
+        move.x *= input.camera.transform.forward.z;
+
+        if (input.currentControlScheme.Equals("keyboard+mouse"))
+        {
+            //if (input[""])
+        }
+        else
+        {
+            
+        }
+
         // compute flick input to trigger flick gesture
-        FlickVelocity = flick - FlickVelocity;
+        var resolvedFlickVelocity = flick - FlickVelocity;
+        resolvedFlickVelocity.x *= input.camera.transform.forward.z;
+        FlickVelocity = resolvedFlickVelocity;
         isFlick = FlickVelocity.sqrMagnitude > flickVelocityThreshold;
         if (isFlick)
         {
             FlickVelocityTriggered = FlickVelocity;
         }
-
-        // transform movement x-axis according to camera direction
-        move.x *= input.camera.transform.forward.z;
     }
 
     public void ResetFlick()

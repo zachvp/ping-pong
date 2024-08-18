@@ -150,6 +150,7 @@ public class Ball : MonoBehaviour
             if (networkState)
             {
                 playerVelocity = networkState.velocity.Value;
+                Debug.Log($"playerVelocity: {playerVelocity}; bodyVelocity: {body.velocity}");
                 playerVelocity = Common.SignMultiply(playerVelocity, networkState.cameraForwardZ.Value);
                 var playerState = networkState.state.Value;
                 var playerStateBuffer = networkState.buffer.Value;
@@ -171,6 +172,7 @@ public class Ball : MonoBehaviour
                     newVelocity.x = Mathf.Clamp(newVelocity.x, -defaultSpinSpeed.x * 1.5f, defaultSpinSpeed.x * 1.5f);
                     newVelocity.y = Mathf.Clamp(newVelocity.y, -defaultSpinSpeed.y * 1.5f, defaultSpinSpeed.y * 1.5f);
 
+                    Debug.Log($"apply normal hit spin; vel: {newVelocity}, curveSpeed: {resolvedCurveSpeed}");
                     ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
                 }
 

@@ -62,6 +62,8 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
                 StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezePositionZ));
                 StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezeRotationY));
             }));
+
+            sharedState.SetCameraStateRpc((int) transform.forward.z);
         }
     }
 
