@@ -7,11 +7,12 @@ public class PlayerInputMapper : MonoBehaviour
     private PlayerInput input;
 
     public bool isHitPressed;
+    public bool isDashPressed;
 
     public Vector2 flick;
     public Vector2 FlickVelocity { get; private set; }
     public float flickVelocityThreshold = 0.25f;
-    public Vector3 FlickVelocityTriggered { get; private set; }
+    //public Vector3 FlickVelocityTriggered { get; private set; } // todo: remove
 
     public bool isFlick;
 
@@ -154,23 +155,21 @@ public class PlayerInputMapper : MonoBehaviour
         // adjust movement x-axis according to camera direction
         move.x *= input.camera.transform.forward.z;
 
-        if (input.currentControlScheme.Equals("keyboard+mouse"))
-        {
-            //if (input[""])
-        }
-        else
-        {
-            
-        }
+        // dash button input
+        // dash input
+        isDashPressed = input.actions["dash"].WasPressedThisFrame();
 
         // compute flick input to trigger flick gesture
         var resolvedFlickVelocity = flick - FlickVelocity;
         resolvedFlickVelocity.x *= input.camera.transform.forward.z;
+
         FlickVelocity = resolvedFlickVelocity;
         isFlick = FlickVelocity.sqrMagnitude > flickVelocityThreshold;
+
         if (isFlick)
         {
-            FlickVelocityTriggered = FlickVelocity;
+            debugValues.vector2_0 = FlickVelocity;
+            //FlickVelocityTriggered = FlickVelocity;
         }
     }
 

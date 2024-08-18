@@ -61,6 +61,18 @@ public class PlayerCharacter : MonoBehaviour
         {
             if (input.isFlick)
             {
+                var roundedDashDirection = Common.Round(input.FlickVelocity);
+                roundedDashDirection = Vector2.ClampMagnitude(roundedDashDirection, 1);
+                dashDirection.vector3.Set(roundedDashDirection);
+
+                Dash(dashMoveFrames);
+            }
+            else if (input.isDashPressed)
+            {
+                var roundedDashDirection = Common.Round(input.move);
+                roundedDashDirection = Vector2.ClampMagnitude(roundedDashDirection, 1);
+                dashDirection.vector3.Set(roundedDashDirection);
+
                 Dash(dashMoveFrames);
             }
         }
@@ -72,7 +84,7 @@ public class PlayerCharacter : MonoBehaviour
         var velocity = move * moveSpeed;
         if (state.HasFlag(State.DASH))
         {
-            velocity = input.FlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
+            velocity = dashDirection.vector3.Value * moveSpeed * dashMoveSpeedMultiplier;
         }
 
         Velocity = velocity;
@@ -94,10 +106,6 @@ public class PlayerCharacter : MonoBehaviour
         state |= State.DASH;
         cooldown |= State.DASH;
         BufferState(state);
-
-        var roundedDashDirection = new Vector2(Mathf.Round(input.FlickVelocity.x),
-                                               Mathf.Round(input.FlickVelocity.y));
-        dashDirection.vector3.Set(roundedDashDirection);
 
         visuals.Trail(dashFrameLength);
         StartCoroutine(Task.Delayed(dashFrameLength, () =>

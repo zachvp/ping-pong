@@ -497,10 +497,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: score zone 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3196018785747604809, guid: 623b618e9381a2943b99fbe9922ff932, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
