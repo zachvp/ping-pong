@@ -47,15 +47,15 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
 
     private void Init()
     {
-        if (OwnerClientId > 0)
-        {
-            var faceDirection = transform.forward;
-            faceDirection.z = -faceDirection.z;
-            transform.forward = faceDirection;
-        }
-
         if (IsOwner)
         {
+            if (OwnerClientId > 0)
+            {
+                var faceDirection = transform.forward;
+                faceDirection.z = -faceDirection.z;
+                transform.forward = faceDirection;
+            }
+
             StartCoroutine(Task.FixedUpdate(() =>
             {
                 body.position = HostGameState.Instance.spawns[OwnerClientId].position;

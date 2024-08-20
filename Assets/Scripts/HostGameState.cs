@@ -12,7 +12,8 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
 
     public List<INetworkGameStateHandler> handlers = new();
 
-    public NetworkVariable<int> firstPlayerScore = new();
+    public NetworkVariable<int> scorePlayer0 = new();
+    public NetworkVariable<int> scorePlayer1 = new();
 
     public int minRequiredPlayers = 2;
     public float restartDelay = 0.7f;
@@ -49,7 +50,6 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
     {
         var old = state;
         state = current;
-        //Debug.Log($"update host GameState: {old} -> {current}");
         foreach (var handler in handlers)
         {
             handler.HandleGameStateChangeRpc(old, state);
@@ -64,8 +64,16 @@ public class HostGameState : CoreSingletonNetworkBehavior<HostGameState>
     [Rpc(SendTo.Server)]
     public void AddScoreRpc(int playerID, int points)
     {
+        switch (playerID)
+        {
+            case 0:
+                scorePlayer0.Value += points;
+                break;
+            case 1:
+                scorePlayer1.Value += points;
+                break;
+        }
         UpdateState(GameState.SCORE);
-        firstPlayerScore.Value += points;
     }
 }
 

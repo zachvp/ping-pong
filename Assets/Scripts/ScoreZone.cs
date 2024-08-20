@@ -1,17 +1,20 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class ScoreZone : MonoBehaviour
+// todo: rename to NetworkScoreZone
+public class ScoreZone : NetworkBehaviour
 {
     public int playerID;
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"trigger enter");
-        var ball = other.GetComponent<Ball>();
-        if (ball)
+        var ball = other.GetComponent<NetworkBall>();
+        var hostGameState = HostGameState.Instance;
+
+        if (ball && IsOwner && hostGameState.state == GameState.MAIN)
         {
+            Debug.Log($"client {OwnerClientId} add score for player: {playerID}");
             // todo: implement score for real
-            var hostGameState = HostGameState.Instance;
             hostGameState.AddScoreRpc(playerID, 1);
             StartCoroutine(Task.Delayed(hostGameState.restartDelay * 2, () => hostGameState.StartGame()));
         }

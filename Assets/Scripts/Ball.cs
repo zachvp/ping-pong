@@ -150,7 +150,6 @@ public class Ball : MonoBehaviour
             if (networkState)
             {
                 playerVelocity = networkState.velocity.Value;
-                Debug.Log($"playerVelocity: {playerVelocity}; bodyVelocity: {body.velocity}");
                 playerVelocity = Common.SignMultiply(playerVelocity, networkState.cameraForwardZ.Value);
                 var playerState = networkState.state.Value;
                 var playerStateBuffer = networkState.buffer.Value;
@@ -172,7 +171,6 @@ public class Ball : MonoBehaviour
                     newVelocity.x = Mathf.Clamp(newVelocity.x, -defaultSpinSpeed.x * 1.5f, defaultSpinSpeed.x * 1.5f);
                     newVelocity.y = Mathf.Clamp(newVelocity.y, -defaultSpinSpeed.y * 1.5f, defaultSpinSpeed.y * 1.5f);
 
-                    Debug.Log($"apply normal hit spin; vel: {newVelocity}, curveSpeed: {resolvedCurveSpeed}");
                     ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
                 }
 
@@ -183,7 +181,6 @@ public class Ball : MonoBehaviour
                     if (playerStateBuffer.HasFlag(PlayerCharacter.State.HIT) &&
                         !(state | cooldown).HasFlag(State.HIT))
                     {
-                        //Debug.Log($"set hit input for state: {state}");
                         state |= State.HIT;
                     }
                 }));
@@ -193,7 +190,6 @@ public class Ball : MonoBehaviour
                     if (playerStateBuffer.HasFlag(PlayerCharacter.State.DASH) &&
                         !(state | cooldown).HasFlag(State.SPIN))
                     {
-                        //Debug.Log($"set hit input for state: {state}");
                         state |= State.SPIN;
                     }
                 }));
@@ -209,14 +205,12 @@ public class Ball : MonoBehaviour
             if (Mathf.Abs(contactNormalDotUp) > steepDeflectDotValue)
             {
                 newVelocity.y *= steepDeflectVelocityNerf;
-                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
             }
 
             // check for steep leftward/rightward deflection
             if (Mathf.Abs(contactNormalDotRight) > steepDeflectDotValue)
             {
                 newVelocity.x *= steepDeflectVelocityNerf;
-                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
             }
         }
 
@@ -231,7 +225,6 @@ public class Ball : MonoBehaviour
             var torque = new Vector3(spinVelocity.y, -spinVelocity.x, 0) * curveSpinAngularMultiplier;
 
             // apply torque so the ball spins
-            //Debug.Log($"addTorque: {torque}");
             StartCoroutine(Task.FixedUpdate(() => OnAddTorque?.Invoke(torque)));
 
             // apply centripetal force over time for a curved motion
@@ -253,7 +246,6 @@ public class Ball : MonoBehaviour
             tick++;
             if (tick % tickStep == 0)
             {
-                //Debug.Log($"addForce: {curveMotion}");
                 OnAddForce?.Invoke(curveMotion, ForceMode.Acceleration);
             }
         });
