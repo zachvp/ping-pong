@@ -51,9 +51,19 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         {
             if (OwnerClientId > 0)
             {
-                var faceDirection = transform.forward;
-                faceDirection.z = -faceDirection.z;
-                transform.forward = faceDirection;
+                //var faceDirection = transform.forward;
+                //faceDirection.z = -faceDirection.z;
+                //transform.forward = faceDirection;
+
+                body.rotation = Quaternion.Euler(body.rotation.eulerAngles.x, body.rotation.eulerAngles.y + 180, body.rotation.eulerAngles.z);
+
+                //         rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, rb.rotation.eulerAngles.y + 180, rb.rotation.eulerAngles.z);
+                Debug.Log($"OwnerClientId set face direction: {body.rotation}");
+                sharedState.SetCameraStateRpc(-1);
+            }
+            else
+            {
+                sharedState.SetCameraStateRpc(1);
             }
 
             StartCoroutine(Task.FixedUpdate(() =>
@@ -62,8 +72,6 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
                 StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezePositionZ));
                 StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezeRotationY));
             }));
-
-            sharedState.SetCameraStateRpc((int) transform.forward.z);
         }
     }
 

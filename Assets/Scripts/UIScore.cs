@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class UIScore : MonoBehaviour//, INetworkGameStateHandler
+public class UIScore : MonoBehaviour
 {
     public TextMeshProUGUI score;
     public int playerID;
@@ -10,7 +10,6 @@ public class UIScore : MonoBehaviour//, INetworkGameStateHandler
     {
         score.text = $"{0}";
 
-        //HostGameState.Instance.RegisterGameResetHandler(this);
         switch (playerID)
         {
             case 0:
@@ -27,14 +26,4 @@ public class UIScore : MonoBehaviour//, INetworkGameStateHandler
                 break;
         }
     }
-
-    //public void HandleGameStateChangeRpc(GameState old, GameState current)
-    //{
-    //    switch(current)
-    //    {
-    //        case GameState.SCORE:
-    //            score.text = $"{HostGameState.Instance.firstPlayerScore.Value}";
-    //            break;
-    //    }
-    //}
 }
