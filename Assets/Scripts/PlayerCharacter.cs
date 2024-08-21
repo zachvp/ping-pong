@@ -25,9 +25,7 @@ public class PlayerCharacter : MonoBehaviour
     public State buffer;
     public IEnumerator bufferRoutine;
 
-    public SharedVector3 dashDirection;
-
-    public VisualsPlayerCharacter visuals;
+    public Vector3 dashDirection;
 
     [Flags]
     public enum State
@@ -40,8 +38,6 @@ public class PlayerCharacter : MonoBehaviour
     private void Awake()
     {
         body = GetComponentInParent<Rigidbody>();
-
-        dashDirection.Reset();
     }
 
     private void Update()
@@ -51,9 +47,7 @@ public class PlayerCharacter : MonoBehaviour
             state |= State.HIT;
             BufferState(state);
 
-            visuals.Flash(hitDurationFrames);
             StartCoroutine(Task.Delayed(hitDurationFrames, () => state &= ~State.HIT));
-
         }
 
         var inputFlick = input.flick;
@@ -63,7 +57,7 @@ public class PlayerCharacter : MonoBehaviour
             {
                 var roundedDashDirection = Common.Round(input.FlickVelocity);
                 roundedDashDirection = Vector2.ClampMagnitude(roundedDashDirection, 1);
-                dashDirection.vector3.Set(roundedDashDirection);
+                dashDirection = roundedDashDirection;
 
                 Dash(dashMoveFrames);
             }
@@ -71,7 +65,7 @@ public class PlayerCharacter : MonoBehaviour
             {
                 var roundedDashDirection = Common.Round(input.move);
                 roundedDashDirection = Vector2.ClampMagnitude(roundedDashDirection, 1);
-                dashDirection.vector3.Set(roundedDashDirection);
+                dashDirection = roundedDashDirection;
 
                 Dash(dashMoveFrames);
             }
@@ -84,7 +78,7 @@ public class PlayerCharacter : MonoBehaviour
         var velocity = move * moveSpeed;
         if (state.HasFlag(State.DASH))
         {
-            velocity = dashDirection.vector3.Value * moveSpeed * dashMoveSpeedMultiplier;
+            velocity = dashMoveSpeedMultiplier * moveSpeed * dashDirection;
         }
 
         Velocity = velocity;
@@ -107,7 +101,6 @@ public class PlayerCharacter : MonoBehaviour
         cooldown |= State.DASH;
         BufferState(state);
 
-        visuals.Trail(dashFrameLength);
         StartCoroutine(Task.Delayed(dashFrameLength, () =>
         {
             state &= ~State.DASH;

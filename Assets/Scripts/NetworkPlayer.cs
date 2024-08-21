@@ -9,6 +9,7 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
     public NetworkPlayerSharedState sharedState;
 
     private PlayerCharacter character;
+    public VisualsPlayerCharacter visuals;
 
     private void Awake()
     {
@@ -24,15 +25,17 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
 
     public override void OnNetworkSpawn()
     {
+        character = ownerRoot.GetComponentInChildren<PlayerCharacter>();
+
         if (IsOwner)
         {
             UIDebug.Instance.Register($"ClientID", $"{OwnerClientId}");
-            character = ownerRoot.GetComponentInChildren<PlayerCharacter>();
         }
         else
         {
             ownerRoot.SetActive(false);
         }
+
         //UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
     }
 
@@ -41,7 +44,23 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         if (IsOwner)
         {
             body.velocity = character.Velocity;
-            sharedState.SetPlayerCharacterStateRPC(character.Velocity, character.state, character.buffer);
+            sharedState.SetPlayerCharacterStateRPC(
+                character.Velocity,
+                character.state,
+                character.buffer);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (sharedState.state.Value.HasFlag(PlayerCharacter.State.HIT))
+        {
+            // todo: move to event handler
+            visuals.Flash(character.hitDurationFrames);
+        }
+        if (sharedState.state.Value.HasFlag(PlayerCharacter.State.DASH))
+        {
+            visuals.Trail(character.dashMoveFrames, sharedState.velocity.Value.normalized);
         }
     }
 
@@ -51,13 +70,7 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         {
             if (OwnerClientId > 0)
             {
-                //var faceDirection = transform.forward;
-                //faceDirection.z = -faceDirection.z;
-                //transform.forward = faceDirection;
-
                 body.rotation = Quaternion.Euler(body.rotation.eulerAngles.x, body.rotation.eulerAngles.y + 180, body.rotation.eulerAngles.z);
-
-                //         rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, rb.rotation.eulerAngles.y + 180, rb.rotation.eulerAngles.z);
                 Debug.Log($"OwnerClientId set face direction: {body.rotation}");
                 sharedState.SetCameraStateRpc(-1);
             }

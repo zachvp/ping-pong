@@ -27,13 +27,11 @@ public class NetworkBall : NetworkBehaviour, INetworkGameStateHandler
             ball.OnAddForce += (force, mode) =>
             {
                 body.AddForce(force, mode);
-                Debug.Log($"add force: {force}");
             };
 
             ball.OnAddTorque += (torque) =>
             {
                 body.AddTorque(torque);
-                Debug.Log($"add force: {torque}");
             };
         }
     }
@@ -66,8 +64,6 @@ public class NetworkBall : NetworkBehaviour, INetworkGameStateHandler
                     }));
                     break;
             }
-
-            Debug.Log($"ball handle reset");
         }
     }
 }
