@@ -132,18 +132,25 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
+    {
+        var contact = collision.contacts[^1];
+        var networkState = collision.gameObject.GetComponent<NetworkPlayerSharedState>();
+
+        HandleCollision(contact.normal, networkState);
+
+        Debug.Log($"ball collision: {collision.gameObject}");
+    }
+
+    public void HandleCollision(Vector3 normal, NetworkPlayerSharedState networkState)
     {
         var newVelocity = body.velocity;
-        var contact = collision.contacts[^1];
-        var contactNormalDotForward = Vector3.Dot(contact.normal, Vector3.forward);
+        var contactNormalDotForward = Vector3.Dot(normal, Vector3.forward);
 
         // check for a hit at either end
         if (Mathf.Abs(contactNormalDotForward) > 0.9f)
         {
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
-
-            var networkState = collision.gameObject.GetComponentInChildren<NetworkPlayerSharedState>();
 
             // ball collides with player
             // apply ball curve physics effects depending on player state
@@ -200,8 +207,8 @@ public class Ball : MonoBehaviour
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
             // check for steep upward/downward deflection
-            var contactNormalDotUp = Vector3.Dot(contact.normal, Vector3.up);
-            var contactNormalDotRight = Vector3.Dot(contact.normal, Vector3.right);
+            var contactNormalDotUp = Vector3.Dot(normal, Vector3.up);
+            var contactNormalDotRight = Vector3.Dot(normal, Vector3.right);
             if (Mathf.Abs(contactNormalDotUp) > steepDeflectDotValue)
             {
                 newVelocity.y *= steepDeflectVelocityNerf;

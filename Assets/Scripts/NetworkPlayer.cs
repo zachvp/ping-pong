@@ -11,6 +11,8 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
     private PlayerCharacter character;
     public VisualsPlayerCharacter visuals;
 
+    public GameObject nonHostHacks;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
@@ -34,6 +36,11 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         else
         {
             ownerRoot.SetActive(false);
+        }
+
+        if (IsHost && IsOwner)
+        {
+            nonHostHacks.SetActive(false);
         }
 
         //UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
@@ -110,6 +117,18 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
                     }));
                     break;
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"collision: {collision.gameObject.name}");
+        var ball = collision.gameObject.GetComponent<Ball>();
+
+        if (ball && IsClient)
+        {
+            Debug.Log($"client-driven collision");
+            ball.HandleCollision(new Vector3(0, 0, sharedState.cameraForwardZ.Value), sharedState);
         }
     }
 }

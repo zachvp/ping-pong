@@ -48,8 +48,8 @@ GameObject:
   - component: {fileID: 8688852875180592761}
   - component: {fileID: 7653284695241467814}
   - component: {fileID: 1435730801952736943}
-  - component: {fileID: 8366624484256552181}
-  - component: {fileID: 6907547110099642325}
+  - component: {fileID: 7087398849072415694}
+  - component: {fileID: 1716113161339525742}
   m_Layer: 6
   m_Name: Ball
   m_TagString: Untagged
@@ -273,7 +273,7 @@ MonoBehaviour:
     flt: 0
     bool_0: 0
     bool_1: 0
---- !u!114 &8366624484256552181
+--- !u!114 &7087398849072415694
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -304,7 +304,8 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6907547110099642325
+  isAuthoritative: 0
+--- !u!114 &1716113161339525742
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

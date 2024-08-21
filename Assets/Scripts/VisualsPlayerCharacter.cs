@@ -6,6 +6,8 @@ public class VisualsPlayerCharacter : MonoBehaviour
     private Color initialColor;
     public string initialColorMaterialPropertyName = "_Color";
     public Color hitColor = Color.red;
+
+    // todo: refactor to separate 'CharacterTrail' class
     public TrailRenderer trailRenderer0;
     public TrailRenderer trailRenderer1;
     public OffsetTransform offset0;
