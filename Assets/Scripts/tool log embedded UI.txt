@@ -1,0 +1,64 @@
+❌ Major Issues / Cannot Assess
+
+If the tool log exists and the text DOES NOT say there is an embedded UI, rate “Major Issues.”
+If no tool log exists and the text DOES SAY that an embedded UI exists, rate “Cannot Assess.”
+If no tool log exists and the text DOES NOT say there is an embedded UI, rate “Major Issues."
+
+
+
+Rule 1
+Empty code
+Then Rate
+
+Tool Call Quality as N/A
+Grounding Information in Output as N/A.
+
+
+If you see the following in the code output:
+
+URL_FETCH_STATUS_GOOGLE_EXTENDED_OPT_OUT
+URL_FETCH_STATUS_PAYWALL
+or any other error that starts with URL_FETCH_STATUS
+
+
+Then Rate
+
+Tool Call Quality as Cannot Assess
+Grounding Information in Code Output as N/A.
+
+Rule 2
+If the response is a full punt,
+
+Then Rate
+
+Instruction Following as Major Issues
+Truthfulness as Cannot Assess
+Content Conciseness & Relevance as N/A
+Content Completeness as N/A
+
+
+What is a Full Punt?
+
+    Complete refusal / inability to answer the prompt.
+
+Example Language of Full Punt
+
+    Full Punt: Complete refusal / inability to answer the prompt. Asking follow-up questions also counts as a refusal to answer.
+    Full Punt Example 1: I'm sorry, but I'm not able to access the video/website you've provided. Can I help with anything else?
+    Full Punt Example 2: I'm just a language model, so I can't help you with that.
+    Full Punt Example 3: I'd be happy to help you find flights for your ambitious trip! I'll need some additional information: Travel Dates, Flight Preferences, Flexibility
+
+
+What is not a full punt?
+
+Partial Punt: Partial refusal to answer: model can’t answer directly, but follows up with options. Keep in mind that for a response to be a Partial Punt, it has to refuse to answer the prompt first, such as "I'm not able to search for flights directly". If the response doesn't follow the instructions completely but it also doesn't refuse to answer, it's not a Partial Punt.
+Partial Punt Example 1: I'm not able to access the video/website you've provided. However, based on the website title, I've searched the web and found that …
+Partial Punt Example 2: I'm not able to search for flights directly. However, you can use the following websites to find direct flights …
+
+
+Rule 3
+If there is no previous conversation:
+    Then Rate
+        Collaborativity as N/A
+        Contextual Awareness as N/A.
+

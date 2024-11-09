@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class NetworkBall : NetworkBehaviour, INetworkGameStateHandler
 {
-    public GameObject ownerPrefab;
-    public GameObject ownerRoot;
-
     private Rigidbody body;
     private Ball ball;
 
