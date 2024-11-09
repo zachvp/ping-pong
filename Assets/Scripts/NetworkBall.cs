@@ -50,6 +50,7 @@ public class NetworkBall : NetworkBehaviour, INetworkGameStateHandler
                     ball.StartGame();
                     break;
                 case GameState.RESET:
+                case GameState.SCORE:
                     ball.Reset();
                     StartCoroutine(Task.FixedUpdate(() =>
                     {
@@ -60,8 +61,6 @@ public class NetworkBall : NetworkBehaviour, INetworkGameStateHandler
                     }));
                     break;
             }
-
-            Debug.Log($"ball handle reset");
         }
     }
 }

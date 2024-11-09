@@ -10,10 +10,11 @@ Shader "Custom/HullOutline"
 
     SubShader
     {
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+
         Pass
         {
             Name "Hull Fill"
-            Tags { "Queue"="Transparent" "RenderType"="Transparent" } // todo: move these to SubShader block
 
             Blend SrcAlpha OneMinusSrcAlpha
 

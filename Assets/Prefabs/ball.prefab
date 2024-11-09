@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &545548564819786369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7544488936847885731}
+  m_Layer: 6
+  m_Name: owner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7544488936847885731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545548564819786369}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2060055902556777814}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &791846433709945142
 GameObject:
   m_ObjectHideFlags: 0
@@ -17,9 +48,9 @@ GameObject:
   - component: {fileID: 8688852875180592761}
   - component: {fileID: 7653284695241467814}
   - component: {fileID: 1435730801952736943}
-  - component: {fileID: 8366624484256552181}
-  - component: {fileID: 6907547110099642325}
-  m_Layer: 0
+  - component: {fileID: 7087398849072415694}
+  - component: {fileID: 1716113161339525742}
+  m_Layer: 6
   m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,14 +245,14 @@ MonoBehaviour:
   bigCurveSpeed: {x: 15, y: 15, z: 0}
   curveLateBufferFrames: 18
   curveSpinAngularMultiplier: 16
-  centripetalForceMultiplier: 1
-  centripetalMotionDurationFrames: 120
+  curveVelocityMultiplier: 1
+  curveDurationFrames: 120
   hitMultiplier: 1.5
   hitStackCount: 4
   hitDampening: {x: 1, y: 1}
-  hitLateBufferFrames: 8
+  hitLateBufferFrames: 16
   hitCooldownFrames: 10
-  initialVelocity: {x: 0, y: 0, z: -8}
+  initialVelocity: {x: 0, y: 0, z: 8}
   minSpeeds: {x: 0, y: 0, z: 8}
   state: 0
   cooldown: 0
@@ -239,7 +270,7 @@ MonoBehaviour:
     flt: 0
     bool_0: 0
     bool_1: 0
---- !u!114 &8366624484256552181
+--- !u!114 &7087398849072415694
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -270,7 +301,8 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6907547110099642325
+  isAuthoritative: 0
+--- !u!114 &1716113161339525742
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -293,7 +325,7 @@ GameObject:
   - component: {fileID: 4241962484949776716}
   - component: {fileID: 199104247678803544}
   - component: {fileID: 7885475260367928704}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}

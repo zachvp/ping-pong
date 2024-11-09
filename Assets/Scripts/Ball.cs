@@ -15,8 +15,9 @@ public class Ball : MonoBehaviour
     [Tooltip("Determines how much spin torque to apply on player hit.")]
     public float curveSpinAngularMultiplier = 10;
     [Tooltip("Determines the force the ball will drive to the center of its curve arc.")]
-    public float centripetalForceMultiplier = 2; // todo: rename to centripetalMotionMultiplier
-    public int centripetalMotionDurationFrames = 120;
+    public float curveVelocityMultiplier = 1;
+    [Tooltip("The time length of the curve.")]
+    public int curveDurationFrames = 120;
     
     public float hitMultiplier = 2;
     public int hitStackCount = 4;
@@ -107,7 +108,7 @@ public class Ball : MonoBehaviour
             newVelocity.y = Mathf.Clamp(newVelocity.y, -bigSpinSpeed.y * 1.5f, bigSpinSpeed.y * 1.5f);
             newVelocity.z = body.velocity.z;
 
-            var resolvedCurveSpeed = Common.SignMultiply(bigCurveSpeed, playerVelocity); // todo: move to ApplySpinCurve()
+            var resolvedCurveSpeed = Common.SignMultiply(bigCurveSpeed, playerVelocity);
             resolvedCurveSpeed.z = 0;
 
             ApplySpinCurve(newVelocity, resolvedCurveSpeed, 2);
@@ -131,27 +132,34 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
+    {
+        var contact = collision.contacts[^1];
+        var networkState = collision.gameObject.GetComponent<NetworkPlayerSharedState>();
+
+        HandleCollision(contact.normal, networkState);
+
+        Debug.Log($"ball collision: {collision.gameObject}");
+    }
+
+    public void HandleCollision(Vector3 normal, NetworkPlayerSharedState networkState)
     {
         var newVelocity = body.velocity;
-        var contact = collision.contacts[^1];
-        var contactNormalDotForward = Vector3.Dot(contact.normal, Vector3.forward);
+        var contactNormalDotForward = Vector3.Dot(normal, Vector3.forward);
 
         // check for a hit at either end
         if (Mathf.Abs(contactNormalDotForward) > 0.9f)
         {
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
-            var networkPlayer = collision.gameObject.GetComponentInChildren<NetworkPlayer>();
-
             // ball collides with player
             // apply ball curve physics effects depending on player state
-            if (networkPlayer)
+            if (networkState)
             {
-                playerVelocity = networkPlayer.velocity.Value;
-                playerVelocity = Common.SignMultiply(playerVelocity, networkPlayer.cameraForwardZ.Value);
-                var playerState = networkPlayer.state.Value;
-                var playerStateBuffer = networkPlayer.buffer.Value;
+                playerVelocity = networkState.velocity.Value;
+                playerVelocity = Common.SignMultiply(playerVelocity, networkState.cameraForwardZ.Value);
+                var playerState = networkState.state.Value;
+                var playerStateBuffer = networkState.buffer.Value;
 
                 if (playerState.HasFlag(PlayerCharacter.State.HIT) &&
                     !(state | cooldown).HasFlag(State.HIT))
@@ -180,7 +188,6 @@ public class Ball : MonoBehaviour
                     if (playerStateBuffer.HasFlag(PlayerCharacter.State.HIT) &&
                         !(state | cooldown).HasFlag(State.HIT))
                     {
-                        //Debug.Log($"set hit input for state: {state}");
                         state |= State.HIT;
                     }
                 }));
@@ -190,7 +197,6 @@ public class Ball : MonoBehaviour
                     if (playerStateBuffer.HasFlag(PlayerCharacter.State.DASH) &&
                         !(state | cooldown).HasFlag(State.SPIN))
                     {
-                        //Debug.Log($"set hit input for state: {state}");
                         state |= State.SPIN;
                     }
                 }));
@@ -201,19 +207,17 @@ public class Ball : MonoBehaviour
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
 
             // check for steep upward/downward deflection
-            var contactNormalDotUp = Vector3.Dot(contact.normal, Vector3.up);
-            var contactNormalDotRight = Vector3.Dot(contact.normal, Vector3.right);
+            var contactNormalDotUp = Vector3.Dot(normal, Vector3.up);
+            var contactNormalDotRight = Vector3.Dot(normal, Vector3.right);
             if (Mathf.Abs(contactNormalDotUp) > steepDeflectDotValue)
             {
                 newVelocity.y *= steepDeflectVelocityNerf;
-                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotUp)}");
             }
 
             // check for steep leftward/rightward deflection
             if (Mathf.Abs(contactNormalDotRight) > steepDeflectDotValue)
             {
                 newVelocity.x *= steepDeflectVelocityNerf;
-                //Debug.LogFormat($"steep deflection: {Mathf.Abs(contactNormalDotRight)}");
             }
         }
 
@@ -228,12 +232,11 @@ public class Ball : MonoBehaviour
             var torque = new Vector3(spinVelocity.y, -spinVelocity.x, 0) * curveSpinAngularMultiplier;
 
             // apply torque so the ball spins
-            //Debug.Log($"addTorque: {torque}");
             StartCoroutine(Task.FixedUpdate(() => OnAddTorque?.Invoke(torque)));
 
             // apply centripetal force over time for a curved motion
             Common.StopNullableCoroutine(this, currentCurveCoroutine);
-            currentCurveCoroutine = CurveCoroutine(curveVelocity, curveTickSteps, centripetalMotionDurationFrames);
+            currentCurveCoroutine = CurveCoroutine(curveVelocity, curveTickSteps, curveDurationFrames);
             StartCoroutine(currentCurveCoroutine);
         }
     }
@@ -241,8 +244,8 @@ public class Ball : MonoBehaviour
     private IEnumerator CurveCoroutine(Vector3 curveVelocity, int tickStep, int durationFrames)
     {
         // at any given frame, the force is directed to the "center" relative to the ball's velocity
-        var centripetalMotion = -curveVelocity * centripetalForceMultiplier;
-        centripetalMotion.z = 0;
+        var curveMotion = -curveVelocity * curveVelocityMultiplier;
+        curveMotion.z = 0;
 
         var tick = 0;
         return Task.FixedUpdate(durationFrames, () =>
@@ -250,9 +253,7 @@ public class Ball : MonoBehaviour
             tick++;
             if (tick % tickStep == 0)
             {
-                // todo: apply on network
-                Debug.Log($"addForce: {centripetalMotion}");
-                OnAddForce?.Invoke(centripetalMotion, ForceMode.Acceleration);
+                OnAddForce?.Invoke(curveMotion, ForceMode.Acceleration);
             }
         });
     }

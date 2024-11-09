@@ -21,7 +21,7 @@ namespace BeaconLib
         /// </summary>
         private static readonly TimeSpan BeaconTimeout = new TimeSpan(0, 0, 0, 5); // seconds
 
-        public event Action<IEnumerable<BeaconLocation>> BeaconsUpdated; // todo: pass single beacon location rather than list
+        public event Action<IEnumerable<BeaconLocation>> BeaconsUpdated;
 
         private readonly Thread thread;
         private readonly EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);

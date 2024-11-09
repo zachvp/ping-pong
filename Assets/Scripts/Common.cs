@@ -22,6 +22,11 @@ public static class Common
         return new Vector3(Mathf.Round(source.x), Mathf.Round(source.y), Mathf.Round(source.z));
     }
 
+    public static Vector2 Round(Vector2 source)
+    {
+        return new Vector2(Mathf.Round(source.x), Mathf.Round(source.y));
+    }
+
     public static Vector2 SmoothStep(Vector2 source)
     {
         var result = Vector2.zero;
@@ -128,7 +133,6 @@ public struct VarWatch<T> where T : struct
     public Action<T, T> onChanged;
     public Action<T, T> onSet;
 
-    // todo: override '=' operator
     public void Set(T newValue)
     {
         value = newValue;

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6281296413483538954}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Joysticks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 7789683421439558037}
   - component: {fileID: 2129830169711210655}
   - component: {fileID: 8173381545468336889}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerOwner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8859637855453628793}
@@ -164,7 +164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4743585953837712070}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: JoystickRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 5794146232223224690}
   - component: {fileID: 8959961735282676677}
   - component: {fileID: 7451414541723807575}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Anchor
   m_TagString: Cursor
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 7321842048085769022}
   - component: {fileID: 1131924851733055446}
   - component: {fileID: 5558161215559347964}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cursor
   m_TagString: Cursor
   m_Icon: {fileID: 0}
@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 1990341774542933899}
   - component: {fileID: 7701614487952355687}
   - component: {fileID: 356054553897799288}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cursor
   m_TagString: Cursor
   m_Icon: {fileID: 0}
@@ -476,7 +476,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3986436570647083354}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: JoystickLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 60582961307097231}
   - component: {fileID: 7736804124640318115}
   - component: {fileID: 1173095684404001832}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Anchor
   m_TagString: Cursor
   m_Icon: {fileID: 0}
@@ -587,7 +587,7 @@ GameObject:
   - component: {fileID: 2693171766206996638}
   - component: {fileID: 3457504555458110356}
   - component: {fileID: 3507815664340005017}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: CanvasUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -695,11 +695,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5828455256320872031, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 5828455256320872031, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -40
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 5828455256320872031, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -729,7 +729,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3652748534720638360, guid: f7faf04bbcbbdd644a1da68fbcd3476b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

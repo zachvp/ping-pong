@@ -119,6 +119,8 @@ MonoBehaviour:
   - {fileID: 5122176987578926301}
   center: {fileID: 3327102276642498861}
   state: 0
+  firstPlayerScore:
+    m_InternalValue: 0
   minRequiredPlayers: 2
   restartDelay: 0.7
 --- !u!1 &7523831055055886790

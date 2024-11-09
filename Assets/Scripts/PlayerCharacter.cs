@@ -2,10 +2,9 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-// todo: refactor - too many lines
 public class PlayerCharacter : MonoBehaviour
 {
-    public PlayerInputMapper input; // todo: rename to 'input'
+    public PlayerInputMapper input;
 
     public float moveSpeed = 5;
 
@@ -19,11 +18,6 @@ public class PlayerCharacter : MonoBehaviour
     public Vector3 Velocity { get; private set; }
     private Rigidbody body;
 
-    private Material material;
-    private Color initialColor;
-    public string initialColorMaterialPropertyName = "_Color";
-    public Color hitColor = Color.red;
-
     public float stationaryFlickMultiplier = 2;
 
     public State state { get; private set; }
@@ -31,9 +25,7 @@ public class PlayerCharacter : MonoBehaviour
     public State buffer;
     public IEnumerator bufferRoutine;
 
-    public TrailRenderer trailRenderer;
-
-    public SharedVector3 dashDirection;
+    public Vector3 dashDirection;
 
     [Flags]
     public enum State
@@ -46,11 +38,6 @@ public class PlayerCharacter : MonoBehaviour
     private void Awake()
     {
         body = GetComponentInParent<Rigidbody>();
-        material = GetComponentInParent<MeshRenderer>().material;
-
-        initialColor = material.GetColor(initialColorMaterialPropertyName);
-
-        dashDirection.Reset();
     }
 
     private void Update()
@@ -60,20 +47,26 @@ public class PlayerCharacter : MonoBehaviour
             state |= State.HIT;
             BufferState(state);
 
-            hitColor.a = initialColor.a;
-            material.SetColor(initialColorMaterialPropertyName, hitColor);
-            StartCoroutine(Task.Delayed(hitDurationFrames, () =>
-            {
-                material.color = initialColor;
-                state &= ~State.HIT;
-            }));
+            StartCoroutine(Task.Delayed(hitDurationFrames, () => state &= ~State.HIT));
         }
 
-        var inputFlick = input.inputFlick;
+        var inputFlick = input.flick;
         if (!state.HasFlag(State.DASH) && !cooldown.HasFlag(State.DASH))
         {
             if (input.isFlick)
             {
+                var roundedDashDirection = Common.Round(input.FlickVelocity);
+                roundedDashDirection = Vector2.ClampMagnitude(roundedDashDirection, 1);
+                dashDirection = roundedDashDirection;
+
+                Dash(dashMoveFrames);
+            }
+            else if (input.isDashPressed)
+            {
+                var roundedDashDirection = Common.Round(input.move);
+                roundedDashDirection = Vector2.ClampMagnitude(roundedDashDirection, 1);
+                dashDirection = roundedDashDirection;
+
                 Dash(dashMoveFrames);
             }
         }
@@ -85,7 +78,7 @@ public class PlayerCharacter : MonoBehaviour
         var velocity = move * moveSpeed;
         if (state.HasFlag(State.DASH))
         {
-            velocity = input.InputFlickVelocityTriggered.normalized * moveSpeed * dashMoveSpeedMultiplier;
+            velocity = dashMoveSpeedMultiplier * moveSpeed * dashDirection;
         }
 
         Velocity = velocity;
@@ -108,18 +101,8 @@ public class PlayerCharacter : MonoBehaviour
         cooldown |= State.DASH;
         BufferState(state);
 
-        var roundedDashDirection = new Vector2(Mathf.Round(input.InputFlickVelocity.x),
-                                               Mathf.Round(input.InputFlickVelocity.y));
-        dashDirection.vector3.Set(roundedDashDirection);
-
-        trailRenderer.enabled = true;
-        trailRenderer.emitting = true;
-
         StartCoroutine(Task.Delayed(dashFrameLength, () =>
         {
-            trailRenderer.emitting = false;
-            trailRenderer.enabled = false;
-
             state &= ~State.DASH;
             input.ResetFlick();
         }));
@@ -129,16 +112,6 @@ public class PlayerCharacter : MonoBehaviour
             cooldown &= ~State.DASH;
             input.ResetFlick();
         }));
-    }
-
-    // todo: use and test this
-    private State AddState(State current, State added)
-    {
-        var resolved = current | added;
-        cooldown |= added;
-        BufferState(resolved);
-
-        return resolved;
     }
 
     private void BufferState(State s)

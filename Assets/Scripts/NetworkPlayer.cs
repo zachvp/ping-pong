@@ -1,21 +1,17 @@
+using Unity.Burst;
 using Unity.Netcode;
 using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
 {
-    public GameObject ownerPrefab;
     public GameObject ownerRoot;
-
     private Rigidbody body;
-
-    public NetworkVariable<Vector3> velocity = new();
-    public NetworkVariable<PlayerCharacter.State> state = new();
-    public NetworkVariable<PlayerCharacter.State> buffer = new();
-    public NetworkVariable<int> cameraForwardZ = new();
-
-    public Vector3 positionSpawn = new Vector3(0, 5, -1f);
+    public NetworkPlayerSharedState sharedState;
 
     private PlayerCharacter character;
+    public VisualsPlayerCharacter visuals;
+
+    public GameObject nonHostHacks;
 
     private void Awake()
     {
@@ -26,18 +22,27 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
     {
         Init();
 
-        Debug.Log($"{OwnerClientId} Register game reset");
         HostGameState.Instance.RegisterGameResetHandler(this);
     }
 
     public override void OnNetworkSpawn()
     {
+        character = ownerRoot.GetComponentInChildren<PlayerCharacter>();
+
         if (IsOwner)
         {
             UIDebug.Instance.Register($"ClientID", $"{OwnerClientId}");
-            var owner = Instantiate(ownerPrefab, ownerRoot.transform);
-            character = owner.GetComponentInChildren<PlayerCharacter>();
         }
+        else
+        {
+            ownerRoot.SetActive(false);
+        }
+
+        if (IsHost && IsOwner)
+        {
+            nonHostHacks.SetActive(false);
+        }
+
         //UIDebug.Instance.Register($"ClientID {OwnerClientId} Spawned", $"ObjectId: {NetworkObjectId}, Host: {IsHost}, Owner: {IsOwner}, Client: {IsClient}");
     }
 
@@ -46,53 +51,48 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         if (IsOwner)
         {
             body.velocity = character.Velocity;
-            UpdateServerRPC(character.Velocity, character.state, character.buffer);
+            sharedState.SetPlayerCharacterStateRPC(
+                character.Velocity,
+                character.state,
+                character.buffer);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (sharedState.state.Value.HasFlag(PlayerCharacter.State.HIT))
+        {
+            // todo: move to event handler
+            visuals.Flash(character.hitDurationFrames);
+        }
+        if (sharedState.state.Value.HasFlag(PlayerCharacter.State.DASH))
+        {
+            visuals.Trail(character.dashMoveFrames, sharedState.velocity.Value.normalized);
         }
     }
 
     private void Init()
     {
-        Debug.Log($"set spawn and camera position");
-
         if (IsOwner)
         {
-            // todo: hacks; move to NetworkCamera
-            // todo: rotate player character
             if (OwnerClientId > 0)
             {
-                var camera = GetComponentInChildren<Camera>();
-
-                var faceDirection = camera.transform.forward;
-                faceDirection.z = -faceDirection.z;
-                camera.transform.forward = faceDirection;
-                UpdateServerOneshotRpc((int) camera.transform.forward.z);
-
-                var facePosition = camera.transform.position;
-                facePosition.z = -facePosition.z;
-                camera.transform.position = facePosition;
+                body.rotation = Quaternion.Euler(body.rotation.eulerAngles.x, body.rotation.eulerAngles.y + 180, body.rotation.eulerAngles.z);
+                Debug.Log($"OwnerClientId set face direction: {body.rotation}");
+                sharedState.SetCameraStateRpc(-1);
+            }
+            else
+            {
+                sharedState.SetCameraStateRpc(1);
             }
 
-            StartCoroutine(Task.FixedUpdate(() => body.position = HostGameState.Instance.spawns[OwnerClientId].position));
-            StartCoroutine(Task.Delayed(Time.fixedDeltaTime * 2,
-                () => StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezePositionZ))));
+            StartCoroutine(Task.FixedUpdate(() =>
+            {
+                body.position = HostGameState.Instance.spawns[OwnerClientId].position;
+                StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezePositionZ));
+                StartCoroutine(Task.FixedUpdate(() => body.constraints |= RigidbodyConstraints.FreezeRotationY));
+            }));
         }
-    }
-
-    [Rpc(SendTo.Server)]
-    public void UpdateServerRPC(
-        Vector3 newVelocity,
-        PlayerCharacter.State newState,
-        PlayerCharacter.State newBuffer)
-    {
-        velocity.Value = newVelocity;
-        state.Value = newState;
-        buffer.Value = newBuffer;
-    }
-
-    [Rpc(SendTo.Server)]
-    public void UpdateServerOneshotRpc(int newCameraForwardZ)
-    {
-        cameraForwardZ.Value = newCameraForwardZ;
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -117,6 +117,18 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
                     }));
                     break;
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"collision: {collision.gameObject.name}");
+        var ball = collision.gameObject.GetComponent<Ball>();
+
+        if (ball && IsClient)
+        {
+            Debug.Log($"client-driven collision");
+            ball.HandleCollision(new Vector3(0, 0, sharedState.cameraForwardZ.Value), sharedState);
         }
     }
 }

@@ -9,6 +9,7 @@ using BeaconLib;
 using System.Linq;
 using System.Collections;
 
+// todo: rename to UINetworkManager
 public class NetworkManagerGUI : MonoBehaviour
 {
     private NetworkManager manager;
@@ -80,7 +81,7 @@ public class NetworkManagerGUI : MonoBehaviour
         });
 
         // client connected event
-        manager.OnClientConnectedCallback += (clientId) =>
+        manager.OnServerStarted += () =>
         {
             if (manager.IsHost)
                 Debug.Log($"server started, i am the host");

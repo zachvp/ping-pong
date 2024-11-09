@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 5828455256320872031}
   - component: {fileID: 2840934839081790478}
   - component: {fileID: 7705063582255748046}
-  m_Layer: 0
+  - component: {fileID: 3652748534720638360}
+  - component: {fileID: 603012987760397080}
+  m_Layer: 7
   m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -97,3 +99,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offsetFromTarget: {x: 0, y: 0, z: 0}
+--- !u!114 &3652748534720638360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314044439484013776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &603012987760397080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314044439484013776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c156f3e2a83bd4c4d9911d4cd66d2a20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraForwardZ:
+    m_InternalValue: 0
