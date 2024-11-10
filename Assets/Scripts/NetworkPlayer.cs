@@ -7,6 +7,7 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
     public GameObject ownerRoot;
     private Rigidbody body;
     public NetworkPlayerSharedState sharedState;
+    public PlayerSharedState playerSharedState;
 
     private PlayerCharacter character;
     public VisualsPlayerCharacter visuals;
@@ -128,7 +129,7 @@ public class NetworkPlayer : NetworkBehaviour, INetworkGameStateHandler
         if (ball && IsClient)
         {
             Debug.Log($"client-driven collision");
-            ball.HandleCollision(new Vector3(0, 0, sharedState.cameraForwardZ.Value), sharedState);
+            ball.HandleCollision(new Vector3(0, 0, sharedState.cameraForwardZ.Value), playerSharedState, collision.gameObject.layer);
         }
     }
 }

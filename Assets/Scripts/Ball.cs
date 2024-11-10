@@ -44,6 +44,9 @@ public class Ball : MonoBehaviour
     public Action<Vector3, ForceMode> OnAddForce;
     public Action<Vector3> OnAddTorque;
 
+    // external data
+    public PlayerSharedState playerSharedState;
+
     // TODO: DBG
     public float debugDuration = 2;
     public DebugValues debugValues;
@@ -52,10 +55,6 @@ public class Ball : MonoBehaviour
     {
         body = GetComponentInParent<Rigidbody>();
         InitialPosition = transform.position;
-    }
-
-    private void Start()
-    {
         Reset();
     }
 
@@ -130,19 +129,20 @@ public class Ball : MonoBehaviour
             newVelocity.z = Common.SignMultiply(body.velocity.z) * minSpeeds.z;
             Velocity = newVelocity;
         }
+
+        debugValues.vector3 = Velocity;
     }
 
     public void OnCollisionEnter(Collision collision)
     {
         var contact = collision.contacts[^1];
-        var networkState = collision.gameObject.GetComponent<NetworkPlayerSharedState>();
 
-        HandleCollision(contact.normal, networkState);
+        HandleCollision(contact.normal, playerSharedState, collision.gameObject.layer);
 
         Debug.Log($"ball collision: {collision.gameObject}");
     }
 
-    public void HandleCollision(Vector3 normal, NetworkPlayerSharedState networkState)
+    public void HandleCollision(Vector3 normal, PlayerSharedState sharedState, int layer)
     {
         var newVelocity = body.velocity;
         var contactNormalDotForward = Vector3.Dot(normal, Vector3.forward);
@@ -154,12 +154,12 @@ public class Ball : MonoBehaviour
 
             // ball collides with player
             // apply ball curve physics effects depending on player state
-            if (networkState)
+            if (layer == Constants.LayerIndex.PLAYER)
             {
-                playerVelocity = networkState.velocity.Value;
-                playerVelocity = Common.SignMultiply(playerVelocity, networkState.cameraForwardZ.Value);
-                var playerState = networkState.state.Value;
-                var playerStateBuffer = networkState.buffer.Value;
+                playerVelocity = sharedState.velocity;
+                playerVelocity = Common.SignMultiply(playerVelocity, sharedState.cameraForwardZ);
+                var playerState = sharedState.state;
+                var playerStateBuffer = sharedState.buffer;
 
                 if (playerState.HasFlag(PlayerCharacter.State.HIT) &&
                     !(state | cooldown).HasFlag(State.HIT))

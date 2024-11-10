@@ -168,6 +168,25 @@ public static class Constants
         public const string CAMERA = "MainCamera";
         public const string CURSOR = "Cursor";
     }
+
+    public static class LayerIndex
+    {
+        public const int DEFAULT = 0;
+        public const int BALL = 6;
+        public const int PLAYER = 7;
+        public const int SCORE_ZONE = 8;
+        public const int OBSTACLE = 9;
+    }
+
+    [Flags]
+    public enum LayerMasks
+    {
+        DEFAULT = 0,
+        BALL = 1 << 6,
+        PLAYER = 1 << 7,
+        SCORE_ZONE = 1 << 8,
+        OBSTACLE = 1 << 9
+    }
 }
 
 [Flags]

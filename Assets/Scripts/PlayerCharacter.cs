@@ -27,6 +27,11 @@ public class PlayerCharacter : MonoBehaviour
 
     public Vector3 dashDirection;
 
+    public PlayerSharedState sharedState;
+
+    // dbg
+    public DebugValues dbg;
+
     [Flags]
     public enum State
     {
@@ -70,6 +75,10 @@ public class PlayerCharacter : MonoBehaviour
                 Dash(dashMoveFrames);
             }
         }
+
+        sharedState.velocity = Velocity;
+        sharedState.state = state;
+        sharedState.buffer = buffer;
     }
 
     private void FixedUpdate()
@@ -82,6 +91,7 @@ public class PlayerCharacter : MonoBehaviour
         }
 
         Velocity = velocity;
+        dbg.vector2_0 = Velocity;
     }
 
     private void OnCollisionEnter(Collision collision)

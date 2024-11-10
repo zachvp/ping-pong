@@ -1,19 +1,13 @@
 using UnityEngine;
 
-// todo: remove useless class
 public class CameraPlayer : MonoBehaviour
 {
     public Vector3 offsetFromTarget;
 
-    private GameObject target;
+    public PlayerSharedState sharedState;
 
-    private void Start()
+    private void Update()
     {
-        target = GetComponentInParent<PlayerCharacter>().gameObject;
-    }
-
-    private void LateUpdate()
-    {
-        
+        sharedState.cameraForwardZ = (int) transform.forward.z;
     }
 }

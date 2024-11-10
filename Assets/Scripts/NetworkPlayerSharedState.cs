@@ -10,14 +10,16 @@ public class NetworkPlayerSharedState : NetworkBehaviour
 
     [Rpc(SendTo.Server)]
     public void SetPlayerCharacterStateRPC(
-    Vector3 newVelocity,
-    PlayerCharacter.State newState,
-    PlayerCharacter.State newBuffer)
+        Vector3 newVelocity,
+        PlayerCharacter.State newState,
+        PlayerCharacter.State newBuffer)
     {
         velocity.Value = newVelocity;
         state.Value = newState;
         buffer.Value = newBuffer;
     }
+
+    // todo: write to PlayerSharedState
 
     [Rpc(SendTo.Server)]
     public void SetCameraStateRpc(int newCameraForwardZ)
